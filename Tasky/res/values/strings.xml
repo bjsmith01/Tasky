@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tasky</string>
+    <string name="action_settings">Settings</string>
+    <string name="folders">Folders</string>
+    <string name="title">Tasky List</string>
+    <string name="title_section3">Section 3</string>
+    <string name="add">Add Task</string>
+    <string name="tv">TV Search</string>
+    <string name="calendar">Calendar</string>
+    <string name="todolist">To Do List</string>
+    <string name="title_activity_tvsearch">TVSearchActivity</string>
+    <string name="hello_world">TV Search</string>
+
+</resources>

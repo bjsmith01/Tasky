@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/calendar"
+          android:icon="@android:drawable/ic_menu_today"
+          android:title="@string/calendar" />
+ 
+    <item android:id="@+id/add_task"
+          android:icon="@android:drawable/ic_menu_add"
+          android:title="@string/add" />
+ 
+    <item android:id="@+id/tv_search"
+          android:icon="@android:drawable/ic_menu_search"
+          android:title="@string/tv" />
+    
+</menu>
