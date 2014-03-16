@@ -6,8 +6,10 @@ import org.joda.time.Period;
 
 
 /**
- * @author Mia
- * Each Project can have multiple tasks
+ * Each @Project can have multiple tasks (see @Task)
+ * 
+ * 
+ * @author Fengfeng (Mia) Liu
  */
 public class Task
 {
@@ -40,19 +42,23 @@ public class Task
 		if ("today".equals(dueDate))
 		{
 			this.setDueDate(currentDate);
+			return;
 		}
 		if ("tod".equals(dueDate))
 		{
 			this.setDueDate(currentDate);
+			return;
 		}
 		
 		if ("tomorrow".equals(dueDate))
 		{
 			this.setDueDate(currentDate.plus(Period.days(1)));
+			return;
 		}
 		if ("tom".equals(dueDate))
 		{
 			this.setDueDate(currentDate.plus(Period.days(1)));
+			return;
 		}
 		
 		
@@ -67,6 +73,7 @@ public class Task
 			System.out.println("getDayOfWeek "+currentDate.getDayOfWeek());
 			int numberOfDaysToBeAdded = (dayOfWeekForDueDate + 7 - currentDate.getDayOfWeek()) % 7;
 			this.setDueDate(currentDate.plus(Period.days(numberOfDaysToBeAdded)));
+			return;
 		}
 	}
 

@@ -8,9 +8,10 @@ import org.junit.Test;
 import edu.wm.cs.cs435.tasky.model.CurrentDate;
 import edu.wm.cs.cs435.tasky.model.Task;
 
+
 /**
- * @author Fengfeng Liu
- * 
+ * @author Fengfeng (Mia) Liu
+ *
  */
 public class TaskTest
 {

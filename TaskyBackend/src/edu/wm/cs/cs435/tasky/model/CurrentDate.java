@@ -7,8 +7,8 @@ import org.joda.time.DateTimeConstants;
  * This class will return the current date and time. In addition, it will be
  * used for testing purposes
  * 
- * @author Mia
- * 
+ * @author Fengfeng (Mia) Liu
+ *
  */
 public class CurrentDate
 {
