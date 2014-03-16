@@ -72,6 +72,8 @@ public class ToDoListActivity extends FragmentActivity implements
 	    switch (item.getItemId()) {
 	    case R.id.calendar:
 	        Log.i("In Menu","Calendar Selected");
+	        Intent cal = new Intent(this, Calendar.class);
+	        startActivity(cal);
 	        return true;
 	    case R.id.add_task:
 	        Log.i("In Menu","Add Task Selected");
