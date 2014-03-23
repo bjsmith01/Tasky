@@ -32,6 +32,14 @@ public class Task
 		convertDueDate(dueDate);
 	}
 
+	public Task(String id,String taskDescription, String dueDate)
+	{
+		this(taskDescription,dueDate);
+		
+		this.id=Integer.parseInt(id);
+		
+	}
+
 	/**
 	 * This method converts a due date that may be expressed as textual dates (e.g., "today",
 	 * "tomorrow", "next fri", etc.) to actual dates

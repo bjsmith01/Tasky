@@ -56,6 +56,30 @@ public class ServerTest
 
 		assertEquals(expectedListOfProjectsAsString, actualListOfProjectsAsText);
 	}
+	
+	@Test
+	public void testGetTasks()
+	{
+		String actualListOfTasksAsText = Server.getTasks("firstUser@gmail.com","10");
+		
+		String expectedListOfTasksAsString="";
+		expectedListOfTasksAsString+="101::task1 of Project1\n";
+		expectedListOfTasksAsString+="201::task2 of Project1\n";
+		expectedListOfTasksAsString+="301::task3 of Project1\n";
+
+		assertEquals(expectedListOfTasksAsString, actualListOfTasksAsText);
+
+		actualListOfTasksAsText = Server.getTasks("firstUser@gmail.com","20");
+		
+		expectedListOfTasksAsString="";
+		expectedListOfTasksAsString+="102::task1 of Project2\n";
+		expectedListOfTasksAsString+="202::task2 of Project2\n";
+		expectedListOfTasksAsString+="302::task3 of Project2\n";
+		expectedListOfTasksAsString+="402::task4 of Project2\n";
+		expectedListOfTasksAsString+="502::task5 of Project2\n";
+		
+		assertEquals(expectedListOfTasksAsString, actualListOfTasksAsText);
+	}
 
 //	@Test
 //	public void testCreateProjectAndAddTwoTask()

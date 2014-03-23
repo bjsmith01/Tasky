@@ -1,8 +1,8 @@
 package edu.wm.cs.cs435.tasky.model;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -88,9 +88,7 @@ public class Server
 	 */
 	public static String getProjects(String email)
 	{
-		//check the database for the specified email and password
-		//this should be replaced with an actual database
-		
+		//this code should be replaced with an actual database
 		
 		Hashtable<String, String> testDatabaseProjects=new Hashtable<>();
 
@@ -128,5 +126,48 @@ public class Server
 		}
 		
 		return listOfProjects.toString();
+	}
+	
+	/**
+	 * Gets the list of tasks associated with a specific projectID of a specific user
+	 * 
+	 * @param email, representing the username
+	 * @param projectID
+	 * @return a textual representation of the list of tasks
+	 */
+	public static String getTasks(String email,String projectID)
+	{
+		//this code should be replaced with an actual database
+		
+		Project project = new Project("sampleProject");
+		
+		//simulate loading from a database
+		try
+		{
+			BufferedReader br;
+			br = new BufferedReader(new FileReader("databaseTextFiles/listOfTasks_"+email+"_"+projectID+".txt"));
+			//each line contains the "taskID\tTaskDescription\tDueDate"
+			String task;
+			while ((task = br.readLine()) != null)
+			{
+				String[] splittedTask = task.split("\t");
+
+				project.addTask(new Task(splittedTask[0],splittedTask[1],"noduedate"));
+			}
+			br.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		StringBuffer listOfTasks=new StringBuffer();
+		for (Task task : project.getListOfTasks())
+		{
+			listOfTasks.append(task.getId()+"::"+task.getTaskDescription());
+			listOfTasks.append("\n");
+		}
+		
+		return listOfTasks.toString();
 	}
 }
