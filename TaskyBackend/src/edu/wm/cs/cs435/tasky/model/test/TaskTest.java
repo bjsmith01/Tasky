@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import edu.wm.cs.cs435.tasky.model.CurrentDate;
+import edu.wm.cs.cs435.tasky.model.IDs;
 import edu.wm.cs.cs435.tasky.model.Task;
 
 
@@ -19,10 +20,40 @@ public class TaskTest
 	@Test
 	public void testCreateTaskDescriptionOnly()
 	{
+		IDs.setMaxTaskID(0);
 		Task task1 = new Task("first task");
 
 		assertEquals("first task", task1.getTaskDescription());
+		assertEquals(1, task1.getId());
+	}
 
+	@Test
+	public void testCreateTwoTasksWithSameName()
+	{
+		IDs.setMaxTaskID(0);
+		Task task1 = new Task("task same name");
+		Task task2 = new Task("task same name");
+		
+		assertEquals("task same name", task1.getTaskDescription());
+		assertEquals("task same name", task2.getTaskDescription());
+		assertEquals(1, task1.getId());
+		assertEquals(2, task2.getId());
+	}
+	
+	@Test
+	public void testCreateThreeTasks()
+	{
+		IDs.setMaxTaskID(0);
+		Task task1 = new Task("first task");
+		Task task2 = new Task("second task");
+		Task task3 = new Task("third task");
+		
+		assertEquals("first task", task1.getTaskDescription());
+		assertEquals("second task", task2.getTaskDescription());
+		assertEquals("third task", task3.getTaskDescription());
+		assertEquals(1, task1.getId());
+		assertEquals(2, task2.getId());
+		assertEquals(3, task3.getId());
 	}
 
 	@Test
@@ -179,5 +210,6 @@ public class TaskTest
 		assertEquals(4, task1.getDueDate().getMonthOfYear());
 		assertEquals(2014, task1.getDueDate().getYear());
 	}
+	
 	
 }

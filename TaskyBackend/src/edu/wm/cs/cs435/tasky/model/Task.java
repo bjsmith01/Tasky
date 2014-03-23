@@ -13,13 +13,16 @@ import org.joda.time.Period;
  */
 public class Task
 {
+	private int id;
 	private String taskDescription;
 	private DateTime dueDate;
 
 	public Task(String taskDescription)
 	{
 		this.setTaskDescription(taskDescription);
+		this.id=IDs.getNextAvailableTaskID();
 		
+
 	}
 
 	public Task(String taskDescription, String dueDate)
@@ -75,6 +78,11 @@ public class Task
 			this.setDueDate(currentDate.plus(Period.days(numberOfDaysToBeAdded)));
 			return;
 		}
+	}
+
+	public int getId()
+	{
+		return id;
 	}
 
 	public String getTaskDescription()
