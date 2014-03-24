@@ -106,7 +106,7 @@
 	<hr/>
 	
 	<h3>Test add task</h3>
-	<p>Check the <a href="https://console.developers.google.com/project/apps~taskmanagersandbox/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
+	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
 	<form action="testGoogleDatastore.jsp" method="get">
 		Task Description: <input type="text" name="taskDescription" value="sample task"><br/> 
 		Due Date: <input type="text" name="dueDate" value="today"><br/>
@@ -117,7 +117,7 @@
 	
 	
 	<h3>Test view all tasks</h3>
-	<p>Check the <a href="https://console.developers.google.com/project/apps~taskmanagersandbox/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
+	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
 	<form action="testGoogleDatastore.jsp" method="get">
 		<input type="hidden" name="functionType" value="getTasks">
 
