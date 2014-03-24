@@ -1,8 +1,12 @@
 package edu.wm.cs.cs435.tasky.model;
 
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 
 /**
@@ -38,6 +42,13 @@ public class Task
 		
 		this.id=Integer.parseInt(id);
 		
+	}
+
+	public Task(int taskID, String taskDescription, Date dueDate)
+	{
+		this.id = taskID;
+		this.taskDescription = taskDescription;
+		this.dueDate = new DateTime(dueDate); 
 	}
 
 	/**
@@ -107,10 +118,23 @@ public class Task
 	{
 		return dueDate;
 	}
+	
+	public Date getDueDateAsJavaData()
+	{
+		if (dueDate!=null)
+			return dueDate.toDate();
+		return null;
+	}
 
 	public void setDueDate(DateTime dueDate)
 	{
 		this.dueDate = dueDate;
+	}
+
+	public String getDueDateAsShortFormat()
+	{
+		DateTimeFormatter fmt = DateTimeFormat.longDate();
+		return fmt.print(dueDate);
 	}
 	
 
