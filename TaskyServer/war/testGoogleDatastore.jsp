@@ -72,7 +72,6 @@
 			<th>Task Description</th>
 			<th>Due Date</th>
 		</tr>
-		<tr>
 
 	<%
 		
