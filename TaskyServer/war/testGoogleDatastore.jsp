@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@page import="edu.wm.cs.cs435.tasky.model.Server"%>
+<%@ page import="edu.wm.cs.cs435.tasky.model.Server"%>
 <%@ page import="edu.wm.cs.cs435.tasky.model.*"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.List" %>
@@ -16,12 +16,18 @@
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<!DOCTYPE HTML>
 <html>
   <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
 
+
   <body>
+  <div class="container">
+  <div class="col-md-8 col-md-offset-2">
+  
 	<%
 		String taskDescription = request.getParameter("taskDescription");
 		String dueDate = request.getParameter("dueDate");
@@ -66,13 +72,16 @@
 		// Use PreparedQuery interface to retrieve results
 		PreparedQuery preparedQuery = datastore.prepare(query);
 	%>
-	<table border="1">
-		<tr>
-			<th>ID</th>
-			<th>Task Description</th>
-			<th>Due Date</th>
-		</tr>
+	<table class="table table-hover">
+		<thead> 
+			<tr>
+				<th>ID</th>
+				<th>Task Description</th>
+				<th>Due Date</th>
+			</tr>
+		</thead>
 
+	<tbody>
 	<%
 		
 		for (Entity result : preparedQuery.asIterable())
@@ -96,6 +105,7 @@
 		}
 	%>
 
+	</tbody>
 	</table>	
 	
 	<%
@@ -107,21 +117,28 @@
 	<h3>Test add task</h3>
 	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
 	<form action="testGoogleDatastore.jsp" method="get">
-		Task Description: <input type="text" name="taskDescription" value="sample task"><br/> 
-		Due Date: <input type="text" name="dueDate" value="today"><br/>
-		<input type="hidden" name="functionType" value="addTask">
-
-		<input type="submit" value="Access Google Datastore & Add Task" >
+		<div class="form-group">
+			<label for="taskdesc">Task Description: </label>
+			<input class="form-control" id="taskdesc" type="text" name="taskDescription" value="sample task">
+			<label for="dueDate">Due Date: </label>
+			<input class="form-control" id="dueDate" type="text" name="dueDate" value="today"><br/>
+			<input type="hidden" name="functionType" value="addTask">
+	
+			<button class="btn btn-success" type="submit">Access Google Datastore &amp; Add Task</button>
+		</div>
 	</form>
 	
 	
 	<h3>Test view all tasks</h3>
 	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
 	<form action="testGoogleDatastore.jsp" method="get">
-		<input type="hidden" name="functionType" value="getTasks">
-
-		<input type="submit" value="Access Google Datastore & View All Tasks" >
+		<div class="form-group">
+			<input type="hidden" name="functionType" value="getTasks">
+			<button class="btn btn-success" type="submit">Access Google Datastore &amp; View All Tasks</button>
+		</div>
 	</form>
-		
+	</div>
+	
+  </div>	
   </body>
 </html>

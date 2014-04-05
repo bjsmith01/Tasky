@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@page import="edu.wm.cs.cs435.tasky.model.Server"%>
+<%@ page import="edu.wm.cs.cs435.tasky.model.Server"%>
 <%@ page import="java.util.List" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
@@ -13,12 +13,16 @@
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<!DOCTYPE HTML>
 <html>
   <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
 
   <body>
+  <div class="container">
+  <div class="col-md-8 col-md-offset-2">
 
 	<%
 		String email = request.getParameter("email");
@@ -89,38 +93,52 @@
 	%>
 	
 	<p>Response from server:<br/>
-	<%=responseFromServer%>
+	<%= responseFromServer %>
 	</p> 
 	
 	<hr/>
 	
 	<h3>Test Login functionality</h3>
-	<form action="testAccessToTaskyDatabase.jsp" method="get">
-		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
-		Password: <input type="text" name="password" value="<%=password%>"><br/>
-		<input type="hidden" name="functionType" value="testLogin">
-		
-		<input type="submit" value="Access Database & Test Login" >
+	<form action="testAccessToTaskyDatabase.jsp" method="get" role="form">
+		<div class="form-group">
+			<label for="email1">Email:</label>
+			<input class="form-control" type="text" name="email1" value="<%= email %>">
+			<label for="password1">Password:</label>
+			<input class="form-control" type="text" name="password" id="password1" value="<%=password%>"><br />
+			<input type="hidden" name="functionType" value="testLogin">
+			
+			<button type="submit" class="btn btn-success">Access Database &amp; Test Login</button>
+		</div>
 	</form>
 	
 	<br/>
 	<h3>Test get list of projects from user</h3>
-	<form action="testAccessToTaskyDatabase.jsp" method="get">
-		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
-		<input type="hidden" name="functionType" value="testGetProjects">
-
-		<input type="submit" value="Access Database & Test Get List of Projects" >
+	<form action="testAccessToTaskyDatabase.jsp" method="get" role="form" >
+		<div class="form-group">
+			<label for="email2">Email:</label>
+			<input class="form-control" type="text" name="email" id="email2" value="<%=email%>"><br/> 
+			<input type="hidden" name="functionType" value="testGetProjects">
+	
+			<button type="submit" class="btn btn-success">Access Database &amp; Test Get List of Projects</button>
+		</div>
 	</form>
 
 	<br/>
 	<h3>Test get list of tasks for a particular project</h3>
 	<form action="testAccessToTaskyDatabase.jsp" method="get">
-		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
-		ProjectID: <input type="text" name="projectID" value="<%=projectID%>"><br/>
-		<input type="hidden" name="functionType" value="testGetTasks">
-
-		<input type="submit" value="Access Database & Test Get List of Tasks" >
+		<div class="form-group">
+			<label for="email3">Email:</label>
+			<input class="form-control" type="text" name="email" id="email3" value="<%=email%>">
+			<label for="projectID1">Project ID:</label>
+			<input class="form-control" type="text" name="projectID"  id="projectID1" value="<%=projectID%>"> <br />
+			
+			<input type="hidden" name="functionType" value="testGetTasks">
+	
+			<button type="submit" class="btn btn-success">Access Database &amp; Test Get List of Tasks</button>
+		</div>
 	</form>
+  </div> 
+  </div>
 
   </body>
 </html>
