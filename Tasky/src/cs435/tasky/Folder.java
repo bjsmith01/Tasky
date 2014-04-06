@@ -23,7 +23,7 @@ public class Folder implements Serializable{
 	 * @param Task newTask
 	 */
 	void AddTask(Task newTask){
-		Log.i(""+name,"Task Added");
+		//Log.i(""+name,"Task Added");
 		TaskList.add(newTask);
 	}
 	

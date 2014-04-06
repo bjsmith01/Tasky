@@ -2,9 +2,16 @@ package cs435.tasky;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -155,10 +162,12 @@ public class ToDoListActivity extends FragmentActivity implements
 	    switch (item.getItemId()) {
 	    case R.id.calendar:
 	        Log.i("In Menu","Calendar Selected");
-	        
-	        
-	        
-	        
+	        //Bring up the calendar activity
+	        Intent calStart = new Intent(this, CalendarActivity.class);
+	        Bundle taskBundle = storeTasksForActivityChange();
+	        calStart.putExtras(taskBundle);
+	        startActivity(calStart);
+	        Log.v("CalTest", "Starting Calendar");
 	        return true;
 	        
 	        
@@ -182,7 +191,7 @@ public class ToDoListActivity extends FragmentActivity implements
 	        return super.onOptionsItemSelected(item);
 	    }
 	}
-
+	
 	//determines what happens when an item in the action bar is pressed
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
@@ -195,6 +204,44 @@ public class ToDoListActivity extends FragmentActivity implements
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.container, fragment).commit();
 		return true;
+	}
+	
+	/*
+	 * Creates a bundle object that will contain all currently available tasks.
+	 * Allows for task data to be transferred to another task.
+	 */
+	private Bundle storeTasksForActivityChange()
+	{
+		Bundle dataBundle = new Bundle();
+		String dataToSave = "";
+		//Takes every task in folder and places it in the bundle
+		//At this point in time only examines a single folder. Will need to
+		//Examine ALL folders at a future point.
+		for (int x = 0; x < folder.TaskList.size(); x++)
+		{
+			Log.v("CalTest","Real month = " +  String.valueOf(folder.getTask(x).getDueDate().get(Calendar.MONTH)));
+			dataToSave = folder.getTask(x).getName() + "/" + folder.getTask(x).getDesc()
+					+ "/" + String.valueOf(folder.getTask(x).getDueDate()
+							.get(Calendar.MONTH)) + 
+							String.valueOf(folder.getTask(x).getDueDate()
+									.get(Calendar.DAY_OF_MONTH)) +
+							String.valueOf(folder.getTask(x).getDueDate()
+									.get(Calendar.YEAR))
+					+ "/" + folder.getTask(x).isCompleted() +
+					"/" + String.valueOf(folder.getTask(x).getReminder()
+							.get(Calendar.YEAR)) + 
+							String.valueOf(folder.getTask(x).getReminder()
+									.get(Calendar.MONTH)) +
+							String.valueOf(folder.getTask(x).getReminder()
+									.get(Calendar.DAY_OF_MONTH));
+			dataBundle.putString("TASK" + x, dataToSave);
+
+		}
+		dataBundle.putInt("COUNT", folder.TaskList.size());
+		
+		Log.v("CalTesting", "Leaving Bundler");
+		
+		return dataBundle;
 	}
 
 	/**

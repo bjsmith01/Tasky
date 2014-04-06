@@ -19,6 +19,7 @@ public class Task implements Serializable {
 	private String name;
 	private String description;
 	private GregorianCalendar dueDate;
+	private boolean hasDueDate = false;
 	private boolean completed;
 	private GregorianCalendar reminder;
 	private boolean hasReminder=false;
@@ -34,6 +35,7 @@ public class Task implements Serializable {
 		name=Name;
 		description=Desc;
 		dueDate=DueDate;
+		hasDueDate = true;
 		completed=false;
 		hasReminder=true;
 		reminder=Reminder;
@@ -49,6 +51,7 @@ public class Task implements Serializable {
 		name=Name;
 		description=Desc;
 		dueDate=DueDate;
+		hasDueDate = true;
 		completed=false;
 	}
 	
@@ -100,7 +103,15 @@ public class Task implements Serializable {
 	 * @return GregorianCalendar duedate
 	 */
 	public GregorianCalendar getDueDate() {
-		return dueDate;
+		if (hasDueDate)
+		{
+			return dueDate;
+		}
+		else
+		{
+			return new GregorianCalendar(1, 1, 1);
+		}
+
 	}
 
 	/**
@@ -109,6 +120,7 @@ public class Task implements Serializable {
 	 */
 	public void setDueDate(GregorianCalendar dueDate) {
 		this.dueDate = dueDate;
+		hasDueDate = true;
 	}
 
 	/**
@@ -135,7 +147,7 @@ public class Task implements Serializable {
 		if (hasReminder)
 			return reminder;
 		else
-			return new GregorianCalendar(0,0,0);
+			return new GregorianCalendar(0001, 1, 1);
 	}
 
 	/**
@@ -144,6 +156,7 @@ public class Task implements Serializable {
 	 */
 	public void setReminder(GregorianCalendar Reminder) {
 		reminder = Reminder;
+		hasReminder = true;
 	}
 	
 	
