@@ -11,15 +11,10 @@
 <body>
 <div class="container">
 
-<%@ include file="../../header.jsp" %>
+<%@ include file="./header.jsp" %>
 
 <!--  Login logic -->
 
-<%
-
-	String email = session.getAttribute("email").toString(); 
-	
-%>
 
 <p> Submitted email: <%= email %></p>
 
@@ -30,5 +25,5 @@
 </div>
 
 
-<%@ include file="../../footer.jsp" %>
+<%@ include file="./footer.jsp" %>
 </div>

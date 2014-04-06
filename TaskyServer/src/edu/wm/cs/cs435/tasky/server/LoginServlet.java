@@ -74,6 +74,7 @@ public class LoginServlet extends HttpServlet
 			//prepare the response back to the client
 			response.setStatus(HttpServletResponse.SC_OK);
 			
+			
 			OutputStreamWriter writerToClient=new OutputStreamWriter(response.getOutputStream());
 			writerToClient.write(""+loginStatus);
 			writerToClient.flush();
