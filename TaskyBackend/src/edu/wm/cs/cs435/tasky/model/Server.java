@@ -13,9 +13,19 @@ import java.util.Hashtable;
  * @author Fengfeng (Mia) Liu
  *
  */
-public class Server 
+public class Server implements ITaskyServer
 {
-
+	//use the Singleton pattern to have only one server
+	//Any call to the server will use "Server.instance"
+	public static final Server instance = new Server();
+	 
+    /**
+     * Private constructor; Part of the Singleton pattern 
+     */
+    private Server() 
+    {
+    	
+    }
 
 	/**
 	 * Check if the credentials for a user are correct
@@ -27,7 +37,7 @@ public class Server
 	 * returns 1 for invalid username
 	 * returns 2 for invalid password
 	 */
-	public static int login(String email, String password)
+	public int login(String email, String password)
 	{
 		//check the database for the specified email and password
 		//this should be replaced with an actual database
@@ -86,7 +96,7 @@ public class Server
 	 * @param email, representing the username
 	 * @return a textual representation of the list of projects
 	 */
-	public static String getProjects(String email)
+	public String getProjects(String email)
 	{
 		//this code should be replaced with an actual database
 		
@@ -135,7 +145,7 @@ public class Server
 	 * @param projectID
 	 * @return a textual representation of the list of tasks
 	 */
-	public static String getTasks(String email,String projectID)
+	public String getTasks(String email,String projectID)
 	{
 		//this code should be replaced with an actual database
 		
