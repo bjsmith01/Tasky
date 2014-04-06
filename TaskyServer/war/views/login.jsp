@@ -1,5 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=US-ASCII"
-    pageEncoding="US-ASCII"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="edu.wm.cs.cs435.tasky.model.Server"%>
+<%@ page import="java.util.List" %>
+<%@ page import="com.google.appengine.api.users.User" %>
+<%@ page import="com.google.appengine.api.users.UserService" %>
+<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
+<%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
+<%@ page import="com.google.appengine.api.datastore.Query" %>
+<%@ page import="com.google.appengine.api.datastore.Entity" %>
+<%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
+<%@ page import="com.google.appengine.api.datastore.Key" %>
+<%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +25,47 @@
 <body>
 <div class="container">
 
-<%@ include file="./views/header.jsp" %>
+<%@ include file="./header.jsp" %>
 
-<div class="col-md-8 col-md-offset-2 text-center jumbotron">
-	<h1>Welcome to Tasky!</h1>
-	<p>In order to use Tasky, you should log in first.</p>
-	<a class="btn btn-lg btn-success" href="./views/login.jsp" >Log In!</a>
+<!--  Login logic -->
+
+<%
+	String email = ""; 
+	String password = ""; 
+	
+	email = request.getParameter("email");
+	password = request.getParameter("password");
+	
+	int loginStatus = Server.login(email, password);
+	
+	if (loginStatus == 0) {
+		session.setAttribute("email", email); 
+	    String redirectURL = "user/tasks/index.jsp";
+	    response.addHeader("email", email);
+	    response.sendRedirect(redirectURL);
+	}
+%>
+
+<p>Submitted email: <%= email %> </p>
+<p>Submitted password: <%= password %></p>
+<p>Login Status: <%= loginStatus %>
+
+<!--  End login logic -->
+
+<div class="col-md-8 col-md-offset-2">
+<h2>Login</h2>
+	<form action="login.jsp" method="get" role="form">
+		<div class="form-group">
+			<label for="email1">Email:</label>
+			<input class="form-control" type="text"  id="email1" name="email" value="<%= email %>">
+			<label for="password1">Password:</label>
+			<input class="form-control" type="text" name="password" id="password1" value="<%= password %>"><br />
+			
+			<button type="submit" class="btn btn-success">Login</button>
+		</div>
+	</form>
 </div>
 
 
-<%@ include file="./views/footer.jsp" %>
+<%@ include file="./footer.jsp" %>
 </div>
