@@ -28,19 +28,19 @@ public class ServerTest
 	@Test
 	public void testLogin()
 	{
-		int loginStatus = Server.login("firstUser@gmail.com","123");
+		int loginStatus = Server.instance.login("firstUser@gmail.com","123");
 		assertEquals(Constants.LOGIN_SUCCESS, loginStatus);
 		
-		loginStatus = Server.login("secondUser@gmail.com","123");
+		loginStatus = Server.instance.login("secondUser@gmail.com","123");
 		assertEquals(Constants.LOGIN_INVALID_PASSWORD, loginStatus);
 		
-		loginStatus = Server.login("secondUser@gmail.com","456");
+		loginStatus = Server.instance.login("secondUser@gmail.com","456");
 		assertEquals(Constants.LOGIN_SUCCESS, loginStatus);
 		
-		loginStatus = Server.login("thirdUserNotExisting@gmail.com","789");
+		loginStatus = Server.instance.login("thirdUserNotExisting@gmail.com","789");
 		assertEquals(Constants.LOGIN_INVALID_EMAIL, loginStatus);
 
-		loginStatus = Server.login("thirdUserNotExisting@gmail.com","any password");
+		loginStatus = Server.instance.login("thirdUserNotExisting@gmail.com","any password");
 		assertEquals(Constants.LOGIN_INVALID_EMAIL, loginStatus);
 	}
 	
@@ -48,7 +48,7 @@ public class ServerTest
 	public void testGetProjects()
 	{
 		
-		String actualListOfProjectsAsText = Server.getProjects("firstUser@gmail.com");
+		String actualListOfProjectsAsText = Server.instance.getProjects("firstUser@gmail.com");
 		
 		String expectedListOfProjectsAsString = "10:Project1\n";
 		expectedListOfProjectsAsString+="20:Project2\n";
@@ -60,7 +60,7 @@ public class ServerTest
 	@Test
 	public void testGetTasks()
 	{
-		String actualListOfTasksAsText = Server.getTasks("firstUser@gmail.com","10");
+		String actualListOfTasksAsText = Server.instance.getTasks("firstUser@gmail.com","10");
 		
 		String expectedListOfTasksAsString="";
 		expectedListOfTasksAsString+="101::task1 of Project1\n";
@@ -69,7 +69,7 @@ public class ServerTest
 
 		assertEquals(expectedListOfTasksAsString, actualListOfTasksAsText);
 
-		actualListOfTasksAsText = Server.getTasks("firstUser@gmail.com","20");
+		actualListOfTasksAsText = Server.instance.getTasks("firstUser@gmail.com","20");
 		
 		expectedListOfTasksAsString="";
 		expectedListOfTasksAsString+="102::task1 of Project2\n";
