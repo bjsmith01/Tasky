@@ -45,11 +45,6 @@
 	    response.sendRedirect(redirectURL);
 	}
 %>
-
-<p>Submitted email: <%= email %> </p>
-<p>Submitted password: <%= password %></p>
-<p>Login Status: <%= loginStatus %>
-
 <!--  End login logic -->
 
 <div class="col-md-8 col-md-offset-2">
@@ -57,11 +52,13 @@
 	<form action="login.jsp" method="get" role="form">
 		<div class="form-group">
 			<label for="email1">Email:</label>
-			<input class="form-control" type="text"  id="email1" name="email" value="<%= email %>">
+			<input class="form-control" type="text"  id="email1" name="email"> <br />
 			<label for="password1">Password:</label>
-			<input class="form-control" type="text" name="password" id="password1" value="<%= password %>"><br />
+			<input class="form-control" type="text" name="password" id="password1" ><br />
 			
-			<button type="submit" class="btn btn-success">Login</button>
+			<div class="text-center">
+				<button type="submit" class="btn btn-success">Login</button>
+			</div>
 		</div>
 	</form>
 </div>

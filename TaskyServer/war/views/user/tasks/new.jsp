@@ -70,9 +70,9 @@
 	<form action="new.jsp" method="get">
 		<div class="form-group">
 			<label for="taskdesc">Task Description: </label>
-			<input class="form-control" id="taskdesc" type="text" name="taskDescription" value="sample task">
+			<input class="form-control" id="taskdesc" type="text" name="taskDescription" > <br />
 			<label for="dueDate">Due Date: </label>
-			<input class="form-control" id="dueDate" type="text" name="dueDate" value="today"><br/>
+			<input class="form-control" id="dueDate" type="text" name="dueDate" value="today"><br />
 			<input type="hidden" name="functionType" value="addTask">
 	
 			<div class="text-center">

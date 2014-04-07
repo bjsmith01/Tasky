@@ -77,15 +77,12 @@
 
 
 	<div class="text-center">
-		<a href="new.jsp" class="btn btn-default">Add New Task</a>
-		<a href="/TasksIndexServlet" class="btn btn-default">View Tasks Json</a>
-	</div>
-	
-		<form action="/TasksIndexServlet" method="get">
-		<div class="form-group">	
-			<button type="submit" class="btn btn-success">View Tasks JSON</button>
+		<div class="btn-group btn-group-lg">
+			<a href="new.jsp" class="btn btn-default">Add New Task</a>
+			<a href="/TasksIndexServlet" class="btn btn-default">View Tasks JSON</a>
 		</div>
-	</form>
+	</div> <br />
+
 </div>
 
 
