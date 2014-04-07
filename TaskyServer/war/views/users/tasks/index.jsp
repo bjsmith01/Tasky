@@ -78,7 +78,7 @@
 
 	<div class="text-center">
 		<div class="btn-group btn-group-lg">
-			<a href="new.jsp" class="btn btn-default">Add New Task</a>
+			<a href="create.jsp" class="btn btn-default">Add New Task</a>
 			<a href="/TasksIndexServlet" class="btn btn-default">View Tasks JSON</a>
 		</div>
 	</div> <br />

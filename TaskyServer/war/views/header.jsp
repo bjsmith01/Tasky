@@ -6,7 +6,7 @@
 	    </div>
       
 		<ul class="nav navbar-nav navbar-right">
-		  <li><a href="/views/login.jsp">Log In</a></li>
+		  <li><a href="/views/sessions/create.jsp">Log In</a></li>
 		</ul>
 	</div><!-- /.container-fluid -->
 </nav>
