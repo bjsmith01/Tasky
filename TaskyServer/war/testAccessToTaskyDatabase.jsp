@@ -1,3 +1,4 @@
+<%@page import="edu.wm.cs.cs435.tasky.database.GoogleDatabase"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="edu.wm.cs.cs435.tasky.model.Server"%>
 <%@ page import="java.util.List" %>
@@ -42,21 +43,34 @@
 		//simulate access to database
 		if (functionType.equals("testLogin"))
 		{
-			int loginStatus = Server.login(email, password);
+			int loginStatus = Server.instance.login(email, password);
 			responseFromServer = "" + loginStatus;
 		}
 		else
 			if (functionType.equals("testGetProjects"))
 			{
-				String actualListOfProjectsAsText = Server.getProjects(email);
+				String actualListOfProjectsAsText = Server.instance.getProjects(email);
 				responseFromServer=actualListOfProjectsAsText;
 			}
 			else
 				if (functionType.equals("testGetTasks"))
 				{
-					String actualListOfTasksAsText = Server.getTasks(email,projectID);
+					String actualListOfTasksAsText = Server.instance.getTasks(email,projectID);
 					responseFromServer=actualListOfTasksAsText;
 				}
+				else
+					if (functionType.equals("isEmailAvailableForSignup"))
+					{
+						GoogleDatabase googleDatabase=new GoogleDatabase();
+						String isEmailAvailableForSignup=googleDatabase.isEmailAvailableForSignup(email);
+						responseFromServer = isEmailAvailableForSignup;
+					}
+					else
+						if (functionType.equals("signup"))
+						{
+							String signupResponse=Server.instance.signup(email, password);
+							responseFromServer = "" + signupResponse;
+						}
 	%>
 	
 	<h1>Values that were submitted</h1>
@@ -86,6 +100,23 @@
 			<p>Submitted projectID: <%=projectID%></p>
 	<%
 				}
+				else
+					if (functionType.equals("isEmailAvailableForSignup"))
+					{
+					%>
+						<p>Submitted email: <%=email%></p> 
+					<%
+					}
+					else
+						if (functionType.equals("signup"))
+						{
+							%>
+							<p>Submitted email: <%=email%></p> 
+							<p>Submitted password: <%=password%></p> 
+							<%
+						}
+						
+	
 	%>
 	
 	<p>Response from server:<br/>
@@ -93,6 +124,23 @@
 	</p> 
 	
 	<hr/>
+	
+	<h3>Test isEmailAvailableForSignup</h3>
+	<form action="testAccessToTaskyDatabase.jsp" method="get">
+		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
+		<input type="hidden" name="functionType" value="isEmailAvailableForSignup">
+
+		<input type="submit" value="Access Database & Test isEmailAvailableForSignup" >
+	</form>
+	
+	<h3>Test signup</h3>
+	<form action="testAccessToTaskyDatabase.jsp" method="get">
+		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
+		Password: <input type="text" name="password" value="<%=password%>"><br/> 
+		<input type="hidden" name="functionType" value="signup">
+
+		<input type="submit" value="Access Database & Test signup for user" >
+	</form>
 	
 	<h3>Test Login functionality</h3>
 	<form action="testAccessToTaskyDatabase.jsp" method="get">
