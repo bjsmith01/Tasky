@@ -6,6 +6,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
+import edu.wm.cs.cs435.tasky.model.ITaskyServer;
+
 /**
  * This class implements the operations that a Server can have with the a database.
  * In this case, the database is the Google App Engine Datastore (https://developers.google.com/appengine/docs/java/datastore/)
@@ -58,6 +60,34 @@ public class GoogleDatabase implements IServerDatabase
 		datastore.put(entityUser);
 		
 		return NEW_USER_ADDED_TO_DATABASE;
+	}
+
+	public String login(String email, String password)
+	{
+		Query query = new Query(USER_KIND).addSort(USER_PROPERTY_EMAIL);
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		
+		// Use PreparedQuery interface to retrieve results
+		PreparedQuery preparedQuery = datastore.prepare(query);
+		
+		//iterate through the results and see if the email is there or not
+		for (Entity result : preparedQuery.asIterable())
+		{
+			String emailRetrieved = (String) result.getProperty(USER_PROPERTY_EMAIL);
+			String passwordRetrieved = (String) result.getProperty(USER_PROPERTY_PASSWORD);
+			
+			if (email.equals(emailRetrieved))
+			{
+				if (password.equals(passwordRetrieved))
+					return ITaskyServer.LOGIN_SUCCESSFUL;
+				else
+					return ITaskyServer.LOGIN_INVALID_PASSWORD;
+			}
+				
+		}
+		//the email was not found in the database
+		return ITaskyServer.LOGIN_INVALID_USERNAME;
 	}
 	
 }

@@ -23,11 +23,11 @@ public class SimpleClientForAccessingLogin
 	{
 		String email; 
 		String password;
-		int loginStatus;
+		String loginStatus;
 		
 		//case 1
 		email = "firstUser@gmail.com";
-		password = "123";
+		password = "12345";
 		loginStatus = login(email,password);
 		System.out.println("For email: "+email+" and password: "+password+" the response was: "+loginStatus);
 		System.out.println("====================================");
@@ -47,7 +47,7 @@ public class SimpleClientForAccessingLogin
 		System.out.println("====================================");
 	}
 
-	private static int login(String email, String password)
+	private static String login(String email, String password)
 	{
 		try
 		{
@@ -84,16 +84,14 @@ public class SimpleClientForAccessingLogin
 			//get the response from the server, which is very similar to reading from a file
 			BufferedReader readerFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			
-			String loginStatusAsString;
+			String loginStatus;
 			
 			
-			//the response will be a single number: 0 (for success), 1 (for invalid email), 2 (for invalid password)
-			loginStatusAsString = readerFromServer.readLine();
+			//the response will be a string representing the status (LOGIN_SUCCESSFUL, LOGIN_INVALID_USERNAME, or LOGIN_INVALID_PASSWORD)
+			loginStatus = readerFromServer.readLine();
 			
 			readerFromServer.close();
 
-			int loginStatus=Integer.parseInt(loginStatusAsString);
-			
 			System.out.println("CLIENT: got response from server=" + loginStatus);
 			
 			return loginStatus;
@@ -106,6 +104,6 @@ public class SimpleClientForAccessingLogin
 		{
 			e.printStackTrace();
 		}
-		return -1;
+		return "-1";
 	}
 }

@@ -9,6 +9,13 @@ package edu.wm.cs.cs435.tasky.model;
  */
 public interface ITaskyServer
 {
+	public static final String LOGIN_SUCCESSFUL="LOGIN_SUCCESSFUL";
+	public static final String LOGIN_INVALID_USERNAME="LOGIN_INVALID_USERNAME";
+	public static final String LOGIN_INVALID_PASSWORD="LOGIN_INVALID_PASSWORD";
+	
+	public static final String NEW_USER_ADDED_TO_DATABASE="NEW_USER_ADDED_TO_DATABASE";
+//	public static final int ERROR_ADDING_USER_TO_DATABASE=4;
+
 	/**
 	 * Create a new user with the given credentials
 	 * 
@@ -28,11 +35,11 @@ public interface ITaskyServer
 	 * @param email
 	 * @param password
 	 * 
-	 * returns 0 for success
-	 * returns 1 for invalid username
-	 * returns 2 for invalid password
+	 * returns LOGIN_SUCCESSFUL for success
+	 * returns LOGIN_INVALID_USERNAME for invalid username
+	 * returns LOGIN_INVALID_PASSWORD for invalid password
 	 */
-	public int login(String email, String password);
+	public String login(String email, String password);
 	
 	
 	/**

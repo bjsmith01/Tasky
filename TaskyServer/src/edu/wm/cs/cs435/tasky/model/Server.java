@@ -69,61 +69,14 @@ public class Server implements ITaskyServer
 	 * @param email
 	 * @param password
 	 * 
-	 * returns 0 for success
-	 * returns 1 for invalid username
-	 * returns 2 for invalid password
+	 * returns LOGIN_SUCCESSFUL for success
+	 * returns LOGIN_INVALID_USERNAME for invalid username
+	 * returns LOGIN_INVALID_PASSWORD for invalid password
 	 */
-	public int login(String email, String password)
+	public String login(String email, String password)
 	{
 		//check the database for the specified email and password
-		//this should be replaced with an actual database
-		
-		Hashtable<String, String> testDatabaseEmailsPasswords=new Hashtable<>();
-
-		//simulate loading from a database
-		try
-		{
-			BufferedReader br;
-			br = new BufferedReader(new FileReader("databaseTextFiles/listOfUsers.txt"));
-			String emailAndPassword;
-			while ((emailAndPassword = br.readLine()) != null)
-			{
-				String[] splittedEmailAndPassword = emailAndPassword.split("\t");
-				
-				testDatabaseEmailsPasswords.put(splittedEmailAndPassword[0], splittedEmailAndPassword[1]);
-			}
-			br.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		
-//		testDatabaseEmailsPasswords.put("firstUser@gmail.com", "123");
-//		testDatabaseEmailsPasswords.put("secondUser@gmail.com", "456");
-//		testDatabaseEmailsPasswords.put("thirdUser@gmail.com", "789");
-		
-		Enumeration<String> keys = testDatabaseEmailsPasswords.keys();
-		
-		while (keys.hasMoreElements())
-		{
-			String currentEmail = (String) keys.nextElement();
-			
-			if (currentEmail.equals(email))
-			{
-				if (testDatabaseEmailsPasswords.get(currentEmail).equals(password))
-				{
-					return Constants.LOGIN_SUCCESS;
-				}
-				else
-				{
-					return Constants.LOGIN_INVALID_PASSWORD;
-				}
-			}
-		}
-		
-		return Constants.LOGIN_INVALID_EMAIL;
+		return databaseInstance.login(email,password);
 	}
 
 	/**

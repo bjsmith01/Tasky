@@ -43,8 +43,8 @@
 		//simulate access to database
 		if (functionType.equals("testLogin"))
 		{
-			int loginStatus = Server.instance.login(email, password);
-			responseFromServer = "" + loginStatus;
+			String loginStatus = Server.instance.login(email, password);
+			responseFromServer = loginStatus;
 		}
 		else
 			if (functionType.equals("testGetProjects"))
@@ -80,7 +80,7 @@
 		if (functionType.equals("testLogin"))
 		{
 	%>
-		<p>The return value should be 0 (success), 1 (invalid username) or 2 (invalid password)</p> 
+		<p>The return value should be a string LOGIN_SUCCESSFUL, LOGIN_INVALID_USERNAME or LOGIN_INVALID_PASSWORD</p> 
 		<p>Submitted email: <%=email%></p> 
 		<p>Submitted password: <%=password%></p> 
 	<%

@@ -35,4 +35,13 @@ public interface IServerDatabase
 	 */
 	String addNewUserToDatabase(String email, String password);
 
+	
+	/**
+	 * Checks the database for a particular user with the specified email and password
+	 * @param email
+	 * @param password
+	 * @return LOGIN_SUCCESSFUL, LOGIN_INVALID_USERNAME, or LOGIN_INVALID_PASSWORD
+	 */
+	String login(String email, String password);
+
 }

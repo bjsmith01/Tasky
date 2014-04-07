@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet
 			System.out.println("SERVER: end of request");
 
 			//access the database and determine if the email/password pair are correct
-			int loginStatus=Server.instance.login(email, password);
+			String loginStatus=Server.instance.login(email, password);
 			System.out.println("SERVER: server response is");
 			System.out.println(loginStatus);
 			System.out.println("SERVER: end of response");
@@ -75,7 +75,7 @@ public class LoginServlet extends HttpServlet
 			response.setStatus(HttpServletResponse.SC_OK);
 			
 			OutputStreamWriter writerToClient=new OutputStreamWriter(response.getOutputStream());
-			writerToClient.write(""+loginStatus);
+			writerToClient.write(loginStatus);
 			writerToClient.flush();
 			writerToClient.close();
 		}
