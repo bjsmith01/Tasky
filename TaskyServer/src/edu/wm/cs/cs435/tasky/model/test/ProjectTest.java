@@ -7,102 +7,73 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import edu.wm.cs.cs435.tasky.model.Constants;
 import edu.wm.cs.cs435.tasky.model.CurrentDate;
 import edu.wm.cs.cs435.tasky.model.IDs;
 import edu.wm.cs.cs435.tasky.model.Project;
-import edu.wm.cs.cs435.tasky.model.Server;
 import edu.wm.cs.cs435.tasky.model.Task;
-import edu.wm.cs.cs435.tasky.model.User;
 
 
 /**
  * @author Fengfeng (Mia) Liu
  *
  */
-public class ServerTest
+public class ProjectTest
 {
 
 	
 
 	@Test
-	public void testLogin()
+	public void testCreateProject()
 	{
-		int loginStatus = Server.instance.login("firstUser@gmail.com","123");
-		assertEquals(Constants.LOGIN_SUCCESS, loginStatus);
-		
-		loginStatus = Server.instance.login("secondUser@gmail.com","123");
-		assertEquals(Constants.LOGIN_INVALID_PASSWORD, loginStatus);
-		
-		loginStatus = Server.instance.login("secondUser@gmail.com","456");
-		assertEquals(Constants.LOGIN_SUCCESS, loginStatus);
-		
-		loginStatus = Server.instance.login("thirdUserNotExisting@gmail.com","789");
-		assertEquals(Constants.LOGIN_INVALID_EMAIL, loginStatus);
+		IDs.setMaxProjectID(0);
+		Project project1 = new Project("First Project");
 
-		loginStatus = Server.instance.login("thirdUserNotExisting@gmail.com","any password");
-		assertEquals(Constants.LOGIN_INVALID_EMAIL, loginStatus);
+		assertEquals("First Project", project1.getName());
+		assertEquals(1, project1.getId());
+
 	}
 	
 	@Test
-	public void testGetProjects()
+	public void testCreateProjectAndAddTask()
 	{
+		IDs.setMaxProjectID(0);
 		
-		String actualListOfProjectsAsText = Server.instance.getProjects("firstUser@gmail.com");
+		Project project1 = new Project("First Project");
 		
-		String expectedListOfProjectsAsString = "10:Project1\n";
-		expectedListOfProjectsAsString+="20:Project2\n";
-		expectedListOfProjectsAsString+="30:Project3\n";
+		assertEquals("First Project", project1.getName());
+		
+		Task task1 = new Task("first task");
+		
+		project1.addTask(task1);
 
-		assertEquals(expectedListOfProjectsAsString, actualListOfProjectsAsText);
+		
+		ArrayList<Task> listOfTasks = project1.getListOfTasks();
+		assertEquals("first task", listOfTasks.get(0).getTaskDescription());
+		assertEquals(1, project1.getId());
 	}
-	
+
 	@Test
-	public void testGetTasks()
+	public void testCreateProjectAndAddTwoTask()
 	{
-		String actualListOfTasksAsText = Server.instance.getTasks("firstUser@gmail.com","10");
+		IDs.setMaxProjectID(0);
 		
-		String expectedListOfTasksAsString="";
-		expectedListOfTasksAsString+="101::task1 of Project1\n";
-		expectedListOfTasksAsString+="201::task2 of Project1\n";
-		expectedListOfTasksAsString+="301::task3 of Project1\n";
-
-		assertEquals(expectedListOfTasksAsString, actualListOfTasksAsText);
-
-		actualListOfTasksAsText = Server.instance.getTasks("firstUser@gmail.com","20");
+		Project project1 = new Project("First Project");
 		
-		expectedListOfTasksAsString="";
-		expectedListOfTasksAsString+="102::task1 of Project2\n";
-		expectedListOfTasksAsString+="202::task2 of Project2\n";
-		expectedListOfTasksAsString+="302::task3 of Project2\n";
-		expectedListOfTasksAsString+="402::task4 of Project2\n";
-		expectedListOfTasksAsString+="502::task5 of Project2\n";
+		assertEquals("First Project", project1.getName());
 		
-		assertEquals(expectedListOfTasksAsString, actualListOfTasksAsText);
+		Task task1 = new Task("first task");
+		
+		project1.addTask(task1);
+		
+		Task task2 = new Task("second task");
+		
+		project1.addTask(task2);
+		
+		ArrayList<Task> listOfTasks = project1.getListOfTasks();
+		assertEquals("first task", listOfTasks.get(0).getTaskDescription());
+		assertEquals("second task", listOfTasks.get(1).getTaskDescription());
+		assertEquals(1, project1.getId());
 	}
-
-//	@Test
-//	public void testCreateProjectAndAddTwoTask()
-//	{
-//		IDs.setMaxProjectID(0);
-//		
-//		Project project1 = new Project("First Project");
-//		
-//		assertEquals("First Project", project1.getName());
-//		
-//		Task task1 = new Task("first task");
-//		
-//		project1.addTask(task1);
-//		
-//		Task task2 = new Task("second task");
-//		
-//		project1.addTask(task2);
-//		
-//		ArrayList<Task> listOfTasks = project1.getListOfTasks();
-//		assertEquals("first task", listOfTasks.get(0).getTaskDescription());
-//		assertEquals("second task", listOfTasks.get(1).getTaskDescription());
-//		assertEquals(1, project1.getId());
-//	}
 
 //	@Test
 //	public void testCreateTaskDescriptionAndDeadlineToday()

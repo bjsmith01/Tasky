@@ -11,49 +11,49 @@ import java.net.URLConnection;
 /**
  * 
  * This is just a simple client to show how to connect to the server, how to
- * pass an email and password and get a login status from the server
+ * signup a user given the email and password and how to get a response status from the server
  * 
  * @author Fengfeng (Mia) Liu
  * 
  */
-public class SimpleClientForAccessingLogin
+public class SimpleClientForSignup
 {
 
 	public static void main(String[] args) 
 	{
 		String email; 
 		String password;
-		String loginStatus;
+		String signupStatus;
 		
 		//case 1
-		email = "firstUser@gmail.com";
+		email = "firstNewUser@gmail.com";
 		password = "12345";
-		loginStatus = login(email,password);
-		System.out.println("For email: "+email+" and password: "+password+" the response was: "+loginStatus);
+		signupStatus = signup(email,password);
+		System.out.println("For email: "+email+" and password: "+password+" the response was: "+signupStatus);
 		System.out.println("====================================");
 		
-		//case 2
-		email = "firstUserThatDoesNotExit@gmail.com";
+		//case 2 should return that user already exists
+		email = "firstNewUser@gmail.com";
 		password = "123";
-		loginStatus = login(email,password);
-		System.out.println("For email: "+email+" and password: "+password+" the response was: "+loginStatus);
+		signupStatus = signup(email,password);
+		System.out.println("For email: "+email+" and password: "+password+" the response was: "+signupStatus);
 		System.out.println("====================================");
 		
-		//case 3
-		email = "firstUser@gmail.com";
-		password = "123InvalidPassword";
-		loginStatus = login(email,password);
-		System.out.println("For email: "+email+" and password: "+password+" the response was: "+loginStatus);
+		//case 3: should return that the password is invalid (too short)
+		email = "firstNewNewUser@gmail.com";
+		password = "123";
+		signupStatus = signup(email,password);
+		System.out.println("For email: "+email+" and password: "+password+" the response was: "+signupStatus);
 		System.out.println("====================================");
 	}
 
-	private static String login(String email, String password)
+	private static String signup(String email, String password)
 	{
 		try
 		{
-			//connect to the servlet for logging in
-//			URL urlToServlet = new URL("http://localhost:8888/LoginServlet");
-			URL urlToServlet = new URL("http://tasky-server.appspot.com/LoginServlet");
+			//connect to the servlet for signup command
+//			URL urlToServlet = new URL("http://localhost:8888/SignupServlet");
+			URL urlToServlet = new URL("http://tasky-server.appspot.com/SignupServlet");
 			URLConnection connection = urlToServlet.openConnection();
 	        connection.setDoOutput(true);
 	        
@@ -61,10 +61,10 @@ public class SimpleClientForAccessingLogin
 			OutputStreamWriter writerToServer = new OutputStreamWriter(connection.getOutputStream());
 
 			//the request is like a "file" with 3 lines:
-			//LOGIN
+			//SIGNUP
 			//email
 			//password
-			writerToServer.write("LOGIN");
+			writerToServer.write("SIGNUP");
 			writerToServer.write("\n");
 			writerToServer.write(email);
 			writerToServer.write("\n");
@@ -75,7 +75,7 @@ public class SimpleClientForAccessingLogin
 			
 			//TODO: replace with logging functionality
 			System.out.println("CLIENT: generated the following request");
-			System.out.println("LOGIN");
+			System.out.println("SIGNUP");
 			System.out.println(email);
 			System.out.println(password);
 			System.out.println("CLIENT: end of request");
@@ -84,17 +84,17 @@ public class SimpleClientForAccessingLogin
 			//get the response from the server, which is very similar to reading from a file
 			BufferedReader readerFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			
-			String loginStatus;
+			String signupStatus;
 			
 			
-			//the response will be a string representing the status (LOGIN_SUCCESSFUL, LOGIN_INVALID_USERNAME, or LOGIN_INVALID_PASSWORD)
-			loginStatus = readerFromServer.readLine();
+			//the response will be a String
+			signupStatus = readerFromServer.readLine();
 			
 			readerFromServer.close();
 
-			System.out.println("CLIENT: got response from server=" + loginStatus);
+			System.out.println("CLIENT: got response from server=" + signupStatus);
 			
-			return loginStatus;
+			return signupStatus;
 		}
 		catch (MalformedURLException e)
 		{

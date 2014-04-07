@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import edu.wm.cs.cs435.tasky.model.Constants;
 import edu.wm.cs.cs435.tasky.model.CurrentDate;
 import edu.wm.cs.cs435.tasky.model.IDs;
 import edu.wm.cs.cs435.tasky.model.Project;
-import edu.wm.cs.cs435.tasky.model.Server;
 import edu.wm.cs.cs435.tasky.model.Task;
 import edu.wm.cs.cs435.tasky.model.User;
 
@@ -20,65 +18,48 @@ import edu.wm.cs.cs435.tasky.model.User;
  * @author Fengfeng (Mia) Liu
  *
  */
-public class ServerTest
+public class UserTest
 {
 
 	
 
 	@Test
-	public void testLogin()
+	public void testCreateUser()
 	{
-		int loginStatus = Server.instance.login("firstUser@gmail.com","123");
-		assertEquals(Constants.LOGIN_SUCCESS, loginStatus);
-		
-		loginStatus = Server.instance.login("secondUser@gmail.com","123");
-		assertEquals(Constants.LOGIN_INVALID_PASSWORD, loginStatus);
-		
-		loginStatus = Server.instance.login("secondUser@gmail.com","456");
-		assertEquals(Constants.LOGIN_SUCCESS, loginStatus);
-		
-		loginStatus = Server.instance.login("thirdUserNotExisting@gmail.com","789");
-		assertEquals(Constants.LOGIN_INVALID_EMAIL, loginStatus);
+//		IDs.setMaxProjectID(0);
+		User user1 = new User("firstUser@gmail.com","123");
 
-		loginStatus = Server.instance.login("thirdUserNotExisting@gmail.com","any password");
-		assertEquals(Constants.LOGIN_INVALID_EMAIL, loginStatus);
+		assertEquals("firstUser@gmail.com", user1.getEmail());
+		assertEquals("123", user1.getPassword());
+//		assertEquals(1, project1.getId());
+
 	}
 	
 	@Test
-	public void testGetProjects()
+	public void testCreateUserProjectAndProject()
 	{
+		User user1 = new User("firstUser@gmail.com","123");
 		
-		String actualListOfProjectsAsText = Server.instance.getProjects("firstUser@gmail.com");
-		
-		String expectedListOfProjectsAsString = "10:Project1\n";
-		expectedListOfProjectsAsString+="20:Project2\n";
-		expectedListOfProjectsAsString+="30:Project3\n";
+		assertEquals("firstUser@gmail.com", user1.getEmail());
+		assertEquals("123", user1.getPassword());
 
-		assertEquals(expectedListOfProjectsAsString, actualListOfProjectsAsText);
-	}
-	
-	@Test
-	public void testGetTasks()
-	{
-		String actualListOfTasksAsText = Server.instance.getTasks("firstUser@gmail.com","10");
+		IDs.setMaxProjectID(0);
 		
-		String expectedListOfTasksAsString="";
-		expectedListOfTasksAsString+="101::task1 of Project1\n";
-		expectedListOfTasksAsString+="201::task2 of Project1\n";
-		expectedListOfTasksAsString+="301::task3 of Project1\n";
+		Project project1 = new Project("First Project");
+		user1.addProject(project1);
+		
+		Task task1 = new Task("first task");
+		project1.addTask(task1);
+		
 
-		assertEquals(expectedListOfTasksAsString, actualListOfTasksAsText);
+		ArrayList<Project> listOfProjects = user1.getListOfProjects();
+		
+		assertEquals("First Project", listOfProjects.get(0).getName());
 
-		actualListOfTasksAsText = Server.instance.getTasks("firstUser@gmail.com","20");
 		
-		expectedListOfTasksAsString="";
-		expectedListOfTasksAsString+="102::task1 of Project2\n";
-		expectedListOfTasksAsString+="202::task2 of Project2\n";
-		expectedListOfTasksAsString+="302::task3 of Project2\n";
-		expectedListOfTasksAsString+="402::task4 of Project2\n";
-		expectedListOfTasksAsString+="502::task5 of Project2\n";
-		
-		assertEquals(expectedListOfTasksAsString, actualListOfTasksAsText);
+		ArrayList<Task> listOfTasks = listOfProjects.get(0).getListOfTasks();
+		assertEquals("first task", listOfTasks.get(0).getTaskDescription());
+//		assertEquals(1, project1.getId());
 	}
 
 //	@Test

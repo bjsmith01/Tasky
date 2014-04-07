@@ -9,21 +9,47 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>LoginServlet</servlet-name>
 		<servlet-class>edu.wm.cs.cs435.tasky.server.LoginServlet</servlet-class>
 	</servlet>
-	<servlet>
-	    <servlet-name>TasksIndexServlet</servlet-name>
-	    <servlet-class>edu.wm.cs.cs435.tasky.server.TasksIndexServlet</servlet-class>
-	</servlet>
-	
-	
 	<servlet-mapping>
 		<servlet-name>LoginServlet</servlet-name>
 		<url-pattern>/LoginServlet</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+	    <servlet-name>TasksIndexServlet</servlet-name>
+	    <servlet-class>edu.wm.cs.cs435.tasky.server.TasksIndexServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 	    <servlet-name>TasksIndexServlet</servlet-name>
 	    <url-pattern>/TasksIndexServlet</url-pattern>
 	</servlet-mapping>
-
+	
+	<servlet>
+		<servlet-name>SignupServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.SignupServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SignupServlet</servlet-name>
+		<url-pattern>/SignupServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AddProjectServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.AddProjectServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddProjectServlet</servlet-name>
+		<url-pattern>/AddProjectServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GetProjectsServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.GetProjectsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetProjectsServlet</servlet-name>
+		<url-pattern>/GetProjectsServlet</url-pattern>
+	</servlet-mapping>
+	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>

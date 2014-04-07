@@ -10,50 +10,50 @@ import java.net.URLConnection;
 
 /**
  * 
- * This is just a simple client to show how to connect to the server, how to
- * pass an email and password and get a login status from the server
+ * This is just a simple client to show how to connect to the server, and how to
+ * create a new project for a given user
  * 
  * @author Fengfeng (Mia) Liu
  * 
  */
-public class SimpleClientForAccessingLogin
+public class SimpleClientForAddProject
 {
 
 	public static void main(String[] args) 
 	{
 		String email; 
-		String password;
-		String loginStatus;
+		String projectName;
+		String addProjectStatus;
 		
 		//case 1
 		email = "firstUser@gmail.com";
-		password = "12345";
-		loginStatus = login(email,password);
-		System.out.println("For email: "+email+" and password: "+password+" the response was: "+loginStatus);
+		projectName = "FirstProject";
+		addProjectStatus = addProject(email,projectName);
+		System.out.println("For email: "+email+" and projectName: "+projectName+" the response was: "+addProjectStatus);
 		System.out.println("====================================");
 		
 		//case 2
-		email = "firstUserThatDoesNotExit@gmail.com";
-		password = "123";
-		loginStatus = login(email,password);
-		System.out.println("For email: "+email+" and password: "+password+" the response was: "+loginStatus);
+		email = "firstUser@gmail.com";
+		projectName = "SecondProject";
+		addProjectStatus = addProject(email,projectName);
+		System.out.println("For email: "+email+" and projectName: "+projectName+" the response was: "+addProjectStatus);
 		System.out.println("====================================");
 		
 		//case 3
 		email = "firstUser@gmail.com";
-		password = "123InvalidPassword";
-		loginStatus = login(email,password);
-		System.out.println("For email: "+email+" and password: "+password+" the response was: "+loginStatus);
+		projectName = "ThirdProject";
+		addProjectStatus = addProject(email,projectName);
+		System.out.println("For email: "+email+" and projectName: "+projectName+" the response was: "+addProjectStatus);
 		System.out.println("====================================");
 	}
 
-	private static String login(String email, String password)
+	private static String addProject(String email, String projectName)
 	{
 		try
 		{
-			//connect to the servlet for logging in
-//			URL urlToServlet = new URL("http://localhost:8888/LoginServlet");
-			URL urlToServlet = new URL("http://tasky-server.appspot.com/LoginServlet");
+			//connect to the servlet for adding a new project
+//			URL urlToServlet = new URL("http://localhost:8888/AddProjectServlet");
+			URL urlToServlet = new URL("http://tasky-server.appspot.com/AddProjectServlet");
 			URLConnection connection = urlToServlet.openConnection();
 	        connection.setDoOutput(true);
 	        
@@ -61,40 +61,40 @@ public class SimpleClientForAccessingLogin
 			OutputStreamWriter writerToServer = new OutputStreamWriter(connection.getOutputStream());
 
 			//the request is like a "file" with 3 lines:
-			//LOGIN
+			//ADD_PROJECT
 			//email
-			//password
-			writerToServer.write("LOGIN");
+			//projectName
+			writerToServer.write("ADD_PROJECT");
 			writerToServer.write("\n");
 			writerToServer.write(email);
 			writerToServer.write("\n");
-			writerToServer.write(password);
+			writerToServer.write(projectName);
 			writerToServer.write("\n");
 			
 			writerToServer.close();
 			
 			//TODO: replace with logging functionality
 			System.out.println("CLIENT: generated the following request");
-			System.out.println("LOGIN");
+			System.out.println("ADD_PROJECT");
 			System.out.println(email);
-			System.out.println(password);
+			System.out.println(projectName);
 			System.out.println("CLIENT: end of request");
 
 			
 			//get the response from the server, which is very similar to reading from a file
 			BufferedReader readerFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			
-			String loginStatus;
+			String addProjectStatus;
 			
 			
-			//the response will be a string representing the status (LOGIN_SUCCESSFUL, LOGIN_INVALID_USERNAME, or LOGIN_INVALID_PASSWORD)
-			loginStatus = readerFromServer.readLine();
+			//the response will be a string saying if the operation was successful or not 
+			addProjectStatus = readerFromServer.readLine();
 			
 			readerFromServer.close();
 
-			System.out.println("CLIENT: got response from server=" + loginStatus);
+			System.out.println("CLIENT: got response from server=" + addProjectStatus);
 			
-			return loginStatus;
+			return addProjectStatus;
 		}
 		catch (MalformedURLException e)
 		{

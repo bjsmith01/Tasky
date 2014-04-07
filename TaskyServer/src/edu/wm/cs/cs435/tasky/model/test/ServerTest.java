@@ -28,7 +28,7 @@ public class ServerTest
 	@Test
 	public void testLogin()
 	{
-		int loginStatus = Server.instance.login("firstUser@gmail.com","123");
+		String loginStatus = Server.instance.login("firstUser@gmail.com","123");
 		assertEquals(Constants.LOGIN_SUCCESS, loginStatus);
 		
 		loginStatus = Server.instance.login("secondUser@gmail.com","123");
@@ -48,7 +48,7 @@ public class ServerTest
 	public void testGetProjects()
 	{
 		
-		String actualListOfProjectsAsText = Server.instance.getProjects("firstUser@gmail.com");
+		String actualListOfProjectsAsText = Server.instance.getProjects("firstUser@gmail.com").toString();
 		
 		String expectedListOfProjectsAsString = "10:Project1\n";
 		expectedListOfProjectsAsString+="20:Project2\n";
