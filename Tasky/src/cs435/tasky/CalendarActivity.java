@@ -1,10 +1,18 @@
 package cs435.tasky;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,10 +32,15 @@ import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/**
+ * 
+ * @author Jarrett Gabel
+ *
+ */
 public class CalendarActivity extends Activity {
 	
 	ArrayList<Task> taskList = new ArrayList<Task>();
+	ArrayList<TextView> a = new ArrayList<TextView>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +49,90 @@ public class CalendarActivity extends Activity {
 
 		GridView gView = (GridView) findViewById(R.id.calView);
 		loadGridViewData(gView);
+		
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy); 
+
+		String email = "firstNewUser@gmail.com";
+		String password = "12345";
+		//String signupStatus = signup(email,password);
+		
+		//Log.v("CalTest", "Signup attempt = " + signupStatus);
+		
+	}
+	
+	/**
+	 * Strictly testing purposes only; this method will be removed.
+	 * @param email
+	 * @param password
+	 * @return
+	 */
+	private String signup(String email, String password)
+	{
+		try
+		{
+			//connect to the servlet for signup command
+//			URL urlToServlet = new URL("http://localhost:8888/SignupServlet");
+			URL urlToServlet = new URL("http://tasky-server.appspot.com/SignupServlet");
+			URLConnection connection = urlToServlet.openConnection();
+	        connection.setDoOutput(true);
+
+			//create the request to the server
+			OutputStreamWriter writerToServer = new OutputStreamWriter(connection.getOutputStream());
+
+			//the request is like a "file" with 3 lines:
+			//SIGNUP
+			//email
+			//password
+			writerToServer.write("SIGNUP");
+			writerToServer.write("\n");
+			writerToServer.write(email);
+			writerToServer.write("\n");
+			writerToServer.write(password);
+			writerToServer.write("\n");
+
+
+			writerToServer.close();
+
+
+			//TODO: replace with logging functionality
+			System.out.println("CLIENT: generated the following request");
+			System.out.println("SIGNUP");
+			System.out.println(email);
+			System.out.println(password);
+			System.out.println("CLIENT: end of request");
+
+			//get the response from the server, which is very similar to reading from a file
+			BufferedReader readerFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+			String signupStatus;
+
+			//the response will be a String
+			signupStatus = readerFromServer.readLine();
+
+
+			readerFromServer.close();
+
+			System.out.println("CLIENT: got response from server=" + signupStatus);
+
+
+			return signupStatus;
+		}
+		catch (MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return "-1";
 	}
 	
 	private void loadGridViewData(GridView g)
 	{
 		Log.v("CalTest", "starting load");
-		ArrayList<TextView> a = new ArrayList<TextView>();
-		//ArrayAdapter<TextView> a = new ArrayAdapter<TextView>(this, android.R.layout.simple_list_item_1);
+		
 		Log.v("CalTest", "creating textview and setting text");
 		TextView tView = new TextView(this);
 		tView.setText("S"); a.add(tView);
@@ -119,39 +209,43 @@ public class CalendarActivity extends Activity {
 		
 		}
 		
-		
 		return false;
 		
 	}
-	/*
+	/**
 	 * The goal of the gridView is to tell the user how many tasks are due on each day
 	 * Thus, addToView will increment the counter of tasks due on each day whenever
 	 * tasks are added to the Calendar's Task List.
+	 * @param t a new task to be added to the gridview
 	 */
 	private void addToView(Task t)
 	{
-		ListAdapter a = ((GridView) (findViewById(R.id.calView))).getAdapter();
-		
-		for (int x = 0; x < a.getCount(); x++)
+		String dayToCheck = String.valueOf(t.getDueDate()
+				.get(GregorianCalendar.DAY_OF_MONTH));
+		Log.v("CalTest", dayToCheck);
+		for (int x = 0; x < a.size(); x++)
 		{
-			TextView text = (TextView) a.getItem(x);
+			TextView text = (TextView) a.get(x);
 			String aText[] = text.getText().toString().split("\n");
 			
-			if (aText[0] == String.valueOf(t.getDueDate()
-					.get(GregorianCalendar.DAY_OF_MONTH)))
+			if (aText[0] == dayToCheck)
 					{
-						if (aText[1] == null) //no tasks are due on this day
+						if (aText.length == 1) //no tasks are due on this day
 						{
-							text.setText((aText[0] + "\n 1 Task").toString());
+							a.get(x).setText((aText[0] + "\n 1 Task").toString());
 						}
 						else //at least 1 task is due on this day
 						{
-							text.setText(aText[0] + "\n" + String.valueOf
+							a.get(x).setText(aText[0] + "\n" + String.valueOf
 									(Integer.valueOf(aText[1]) + 1) + "Tasks");
 						}
 
 					}
 		}
+		TextAdapter tA = new TextAdapter(this, a);
+		GridView g = (GridView) findViewById(R.id.calView);
+		g.setAdapter(tA);
+		
 	}
 	
 	@Override
@@ -160,7 +254,11 @@ public class CalendarActivity extends Activity {
 		getMenuInflater().inflate(R.menu.calendar, menu);
 		return true;
 	}
-
+	/**
+	 * 
+	 * @author Jarrett Gabel
+	 *
+	 */
 	private class TextAdapter extends BaseAdapter 
 	{
 
@@ -183,7 +281,7 @@ public class CalendarActivity extends Activity {
 		@Override
 		public Object getItem(int arg0) {
 			// TODO Auto-generated method stub
-			return textList.get(arg0).getText();
+			return textList.get(arg0);
 		}
 
 		@Override
@@ -200,7 +298,12 @@ public class CalendarActivity extends Activity {
 		@Override
 		public View getView(int arg0, View arg1, ViewGroup arg2) {
 			// TODO Auto-generated method stub
-			return null;
+			TextView newText = new TextView(getBaseContext());
+			newText.setTextColor(0xFF000000);
+			newText.setHeight(50);
+			newText.setTextSize(24);
+			newText.setText(textList.get(arg0).getText());
+			return newText;
 		}
 		
 	}
