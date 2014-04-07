@@ -52,12 +52,12 @@ public class CalendarActivity extends Activity {
 		
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy); 
-
-		String email = "firstNewUser@gmail.com";
-		String password = "12345";
-		//String signupStatus = signup(email,password);
 		
-		//Log.v("CalTest", "Signup attempt = " + signupStatus);
+		GlobalTaskList tasks = (GlobalTaskList) getApplication();
+		if (tasks.getList().size() == 0)
+		{
+			getTaskDataFromServer(tasks);
+		}
 		
 	}
 	
@@ -189,6 +189,7 @@ public class CalendarActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		Intent i;
 		switch (item.getItemId()) {
 		
 		case R.id.calToDoList:
@@ -202,8 +203,18 @@ public class CalendarActivity extends Activity {
 		case R.id.calAddTask:
 			Task t = new Task("test", "Description", new GregorianCalendar(2014, 4, 5));
 			taskList.add(t);
+			GlobalTaskList tL = (GlobalTaskList) getApplication();
+			tL.getList().add(t);
 			addToView(t);
+			addToServer(t);
 			break;
+		case R.id.calEdit:
+			i = new Intent(this, EditTaskActivity.class);
+			i.putExtra("RETURN", Constants.CALENDAR);
+			startActivity(i);
+		case R.id.calViewAll:
+			i = new Intent(this, TaskViewActivity.class);
+			startActivity(i);
 		default:
 			return super.onOptionsItemSelected(item);
 		
@@ -246,6 +257,133 @@ public class CalendarActivity extends Activity {
 		GridView g = (GridView) findViewById(R.id.calView);
 		g.setAdapter(tA);
 		
+	}
+	
+	private void addToServer(Task t)
+	{
+		try
+		{
+			//connect to the servlet for adding a new project
+//			URL urlToServlet = new URL("http://localhost:8888/AddProjectServlet");
+			URL urlToServlet = new URL("http://tasky-server.appspot.com/AddProjectServlet");
+			URLConnection connection = urlToServlet.openConnection();
+	        connection.setDoOutput(true);
+
+
+			//create the request to the server
+			OutputStreamWriter writerToServer = new OutputStreamWriter(connection.getOutputStream());
+
+
+			//the request is like a "file" with 3 lines:
+			//ADD_PROJECT
+			//email
+			//projectName
+			writerToServer.write("ADD_PROJECT");
+			writerToServer.write("\n");
+			writerToServer.write("firstUser@gmail.com");
+			writerToServer.write("\n");
+			writerToServer.write(t.getName());
+			writerToServer.write("\n");
+
+
+			writerToServer.close();
+
+
+			//TODO: replace with logging functionality
+			System.out.println("CLIENT: generated the following request");
+			System.out.println("ADD_PROJECT");
+			System.out.println("firstUser@gmail.com");
+			System.out.println(t.getName());
+			System.out.println("CLIENT: end of request");
+
+			//get the response from the server, which is very similar to reading from a file
+			BufferedReader readerFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+			String addProjectStatus;
+
+			//the response will be a string saying if the operation was successful or not 
+			addProjectStatus = readerFromServer.readLine();
+
+			readerFromServer.close();
+
+			System.out.println("CLIENT: got response from server=" + addProjectStatus);
+		}
+		catch (MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+	
+	private void getTaskDataFromServer(GlobalTaskList t)
+	{
+		try
+		{
+			//connect to the servlet for getting all the projects for a user in
+//			URL urlToServlet = new URL("http://localhost:8888/GetProjectsServlet");
+			URL urlToServlet = new URL("http://tasky-server.appspot.com/GetProjectsServlet");
+			URLConnection connection = urlToServlet.openConnection();
+	        connection.setDoOutput(true);
+
+
+			//create the request to the server
+			OutputStreamWriter writerToServer = new OutputStreamWriter(connection.getOutputStream());
+
+
+			//the request is like a "file" with 2 lines:
+			//GET_PROJECTS
+			//email
+			writerToServer.write("GET_PROJECTS");
+			writerToServer.write("\n");
+			writerToServer.write("firstUser@gmail.com");
+			writerToServer.write("\n");
+
+
+			writerToServer.close();
+
+
+			//get the response from the server, which is very similar to reading from a file
+			BufferedReader readerFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+
+			String responseFromServerAsString="";
+			ArrayList<Task> listOfProjects=new ArrayList<Task>();
+			int numberOfProjects=Integer.parseInt(readerFromServer.readLine());
+			for (int i = 0; i < numberOfProjects; i++)
+			{
+				int projectID = Integer.parseInt(readerFromServer.readLine());
+				String projectName = readerFromServer.readLine();
+
+
+				Task project = new Task(projectName, "NA");
+				listOfProjects.add(project);
+
+
+				responseFromServerAsString+=projectID+"\t"+projectName+"\n";
+			}
+
+
+			readerFromServer.close();
+
+			t.setList(listOfProjects);
+			
+
+			System.out.println("CLIENT: got response from server=" + responseFromServerAsString);
+
+		}
+		catch (MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 	
 	@Override
