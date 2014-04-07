@@ -27,6 +27,13 @@ public class Project
 		this.listOfTasks=new ArrayList<>();
 	}
 
+	public Project(int projectID, String projectName)
+	{
+		this.id=projectID;
+		this.setName(projectName);
+		this.listOfTasks=new ArrayList<>();
+	}
+
 	public String getName()
 	{
 		return name;
@@ -52,4 +59,9 @@ public class Project
 		return id;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Project[id="+id+", name="+name+"]";
+	}
 }

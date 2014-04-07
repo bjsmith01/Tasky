@@ -48,7 +48,7 @@ public class ServerTest
 	public void testGetProjects()
 	{
 		
-		String actualListOfProjectsAsText = Server.instance.getProjects("firstUser@gmail.com");
+		String actualListOfProjectsAsText = Server.instance.getProjects("firstUser@gmail.com").toString();
 		
 		String expectedListOfProjectsAsString = "10:Project1\n";
 		expectedListOfProjectsAsString+="20:Project2\n";

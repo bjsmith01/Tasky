@@ -83,48 +83,12 @@ public class Server implements ITaskyServer
 	 * Gets the list of projects associated with a specific user
 	 * 
 	 * @param email, representing the username
-	 * @return a textual representation of the list of projects
+	 * @return a list of projects
 	 */
-	public String getProjects(String email)
+	public ArrayList<Project> getProjects(String email)
 	{
-		//this code should be replaced with an actual database
-		
-		Hashtable<String, String> testDatabaseProjects=new Hashtable<>();
-
-		//simulate loading from a database
-		try
-		{
-			BufferedReader br;
-			br = new BufferedReader(new FileReader("databaseTextFiles/listOfProjects_"+email+".txt"));
-			//each line contains the "projectID\tprojectName"
-			String project;
-			while ((project = br.readLine()) != null)
-			{
-				String[] splittedProject = project.split("\t");
-				
-				testDatabaseProjects.put(splittedProject[0], splittedProject[1]);
-			}
-			br.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		
-		StringBuffer listOfProjects=new StringBuffer();
-		
-		Enumeration<String> keys = testDatabaseProjects.keys();
-		
-		while (keys.hasMoreElements())
-		{
-			String currentProjectID = (String) keys.nextElement();
-		
-			listOfProjects.append(currentProjectID+":"+testDatabaseProjects.get(currentProjectID));
-			listOfProjects.append("\n");
-		}
-		
-		return listOfProjects.toString();
+		//get all the projects associated with a user from the database
+		return databaseInstance.getProjects(email);
 	}
 	
 	/**
@@ -173,8 +137,14 @@ public class Server implements ITaskyServer
 	@Override
 	public String addProject(String email, String projectName)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//create a new project and assign it a unique ID
+		Project project = new Project(projectName);
+		
+		
+		
+		//store the project in the database
+		return databaseInstance.addProject(email,project);
+
 	}
 
 	@Override

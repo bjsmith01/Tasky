@@ -1,5 +1,7 @@
 package edu.wm.cs.cs435.tasky.model;
 
+import java.util.ArrayList;
+
 /**
  * This interface stores the commands that a client can have access to.
  * This interface defines the operations between client and server.
@@ -9,6 +11,12 @@ package edu.wm.cs.cs435.tasky.model;
  */
 public interface ITaskyServer
 {
+	//constants defining the "operations" between client and server
+	public static final String SIGNUP_OPERATION = "SIGNUP";
+	public static final String LOGIN_OPERATION = "LOGIN";
+	public static final String ADD_PROJECT_OPERATION = "ADD_PROJECT";
+	public static final String GET_PROJECTS_OPERATION = "GET_PROJECTS";
+	
 	public static final String LOGIN_SUCCESSFUL="LOGIN_SUCCESSFUL";
 	public static final String LOGIN_INVALID_USERNAME="LOGIN_INVALID_USERNAME";
 	public static final String LOGIN_INVALID_PASSWORD="LOGIN_INVALID_PASSWORD";
@@ -16,6 +24,12 @@ public interface ITaskyServer
 	public static final String NEW_USER_ADDED_TO_DATABASE="NEW_USER_ADDED_TO_DATABASE";
 //	public static final int ERROR_ADDING_USER_TO_DATABASE=4;
 
+	public static final String ADD_PROJECT_SUCCESSFUL="ADD_PROJECT_SUCCESSFUL";
+	public static final String ADD_PROJECT_FAILED="ADD_PROJECT_FAILED";
+	
+	
+	
+	
 	/**
 	 * Create a new user with the given credentials
 	 * 
@@ -46,9 +60,9 @@ public interface ITaskyServer
 	 * Gets the list of projects associated with a specific user
 	 * 
 	 * @param email, representing the username
-	 * @return a textual representation of the list of projects
+	 * @return a list of projects
 	 */
-	public String getProjects(String email);
+	public ArrayList<Project> getProjects(String email);
 	
 	/**
 	 * Add a new project for the exiting user

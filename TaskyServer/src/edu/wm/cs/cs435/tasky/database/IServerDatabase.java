@@ -1,5 +1,9 @@
 package edu.wm.cs.cs435.tasky.database;
 
+import java.util.ArrayList;
+
+import edu.wm.cs.cs435.tasky.model.Project;
+
 /**
  * This interface defines the operations between a server and a database.
  * 
@@ -43,5 +47,22 @@ public interface IServerDatabase
 	 * @return LOGIN_SUCCESSFUL, LOGIN_INVALID_USERNAME, or LOGIN_INVALID_PASSWORD
 	 */
 	String login(String email, String password);
+
+	/**
+	 * Adds a new project to the database
+	 * @param email	representing the username
+	 * @param project
+	 * @return ADD_PROJECT_SUCCESSFUL or ADD_PROJECT_FAILED
+	 * 
+	 */
+	String addProject(String email, Project project);
+
+	/**
+	 * Gets the list of projects associated with a specific user
+	 * 
+	 * @param email, representing the username
+	 * @return a list of projects
+	 */
+	ArrayList<Project> getProjects(String email);
 
 }

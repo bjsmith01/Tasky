@@ -25,6 +25,7 @@
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String projectID = request.getParameter("projectID");
+		String projectName = request.getParameter("projectName");
 		String functionType = request.getParameter("functionType");
 		String responseFromServer = "N/A";
 		
@@ -37,6 +38,8 @@
 			password="123";
 		if (projectID==null)
 			projectID="10";
+		if (projectName==null)
+			projectID="FirstProject";
 	%>
 	
 	<%
@@ -47,9 +50,9 @@
 			responseFromServer = loginStatus;
 		}
 		else
-			if (functionType.equals("testGetProjects"))
+			if (functionType.equals("getProjects"))
 			{
-				String actualListOfProjectsAsText = Server.instance.getProjects(email);
+				String actualListOfProjectsAsText = Server.instance.getProjects(email).toString();
 				responseFromServer=actualListOfProjectsAsText;
 			}
 			else
@@ -71,6 +74,12 @@
 							String signupResponse=Server.instance.signup(email, password);
 							responseFromServer = "" + signupResponse;
 						}
+						else
+							if (functionType.equals("addProject"))
+							{
+								String addProjectResponse=Server.instance.addProject(email, projectName);
+								responseFromServer = addProjectResponse;
+							}
 	%>
 	
 	<h1>Values that were submitted</h1>
@@ -86,7 +95,7 @@
 	<%
 		}
 		else
-			if (functionType.equals("testGetProjects"))
+			if (functionType.equals("getProjects"))
 			{
 	%>
 			<p>Submitted email: <%=email%></p> 
@@ -115,6 +124,14 @@
 							<p>Submitted password: <%=password%></p> 
 							<%
 						}
+						else
+							if (functionType.equals("addProject"))
+							{
+								%>
+								<p>Submitted email: <%=email%></p> 
+								<p>Submitted project Name: <%=projectName%></p> 
+								<%
+							}
 						
 	
 	%>
@@ -124,6 +141,23 @@
 	</p> 
 	
 	<hr/>
+	
+	<h3>Test add project</h3>
+	<form action="testAccessToTaskyDatabase.jsp" method="get">
+		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
+		Project Name: <input type="text" name="projectName" value="<%=projectName%>"><br/>
+		<input type="hidden" name="functionType" value="addProject">
+
+		<input type="submit" value="Access Database & Test addProject" >
+	</form>
+	
+	<h3>Test get projects</h3>
+	<form action="testAccessToTaskyDatabase.jsp" method="get">
+		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
+		<input type="hidden" name="functionType" value="getProjects">
+
+		<input type="submit" value="Access Database & Test getProjects" >
+	</form>
 	
 	<h3>Test isEmailAvailableForSignup</h3>
 	<form action="testAccessToTaskyDatabase.jsp" method="get">
@@ -169,6 +203,8 @@
 
 		<input type="submit" value="Access Database & Test Get List of Tasks" >
 	</form>
+
+
 
   </body>
 </html>
