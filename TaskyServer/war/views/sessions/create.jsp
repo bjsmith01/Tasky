@@ -27,6 +27,8 @@
 
 <%@ include file="/views/header.jsp" %>
 
+
+
 <!--  Login logic -->
 
 <%
@@ -36,12 +38,13 @@
 	email = request.getParameter("email");
 	password = request.getParameter("password");
 	
-	int loginStatus = Server.login(email, password);
 	
-	if (loginStatus == 0) {
+	String loginStatus = Server.instance.login(email, password);
+	System.out.println(loginStatus); 
+	
+	if (loginStatus.equals("LOGIN_SUCCESS")) {
 		session.setAttribute("email", email); 
 	    String redirectURL = "/views/users/tasks/index.jsp";
-	    response.addHeader("email", email);
 	    response.sendRedirect(redirectURL);
 	}
 %>
@@ -62,7 +65,6 @@
 		</div>
 	</form>
 </div>
-
 
 <%@ include file="/views/footer.jsp" %>
 </div>

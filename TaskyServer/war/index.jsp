@@ -15,8 +15,11 @@
 
 <div class="col-md-8 col-md-offset-2 text-center jumbotron">
 	<h1>Welcome to Tasky!</h1>
-	<p>In order to use Tasky, you should log in first.</p>
-	<a class="btn btn-lg btn-success" href="./views/sessions/create.jsp" >Log In!</a>
+	<p>In order to use Tasky, you should log in or sign up first.</p>
+	<div class="btn-group btn-group-lg">
+		<a class="btn btn-default" href="/views/sessions/create.jsp" >Log In!</a>
+		<a class="btn btn-default" href="/views/users/create.jsp">Sign Up!</a>
+	</div>
 </div>
 
 
