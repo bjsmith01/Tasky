@@ -28,31 +28,10 @@
 
 <%@ include file="/views/header.jsp" %>
 
-<!--  Login logic -->
-
-<%)
-	String email = ""; 
-	String password = ""; 
-	
-	email = request.getParameter("email");
-	password = request.getParameter("password");
-	
-	System.out.println(password);	
-	
-	String signupStatus = Server.instance.signup(email, password);
-	
-	if (signupStatus.equals(IServerDatabase.NEW_USER_ADDED_TO_DATABASE)) {
-		session.setAttribute("email", email); 
-	    String redirectURL = "/views/users/tasks/index.jsp";
-	    response.addHeader("email", email);
-	    response.sendRedirect(redirectURL);
-	}
-%>
-<!--  End login logic -->
 
 <div class="col-md-8 col-md-offset-2">
-<h2>Login</h2>
-	<form action="create.jsp" method="get" role="form">
+<h2>Sign Up</h2>
+	<form action="/WebSignupServlet" method="post" role="form">
 		<div class="form-group">
 			<label for="email1">Email:</label>
 			<input class="form-control" type="text"  id="email1" name="email"> <br />
