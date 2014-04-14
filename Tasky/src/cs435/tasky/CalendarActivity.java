@@ -24,12 +24,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.NumberPicker;
+import android.widget.NumberPicker.OnValueChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 /**
@@ -46,19 +51,60 @@ public class CalendarActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calendar);
-
-		GridView gView = (GridView) findViewById(R.id.calView);
-		loadGridViewData(gView);
 		
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy); 
 		
 		GlobalTaskList tasks = (GlobalTaskList) getApplication();
+		Log.v("CalTest", "checking tasks size");
 		if (tasks.getList().size() == 0)
 		{
-			getTaskDataFromServer(tasks);
+			//getTaskDataFromServer(tasks);
+			
 		}
 		
+		Spinner s = (Spinner) findViewById(R.id.calMonths);
+		ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this, R.array.monthArray, android.R.layout.simple_dropdown_item_1line);
+		a.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+		s.setAdapter(a);
+		
+		s.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View arg1,
+					int pos, long arg3) {
+				GridView gView = (GridView) findViewById(R.id.calView);
+				NumberPicker year = (NumberPicker) findViewById(R.id.calYear);
+				loadGridViewData(gView, pos, year.getValue());
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// do nothing
+				
+			}
+			
+		});
+		
+		NumberPicker year = (NumberPicker) findViewById(R.id.calYear);
+		
+		year.setMaxValue(3000);
+		year.setValue(2014);
+		year.setMinValue(1);
+		
+		year.setOnValueChangedListener(new OnValueChangeListener(){
+
+			@Override
+			public void onValueChange(NumberPicker arg0, int oldVal, int newVal) {
+				// TODO Auto-generated method stub
+				GridView gView = (GridView) findViewById(R.id.calView);
+				Spinner month = (Spinner) findViewById(R.id.calMonths);
+				loadGridViewData(gView, month.getSelectedItemPosition(), newVal);
+			}
+			
+		});
+		
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	}
 	
 	/**
@@ -129,10 +175,10 @@ public class CalendarActivity extends Activity {
 		return "-1";
 	}
 	
-	private void loadGridViewData(GridView g)
+	private void loadGridViewData(GridView g, int monthValue, int yearValue)
 	{
-		Log.v("CalTest", "starting load");
-		
+		GregorianCalendar cal = new GregorianCalendar(yearValue, monthValue, 1);
+		a.clear();
 		Log.v("CalTest", "creating textview and setting text");
 		TextView tView = new TextView(this);
 		tView.setText("S"); a.add(tView);
@@ -155,7 +201,13 @@ public class CalendarActivity extends Activity {
 		tView = new TextView(this);
 		tView.setText("S"); a.add(tView);
 		
-		for (int x = 1; x < 32; x++)
+		for (int x = 1; x < cal.get(GregorianCalendar.DAY_OF_WEEK); x++)
+		{
+			tView = new TextView(this);
+			tView.setText(""); a.add(tView);
+		}
+		
+		for (int x = 1; x < cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH) + 1; x++)
 		{
 			tView = new TextView(this);
 			tView.setText(String.valueOf(x)); a.add(tView);
@@ -233,22 +285,28 @@ public class CalendarActivity extends Activity {
 	{
 		String dayToCheck = String.valueOf(t.getDueDate()
 				.get(GregorianCalendar.DAY_OF_MONTH));
-		Log.v("CalTest", dayToCheck);
 		for (int x = 0; x < a.size(); x++)
 		{
 			TextView text = (TextView) a.get(x);
+			Log.v("CalTest", text.getText().toString());
 			String aText[] = text.getText().toString().split("\n");
-			
-			if (aText[0] == dayToCheck)
+		
+			String val1 = aText[0].replaceAll("[\\D]", "");
+			String val2 = dayToCheck.replaceAll("[\\D]", "");
+			Log.v("CalTest", "Val1: " + val1 + " Val2: " + val2);
+			Log.v("CalTest", "Val1: " + val1.length() + " Val2: " + val2.length());
+			if (val1.equals(val2))
 					{
 						if (aText.length == 1) //no tasks are due on this day
 						{
-							a.get(x).setText((aText[0] + "\n 1 Task").toString());
+							a.get(x).setText((aText[0] + "\n1 Task").toString());
 						}
 						else //at least 1 task is due on this day
 						{
+							String taskCount[] = aText[1].split(" ");
+							
 							a.get(x).setText(aText[0] + "\n" + String.valueOf
-									(Integer.valueOf(aText[1]) + 1) + "Tasks");
+									(Integer.valueOf(taskCount[0]) + 1) + " Tasks");
 						}
 
 					}
@@ -438,8 +496,8 @@ public class CalendarActivity extends Activity {
 			// TODO Auto-generated method stub
 			TextView newText = new TextView(getBaseContext());
 			newText.setTextColor(0xFF000000);
-			newText.setHeight(50);
-			newText.setTextSize(24);
+			newText.setHeight(100);
+			newText.setTextSize(20);
 			newText.setText(textList.get(arg0).getText());
 			return newText;
 		}

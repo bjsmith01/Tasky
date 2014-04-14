@@ -7,12 +7,27 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CalendarActivity" >
+    
 
-    <TextView
+
+
+    <NumberPicker
+        android:id="@+id/calYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/calDood"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
     
+        <Spinner 
+        android:id="@+id/calMonths"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/calYear"
+        />
+        
+            
     <GridView 
         android:id="@+id/calView"
         android:layout_width="wrap_content"
@@ -20,8 +35,8 @@
         android:columnWidth="90dp"
         android:numColumns="7"
         android:stretchMode="columnWidth"
+        android:layout_below="@id/calYear"
         
-        />
-    
+        />"
 
 </RelativeLayout>
