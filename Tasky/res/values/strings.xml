@@ -13,5 +13,6 @@
     <string name="title_activity_tvsearch">TVSearchActivity</string>
     <string name="hello_world">TV Search</string>
     <string name="title_activity_calendar">Calendar</string>
+    <string name="tv_search">Search For Shows</string>
 
 </resources>

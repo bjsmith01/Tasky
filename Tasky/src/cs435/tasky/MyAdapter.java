@@ -35,6 +35,22 @@ public class MyAdapter extends BaseExpandableListAdapter {
 		}
 	}
 
+	public MyAdapter(Context con, ArrayList<String[]> showList) {
+		// TODO Auto-generated constructor stub
+		context=con;
+		
+		String[] show=new String[2];
+		String[] temp={""};
+		for (int i=0; i< showList.size();i++){
+			show=showList.get(i);
+			parentList.add(show[0]);
+			temp[0]=show[1];
+			childList.add(temp);
+			
+			
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see android.widget.ExpandableListAdapter#getChild(int, int)
 	 */
@@ -127,6 +143,25 @@ public class MyAdapter extends BaseExpandableListAdapter {
 			childList.add(temp);
 		}
 		
+	}
+	
+	public void changeAdapter(ArrayList<String[]> showList){
+		
+		parentList.clear();
+		childList.clear();
+		
+		String[] show=new String[2];
+		
+		for (int i=0; i< showList.size();i++){
+			String[] temp=new String[1];
+			show=showList.get(i);
+			parentList.add(show[0]);
+			temp[0]=show[1];
+			if (temp[0]==""){
+				temp[0]="No description available";
+			}
+			childList.add(temp);
+		}
 	}
 
 	/* (non-Javadoc)
