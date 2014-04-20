@@ -6,6 +6,7 @@
     tools:context=".ToDoListActivity"
     tools:ignore="MergeRootFrame" >
 
+
     <ExpandableListView
         android:id="@+id/expandableListView1"
         android:layout_width="match_parent"
@@ -13,5 +14,5 @@
         android:groupIndicator="@null" >
     </ExpandableListView>
 
-</FrameLayout>
 
+</FrameLayout>
