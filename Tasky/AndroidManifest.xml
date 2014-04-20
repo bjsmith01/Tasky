@@ -35,10 +35,6 @@
             android:label="@string/title_activity_tvsearch" >
         </activity>
         <activity
-            android:name="cs435.tasky.Calendar"
-            android:label="@string/title_activity_calendar" >
-        </activity>
-        <activity
             android:name="cs435.tasky.CalendarActivity"
             android:label="@string/title_activity_calendar" >
         </activity>
@@ -49,6 +45,19 @@
         <activity
             android:name="cs435.tasky.EditTaskActivity"
             android:label="@string/title_activity_edit_task" >
+        </activity>
+        <activity
+            android:name="cs435.tasky.LogInActivity"
+            android:label="@string/title_activity_log_in" >
+
+        </activity>
+        <activity
+            android:name="cs435.tasky.NewUserActivity"
+            android:label="@string/title_activity_new_user" >
+        </activity>
+        <activity
+            android:name="cs435.tasky.AddTaskActivity"
+            android:label="@string/title_activity_add_task" >
         </activity>
     </application>
 
