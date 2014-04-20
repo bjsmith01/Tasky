@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,31 +27,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-
 public class ToDoListActivity extends FragmentActivity implements
 		ActionBar.OnNavigationListener {
-
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * current dropdown position.
 	 */
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-
-
+	
 	Folder folder= new Folder("Personal");
 	MyAdapter myAdapter;
 	ExpandableListView exv;
 	ArrayList<String> savedFolders= new ArrayList<String>();
-
-
-
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_to_do_list);
-
 
 		/*
 		//the names of the saved folders are stored in saved_folders.txt in
@@ -60,7 +53,6 @@ public class ToDoListActivity extends FragmentActivity implements
 		try{
 			
 			FileInputStream fis= openFileInput("saved_folders.txt");
-
 
 			//store the names of the folders in an array 
 			int ch;
@@ -77,7 +69,6 @@ public class ToDoListActivity extends FragmentActivity implements
 			fos2.write(null);
 			fos2.close();
 		}
-
 
 			
         try{
@@ -107,7 +98,6 @@ public class ToDoListActivity extends FragmentActivity implements
 	         obOut.close();
 	         fileOut.close();
 
-
 	        }
 	        catch (Exception ex2){
 	        	Log.e("ToDoListActivity",ex2.getMessage());
@@ -115,17 +105,14 @@ public class ToDoListActivity extends FragmentActivity implements
 			
 		}
 		*/
-
-
+		
 		//folder=new Folder("Personal");
 		//folder.AddTask(new Task("Test","Testing App \n and stuff \n and stuff",new GregorianCalendar(12,12,2014)));
 		//folder.AddTask(new Task("Test2","Testing App \n and stuff \n and stuff",new GregorianCalendar(12,12,2014)));
 		myAdapter=new MyAdapter(this,folder);
-
-
+		
 		exv= (ExpandableListView) findViewById(R.id.expandableListView1);
 		exv.setAdapter(myAdapter);
-
 
 //		// Set up the action bar to show a dropdown list.
 //		final ActionBar actionBar = getActionBar();
@@ -142,7 +129,6 @@ public class ToDoListActivity extends FragmentActivity implements
 //								getString(R.string.folders), }), this);
 	}
 
-
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		// Restore the previously serialized current dropdown position.
@@ -152,14 +138,12 @@ public class ToDoListActivity extends FragmentActivity implements
 		}
 	}
 
-
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		// Serialize the current dropdown position.
 		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
 				.getSelectedNavigationIndex());
 	}
-
 
 	//determines what shows up when menu button is pressed.
 	//looks at to_do_list.xml and populates the menu
@@ -169,8 +153,7 @@ public class ToDoListActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.to_do_list, menu);
 		return true;
 	}
-
-
+	
 	//determines what happens when an item in the menu is selected
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -185,23 +168,18 @@ public class ToDoListActivity extends FragmentActivity implements
 	        startActivity(calStart);
 	        Log.v("CalTest", "Starting Calendar");
 	        return true;
-
-
-
-
+	        
+	        
 	    case R.id.add_task:
 	        Log.i("In Menu","Add Task Selected");
 	        Task task=new Task("Test Add","Testing App \n and stuff \n and stuff",new GregorianCalendar(12,12,2014));
 	        folder.AddTask(task);
 	        myAdapter.changeAdapter(folder);
 	        exv.setAdapter(myAdapter);
-
-
+	        
 	        //for creating  a file
-
-
-
-
+	        
+	        
 	        return true;
 	    case R.id.tv_search:
 	        Log.i("In Menu","TV Search Selected");
@@ -212,8 +190,7 @@ public class ToDoListActivity extends FragmentActivity implements
 	        return super.onOptionsItemSelected(item);
 	    }
 	}
-
-
+	
 	//determines what happens when an item in the action bar is pressed
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
@@ -227,8 +204,7 @@ public class ToDoListActivity extends FragmentActivity implements
 				.replace(R.id.container, fragment).commit();
 		return true;
 	}
-
-
+	
 	/*
 	 * Creates a bundle object that will contain all currently available tasks.
 	 * Allows for task data to be transferred to another task.
@@ -259,17 +235,13 @@ public class ToDoListActivity extends FragmentActivity implements
 									.get(Calendar.DAY_OF_MONTH));
 			dataBundle.putString("TASK" + x, dataToSave);
 
-
 		}
 		dataBundle.putInt("COUNT", folder.TaskList.size());
-
-
+		
 		Log.v("CalTesting", "Leaving Bundler");
-
-
+		
 		return dataBundle;
 	}
-
 
 	/**
 	 * A dummy fragment representing a section of the app, but that simply
@@ -282,10 +254,8 @@ public class ToDoListActivity extends FragmentActivity implements
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
-
 		public DummySectionFragment() {
 		}
-
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -299,6 +269,5 @@ public class ToDoListActivity extends FragmentActivity implements
 			return rootView;
 		}
 	}
-
 
 }
