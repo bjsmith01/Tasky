@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/LoginServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>SignupServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.SignupServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SignupServlet</servlet-name>
+		<url-pattern>/SignupServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AddProjectServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.AddProjectServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddProjectServlet</servlet-name>
+		<url-pattern>/AddProjectServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GetProjectsServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.GetProjectsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetProjectsServlet</servlet-name>
+		<url-pattern>/GetProjectsServlet</url-pattern>
+	</servlet-mapping>
+	
+	<welcome-file-list>
+		<welcome-file>testAccessToTaskyDatabase.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>
