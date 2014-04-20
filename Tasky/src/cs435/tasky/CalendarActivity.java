@@ -8,37 +8,25 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
-
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListAdapter;
-import android.widget.NumberPicker;
-import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 /**
  * 
  * @author Jarrett Gabel
@@ -78,7 +66,7 @@ public class CalendarActivity extends Activity {
 					int pos, long id) {
 				GridView gView = (GridView) findViewById(R.id.calView);
 				Spinner year = (Spinner) findViewById(R.id.calYear);
-				loadGridViewData(gView, pos, Integer.valueOf(year.getSelectedItem().toString()));
+				loadGridViewData(gView, pos + 1, Integer.valueOf(year.getSelectedItem().toString()));
 			}
 
 			@Override
@@ -106,7 +94,7 @@ public class CalendarActivity extends Activity {
 				GridView gView = (GridView) findViewById(R.id.calView);
 				Spinner month = (Spinner) findViewById(R.id.calMonths);
 				TextView t = (TextView) item;
-				loadGridViewData(gView, month.getSelectedItemPosition(), 
+				loadGridViewData(gView, month.getSelectedItemPosition() + 1, 
 						Integer.valueOf(t.getText().toString()));
 				// TODO Auto-generated method stub
 				
@@ -122,17 +110,14 @@ public class CalendarActivity extends Activity {
 
 		GridView g = (GridView) findViewById(R.id.calView);
 		Spinner month = (Spinner) findViewById(R.id.calMonths);
-		loadGridViewData(g, month.getSelectedItemPosition(), year.getSelectedItemPosition() + 2000);
-		
-		for (int x = 0; x < tasks.getList().size(); x++)
-		{
-			addToView(tasks.getList().get(x));
-		}
+		loadGridViewData(g, month.getSelectedItemPosition() + 1, year.getSelectedItemPosition() + 2000);
+		Log.v("CalTest", "a element count = " + String.valueOf(a.size()));
+
 	}
 
 	private void loadGridViewData(GridView g, int monthValue, int yearValue)
 	{
-		GregorianCalendar cal = new GregorianCalendar(yearValue, monthValue, 1);
+		GregorianCalendar cal = new GregorianCalendar(yearValue, monthValue - 1, 1);
 		a.clear();
 		TextView tView = new TextView(this);
 		tView.setText("S"); a.add(tView);
@@ -155,15 +140,49 @@ public class CalendarActivity extends Activity {
 			tView.setText(""); a.add(tView);
 		}
 		
+		GlobalTaskList tasks = (GlobalTaskList) getApplication();
+		int [] taskCount = new int[32];
+		for (int y = 1; y < cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH); y++)
+		{
+			for (int x = 0; x < tasks.getList().size(); x++)
+			{
+				Task t = tasks.getList().get(x);
+				Log.v("CalTest", "TaskDay = " + t.getDueDate().get(GregorianCalendar.DAY_OF_MONTH));
+				Log.v("CalTest", "TaskMonth = " + t.getDueDate().get(GregorianCalendar.MONTH));
+				Log.v("CalTest", "TaskYear = " + t.getDueDate().get(GregorianCalendar.YEAR));
+				Log.v("CalTest", "checkDay = " + y);
+				Log.v("CalTest", "checkMonth = " + monthValue);
+				Log.v("CalTest", "checkYear = " + yearValue);
+				if (monthValue == t.getDueDate().get(GregorianCalendar.MONTH) 
+						&& yearValue == t.getDueDate().get(GregorianCalendar.YEAR)
+						&& y == t.getDueDate().get(GregorianCalendar.DAY_OF_MONTH))
+						{
+							Log.v("CalTest", "Added to list");
+							taskCount[y]++;
+						}
+			}
+		}
+
 		for (int x = 1; x < cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH) + 1; x++)
 		{
 			tView = new TextView(this);
-			tView.setText(String.valueOf(x)); a.add(tView);
+			if (taskCount[x] == 1){
+				tView.setText(String.valueOf(x) + "\n" + String.valueOf(taskCount[x]) + " Task"); a.add(tView);
+			}
+			else if(taskCount[x] > 1)
+			{
+				tView.setText(String.valueOf(x) + "\n" + String.valueOf(taskCount[x]) + " Tasks"); a.add(tView);
+			}
+			else
+			{
+				tView.setText(String.valueOf(x)); a.add(tView);
+			}
+
 		}
 		
 		Log.v("CalTest", "Adding the adapter to the gridview");
 		
-		TextAdapter tA = new TextAdapter(this, a);
+		TextAdapter tA = new TextAdapter(a);
 		
 		g.setAdapter(tA);
 		Log.v("CalTest", "Setting Click Listener");
@@ -172,15 +191,31 @@ public class CalendarActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int pos,
 					long id) {
-				String data = (String) ((TextView) v).getText();
-				if (data.contains("\n"))
+				try
 				{
-					Intent i = new Intent(getApplicationContext(), TaskViewActivity.class);
-					i.putExtra("DATE", ((TextView)v).getText());
+					TextView vi = (TextView) v;
+					Log.v("CalTest", "vi contents: " + vi.getText().toString());
+					int day = 0;
+					day = Integer.parseInt(vi.getText().
+							toString().split("\n")[0]);
+
+					Spinner m = (Spinner) findViewById(R.id.calMonths);
+					Spinner y = (Spinner) findViewById(R.id.calYear);
+					int month = m.getSelectedItemPosition() + 1;
+					int year = y.getSelectedItemPosition();
+					Intent i = new Intent(getApplicationContext(), 
+							TaskViewActivity.class);
+					i.putExtra("DAY", day);
+					i.putExtra("MONTH", month);
+					i.putExtra("YEAR", year);
+
 					startActivity(i);
 				}
-				else
-					Toast.makeText(getApplicationContext(), "Didn't have it", Toast.LENGTH_LONG).show();
+				catch(NumberFormatException NFE)
+				{
+					
+				}
+
 			}
 			
 		});
@@ -202,10 +237,6 @@ public class CalendarActivity extends Activity {
 			break;
 		case R.id.calAddTask:
 			
-			//Task t = new Task("test", "Description", new GregorianCalendar(2014, 4, 5));
-			//taskList.add(t);
-			//addToView(t);
-			//addToServer(t); 
 			Intent addI = new Intent(this, AddTaskActivity.class);
 			addI.putExtra("PrevView", Constants.CALENDAR);
 			startActivity(addI);
@@ -214,58 +245,12 @@ public class CalendarActivity extends Activity {
 			i = new Intent(this, EditTaskActivity.class);
 			i.putExtra("RETURN", Constants.CALENDAR);
 			startActivity(i);
-		case R.id.calViewAll:
-			i = new Intent(this, TaskViewActivity.class);
-			startActivity(i);
 		default:
 			return super.onOptionsItemSelected(item);
 		
 		}
 		
 		return false;
-		
-	}
-	/**
-	 * The goal of the gridView is to tell the user how many tasks are due on each day
-	 * Thus, addToView will increment the counter of tasks due on each day whenever
-	 * tasks are added to the Calendar's Task List.
-	 * @param t a new task to be added to the gridview
-	 */
-	private void addToView(Task t)
-	{
-		Log.v("CalTest", "Entering addToView");
-		String dayToCheck = String.valueOf(t.getDueDate()
-				.get(GregorianCalendar.DAY_OF_MONTH));
-		Log.v("CalTest", "dayToCheck = " + dayToCheck);
-		for (int x = 0; x < a.size(); x++)
-		{
-			TextView text = (TextView) a.get(x);
-			Log.v("CalTest", "Text from tingie: " + text.getText().toString());
-			String aText[] = text.getText().toString().split("\n");
-		
-			String val1 = aText[0].replaceAll("[\\D]", "");
-			String val2 = dayToCheck.replaceAll("[\\D]", "");
-
-			if (val1.equals(val2))
-					{
-				Log.v("CalTest", "val1 equals val2");
-						if (aText.length < 3) //no tasks are due on this day
-						{
-							a.get(x).setText((aText[0] + "\n1 Task").toString());
-						}
-						else //at least 1 task is due on this day
-						{
-							String taskCount[] = aText[1].split(" ");
-							
-							a.get(x).setText(aText[0] + "\n" + String.valueOf
-									(Integer.valueOf(taskCount[0]) + 1) + " Tasks");
-						}
-
-					}
-		}
-		TextAdapter tA = new TextAdapter(this, a);
-		GridView g = (GridView) findViewById(R.id.calView);
-		g.setAdapter(tA);
 		
 	}
 	
@@ -410,12 +395,10 @@ public class CalendarActivity extends Activity {
 	private class TextAdapter extends BaseAdapter 
 	{
 
-		Context c;
 		ArrayList<TextView> textList;
 		
-		public TextAdapter(Context c, ArrayList<TextView> newList) {
+		public TextAdapter(ArrayList<TextView> newList) {
 			
-			this.c = c;
 			this.textList = newList;
 			Log.v("CalTest","TextList is (true = null): " + String.valueOf(textList == null));
 		}
@@ -436,11 +419,6 @@ public class CalendarActivity extends Activity {
 		public long getItemId(int arg0) {
 			// TODO Auto-generated method stub
 			return 0;
-		}
-		
-		public void setItemText(int index, String newText)
-		{
-			textList.get(index).setText(newText);
 		}
 
 		@Override

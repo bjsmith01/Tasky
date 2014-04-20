@@ -235,6 +235,15 @@ public class AddTaskActivity extends Activity {
 			Task t = new Task(eName.getText().toString(), 
 					eDesc.getText().toString(), g);
 			
+			CheckBox b = (CheckBox) findViewById(R.id.addViewRemind);
+			if (b.isChecked())
+			{
+				GregorianCalendar r = new GregorianCalendar(remindYear.
+						getValue(), remindMonth.getValue(), remindDay.
+						getValue());
+				t.setReminder(r);
+			}
+			
 			GlobalTaskList gL = (GlobalTaskList) getApplication();
 			gL.taskList.add(t);
 			
