@@ -30,11 +30,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 /**
@@ -62,20 +64,21 @@ public class CalendarActivity extends Activity {
 			//getTaskDataFromServer(tasks);
 			
 		}
-		
+		Log.v("CalTest", "task size: " + tasks.getList().size());
+
 		Spinner s = (Spinner) findViewById(R.id.calMonths);
-		ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this, R.array.monthArray, android.R.layout.simple_dropdown_item_1line);
-		a.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-		s.setAdapter(a);
+		ArrayAdapter<CharSequence> monthVals = ArrayAdapter.createFromResource(this, R.array.monthArray, android.R.layout.simple_dropdown_item_1line);
+		monthVals.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+		s.setAdapter(monthVals);
 		
 		s.setOnItemSelectedListener(new OnItemSelectedListener(){
 
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View arg1,
-					int pos, long arg3) {
+			public void onItemSelected(AdapterView<?> parent, View item,
+					int pos, long id) {
 				GridView gView = (GridView) findViewById(R.id.calView);
-				NumberPicker year = (NumberPicker) findViewById(R.id.calYear);
-				loadGridViewData(gView, pos, year.getValue());
+				Spinner year = (Spinner) findViewById(R.id.calYear);
+				loadGridViewData(gView, pos, Integer.valueOf(year.getSelectedItem().toString()));
 			}
 
 			@Override
@@ -86,118 +89,63 @@ public class CalendarActivity extends Activity {
 			
 		});
 		
-		NumberPicker year = (NumberPicker) findViewById(R.id.calYear);
+		Spinner year = (Spinner) findViewById(R.id.calYear);
+		ArrayAdapter<Integer> yearVals = new ArrayAdapter<Integer>(this, android.R.layout.simple_dropdown_item_1line);
 		
-		year.setMaxValue(3000);
-		year.setValue(2014);
-		year.setMinValue(1);
-		
-		year.setOnValueChangedListener(new OnValueChangeListener(){
+		for (int x = 0; x <= 1000; x++)
+		{
+			yearVals.add(2000+x);
+		}
+		year.setAdapter((SpinnerAdapter)yearVals);
+		year.setSelection(14);
+		year.setOnItemSelectedListener(new OnItemSelectedListener(){
 
 			@Override
-			public void onValueChange(NumberPicker arg0, int oldVal, int newVal) {
-				// TODO Auto-generated method stub
+			public void onItemSelected(AdapterView<?> arg0, View item,
+					int pos, long id) {
 				GridView gView = (GridView) findViewById(R.id.calView);
 				Spinner month = (Spinner) findViewById(R.id.calMonths);
-				loadGridViewData(gView, month.getSelectedItemPosition(), newVal);
+				TextView t = (TextView) item;
+				loadGridViewData(gView, month.getSelectedItemPosition(), 
+						Integer.valueOf(t.getText().toString()));
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
 			}
 			
 		});
+
+		GridView g = (GridView) findViewById(R.id.calView);
+		Spinner month = (Spinner) findViewById(R.id.calMonths);
+		loadGridViewData(g, month.getSelectedItemPosition(), year.getSelectedItemPosition() + 2000);
 		
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		for (int x = 0; x < tasks.getList().size(); x++)
+		{
+			addToView(tasks.getList().get(x));
+		}
 	}
-	
-	/**
-	 * Strictly testing purposes only; this method will be removed.
-	 * @param email
-	 * @param password
-	 * @return
-	 */
-	private String signup(String email, String password)
-	{
-		try
-		{
-			//connect to the servlet for signup command
-//			URL urlToServlet = new URL("http://localhost:8888/SignupServlet");
-			URL urlToServlet = new URL("http://tasky-server.appspot.com/SignupServlet");
-			URLConnection connection = urlToServlet.openConnection();
-	        connection.setDoOutput(true);
 
-			//create the request to the server
-			OutputStreamWriter writerToServer = new OutputStreamWriter(connection.getOutputStream());
-
-			//the request is like a "file" with 3 lines:
-			//SIGNUP
-			//email
-			//password
-			writerToServer.write("SIGNUP");
-			writerToServer.write("\n");
-			writerToServer.write(email);
-			writerToServer.write("\n");
-			writerToServer.write(password);
-			writerToServer.write("\n");
-
-
-			writerToServer.close();
-
-
-			//TODO: replace with logging functionality
-			System.out.println("CLIENT: generated the following request");
-			System.out.println("SIGNUP");
-			System.out.println(email);
-			System.out.println(password);
-			System.out.println("CLIENT: end of request");
-
-			//get the response from the server, which is very similar to reading from a file
-			BufferedReader readerFromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-			String signupStatus;
-
-			//the response will be a String
-			signupStatus = readerFromServer.readLine();
-
-
-			readerFromServer.close();
-
-			System.out.println("CLIENT: got response from server=" + signupStatus);
-
-
-			return signupStatus;
-		}
-		catch (MalformedURLException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return "-1";
-	}
-	
 	private void loadGridViewData(GridView g, int monthValue, int yearValue)
 	{
 		GregorianCalendar cal = new GregorianCalendar(yearValue, monthValue, 1);
 		a.clear();
-		Log.v("CalTest", "creating textview and setting text");
 		TextView tView = new TextView(this);
 		tView.setText("S"); a.add(tView);
-		Log.v("CalTest", "onto Monday build");
 		tView = new TextView(this);
 		tView.setText("M"); a.add(tView);
-		Log.v("CalTest", "onto Tuesday build");
 		tView = new TextView(this);
 		tView.setText("T"); a.add(tView);
-		
 		tView = new TextView(this);
 		tView.setText("W"); a.add(tView);
-		
 		tView = new TextView(this);
 		tView.setText("TH"); a.add(tView);
-		
 		tView = new TextView(this);
 		tView.setText("F"); a.add(tView);
-		
 		tView = new TextView(this);
 		tView.setText("S"); a.add(tView);
 		
@@ -253,12 +201,14 @@ public class CalendarActivity extends Activity {
 			startActivity(TVI);
 			break;
 		case R.id.calAddTask:
-			Task t = new Task("test", "Description", new GregorianCalendar(2014, 4, 5));
-			taskList.add(t);
-			GlobalTaskList tL = (GlobalTaskList) getApplication();
-			tL.getList().add(t);
-			addToView(t);
-			addToServer(t);
+			
+			//Task t = new Task("test", "Description", new GregorianCalendar(2014, 4, 5));
+			//taskList.add(t);
+			//addToView(t);
+			//addToServer(t); 
+			Intent addI = new Intent(this, AddTaskActivity.class);
+			addI.putExtra("PrevView", Constants.CALENDAR);
+			startActivity(addI);
 			break;
 		case R.id.calEdit:
 			i = new Intent(this, EditTaskActivity.class);
@@ -283,21 +233,23 @@ public class CalendarActivity extends Activity {
 	 */
 	private void addToView(Task t)
 	{
+		Log.v("CalTest", "Entering addToView");
 		String dayToCheck = String.valueOf(t.getDueDate()
 				.get(GregorianCalendar.DAY_OF_MONTH));
+		Log.v("CalTest", "dayToCheck = " + dayToCheck);
 		for (int x = 0; x < a.size(); x++)
 		{
 			TextView text = (TextView) a.get(x);
-			Log.v("CalTest", text.getText().toString());
+			Log.v("CalTest", "Text from tingie: " + text.getText().toString());
 			String aText[] = text.getText().toString().split("\n");
 		
 			String val1 = aText[0].replaceAll("[\\D]", "");
 			String val2 = dayToCheck.replaceAll("[\\D]", "");
-			Log.v("CalTest", "Val1: " + val1 + " Val2: " + val2);
-			Log.v("CalTest", "Val1: " + val1.length() + " Val2: " + val2.length());
+
 			if (val1.equals(val2))
 					{
-						if (aText.length == 1) //no tasks are due on this day
+				Log.v("CalTest", "val1 equals val2");
+						if (aText.length < 3) //no tasks are due on this day
 						{
 							a.get(x).setText((aText[0] + "\n1 Task").toString());
 						}

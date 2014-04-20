@@ -12,7 +12,7 @@
     </uses-permission>
 
     <application
-        android:name=".GlobalTaskList"
+        android:name="cs435.tasky.GlobalTaskList"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -21,23 +21,19 @@
         <activity
             android:name="cs435.tasky.ToDoListActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="cs435.tasky.TVSearchActivity"
             android:label="@string/title_activity_tvsearch" >
         </activity>
         <activity
-            android:name="cs435.tasky.Calendar"
-            android:label="@string/title_activity_calendar" >
-        </activity>
-        <activity
             android:name="cs435.tasky.CalendarActivity"
             android:label="@string/title_activity_calendar" >
+                    <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="cs435.tasky.TaskViewActivity"
@@ -46,6 +42,19 @@
         <activity
             android:name="cs435.tasky.EditTaskActivity"
             android:label="@string/title_activity_edit_task" >
+        </activity>
+        <activity
+            android:name="cs435.tasky.LogInActivity"
+            android:label="@string/title_activity_log_in" >
+
+        </activity>
+        <activity
+            android:name="cs435.tasky.NewUserActivity"
+            android:label="@string/title_activity_new_user" >
+        </activity>
+        <activity
+            android:name="cs435.tasky.AddTaskActivity"
+            android:label="@string/title_activity_add_task" >
         </activity>
     </application>
 

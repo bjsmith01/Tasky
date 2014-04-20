@@ -17,5 +17,10 @@
     <string name="title_activity_edit_task">EditTaskActivity</string>
     <string name="Accept">Accept</string>
     <string name="Cancel">Cancel</string>
+    <string name="title_activity_log_in">LogInActivity</string>
+    <string name="loginUserName">Enter Username</string>
+    <string name="loginPassword">Enter Password</string>
+    <string name="title_activity_new_user">NewUserActivity</string>
+    <string name="title_activity_add_task">AddTaskActivity</string>
 
 </resources>

@@ -14,7 +14,6 @@ import java.util.GregorianCalendar;
  */
 public class Task implements Serializable {
 	
-	
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String description;
@@ -159,6 +158,6 @@ public class Task implements Serializable {
 		hasReminder = true;
 	}
 	
-	
+
 	
 }
