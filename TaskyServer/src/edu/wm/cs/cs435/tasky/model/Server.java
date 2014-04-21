@@ -1,10 +1,6 @@
 package edu.wm.cs.cs435.tasky.model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
 
 import edu.wm.cs.cs435.tasky.database.GoogleDatabase;
 import edu.wm.cs.cs435.tasky.database.IServerDatabase;
@@ -98,40 +94,11 @@ public class Server implements ITaskyServer
 	 * @param projectID
 	 * @return a textual representation of the list of tasks
 	 */
-	public String getTasks(String email,String projectID)
+	public ArrayList<Task> getTasks(String email,String projectID)
 	{
-		//this code should be replaced with an actual database
-		
-		Project project = new Project("sampleProject");
-		
-		//simulate loading from a database
-		try
-		{
-			BufferedReader br;
-			br = new BufferedReader(new FileReader("databaseTextFiles/listOfTasks_"+email+"_"+projectID+".txt"));
-			//each line contains the "taskID\tTaskDescription\tDueDate"
-			String task;
-			while ((task = br.readLine()) != null)
-			{
-				String[] splittedTask = task.split("\t");
-
-				project.addTask(new Task(splittedTask[0],splittedTask[1],"noduedate"));
-			}
-			br.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		StringBuffer listOfTasks=new StringBuffer();
-		for (Task task : project.getListOfTasks())
-		{
-			listOfTasks.append(task.getId()+"::"+task.getTaskDescription());
-			listOfTasks.append("\n");
-		}
-		
-		return listOfTasks.toString();
+		//get all the tasks associated with a project that belongs to a user from the database
+		Project project=new Project(Integer.parseInt(projectID), "");
+		return databaseInstance.getTasks(email, project);
 	}
 
 	@Override
@@ -140,18 +107,16 @@ public class Server implements ITaskyServer
 		//create a new project and assign it a unique ID
 		Project project = new Project(projectName);
 		
-		
-		
 		//store the project in the database
 		return databaseInstance.addProject(email,project);
 
 	}
 
 	@Override
-	public String addTask(String email, String projectID, String task)
+	public String addTask(String email, Project project, Task task)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		//store the task in the database
+		return databaseInstance.addTask(project, task);
 	}
 
 	@Override

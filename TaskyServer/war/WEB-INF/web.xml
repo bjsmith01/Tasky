@@ -41,7 +41,26 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/GetProjectsServlet</url-pattern>
 	</servlet-mapping>
 	
-	<welcome-file-list>
+		
+	<servlet>
+		<servlet-name>AddTaskServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.AddTaskServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddTaskServlet</servlet-name>
+		<url-pattern>/AddTaskServlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GetTasksServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.GetTasksServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetTasksServlet</servlet-name>
+		<url-pattern>/GetTasksServlet</url-pattern>
+	</servlet-mapping>
+
+		<welcome-file-list>
 		<welcome-file>testAccessToTaskyDatabase.jsp</welcome-file>
 	</welcome-file-list>
 </web-app>

@@ -15,15 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import edu.wm.cs.cs435.tasky.model.ITaskyServer;
 import edu.wm.cs.cs435.tasky.model.Project;
 import edu.wm.cs.cs435.tasky.model.Server;
+import edu.wm.cs.cs435.tasky.model.Task;
 
 
 /**
- * Servlet implementation for the get projects functionality
+ * Servlet implementation for the get tasks functionality
  *
  * @author Fengfeng (Mia) Liu
  *
  */
-public class GetProjectsServlet extends HttpServlet
+public class GetTasksServlet extends HttpServlet
 {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -31,7 +32,7 @@ public class GetProjectsServlet extends HttpServlet
 	 */
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException
 	{
-		response.getOutputStream().println("GetProjectsServlet.doGet() works! Use the doPost() method from Android or web application");
+		response.getOutputStream().println("GetTasksServlet.doGet() works! Use the doPost() method from Android or web application");
 	}
 
 	/**
@@ -43,18 +44,20 @@ public class GetProjectsServlet extends HttpServlet
 		try
 		{
 			//read the actual request sent by the client using readerFromClient
-			//the expected request is on 2 lines, and it is similar to reading from a file:
-			//GET_PROJECTS
+			//the expected request is on 3 lines, and it is similar to reading from a file:
+			//GET_TASKS
 			//email
+			//projectID
 			BufferedReader readerFromClient=new BufferedReader(new InputStreamReader(request.getInputStream()));
 			String requestType=readerFromClient.readLine();		//read first line of the request
 			
-			if (ITaskyServer.GET_PROJECTS_OPERATION.equals(requestType)==false)
+			if (ITaskyServer.GET_TASKS_OPERATION.equals(requestType)==false)
 			{
-				throw new IOException("Invalid command. "+ITaskyServer.GET_PROJECTS_OPERATION+" expected");
+				throw new IOException("Invalid command. "+ITaskyServer.GET_TASKS_OPERATION+" expected");
 			}
 			
 			String email=readerFromClient.readLine();			//read second line of the request
+			String projectID=readerFromClient.readLine();		//read third line of the request
 			
 			readerFromClient.close();
 
@@ -63,36 +66,46 @@ public class GetProjectsServlet extends HttpServlet
 			System.out.println("SERVER: Got the following request");
 			System.out.println(requestType);
 			System.out.println(email);
+			System.out.println(projectID);
 			System.out.println("SERVER: end of request");
 
-			//access the database and get all projects
-			ArrayList<Project> listOfProjects=Server.instance.getProjects(email);
+			//access the database and get all tasks
+			ArrayList<Task> listOfTasks=Server.instance.getTasks(email, projectID);
 			System.out.println("SERVER: server response is");
-			System.out.println(listOfProjects);
+			System.out.println(listOfTasks);
 			System.out.println("SERVER: end of response");
 
 
 			//prepare the response back to the client
 			response.setStatus(HttpServletResponse.SC_OK);
 			
-			//the response will be a list of projects
-			//the first line represents the numberOfProjects as int
-			//the next 2*numberOfProjects represent the IDs and names of the projects
+			//the response will be a list of tasks
+			//the first line represents the numberOfTasks as int
+			//the next 4*numberOfTasks lines represent the IDs, description, due date and priority of the tasks
 			//
-			//numberOfProjects		//first line
-			//ProjectID1
-			//projectName1
-			//ProjectID2
-			//projectName2
+			//numberOfTasks		//first line
+			//TaskID1
+			//TaskDescription1
+			//TaskDueDate1
+			//TaskPriority1
+			//TaskID2
+			//TaskDescription2
+			//TaskDueDate2
+			//TaskPriority2
 			//...
-			//ProjectIDN			//line 2N
-			//projectNameN			//line 2N+1
+			//TaskIDN
+			//TaskDescriptionN
+			//TaskDueDateN		//line 4*N
+			//TaskPriorityN		//line 4*N+1
+			
 			OutputStreamWriter writerToClient=new OutputStreamWriter(response.getOutputStream());
-			writerToClient.write(listOfProjects.size()+"\n");
-			for (Project project : listOfProjects)
+			writerToClient.write(listOfTasks.size()+"\n");
+			for (Task task : listOfTasks)
 			{
-				writerToClient.write(project.getId()+"\n");
-				writerToClient.write(project.getName()+"\n");
+				writerToClient.write(task.getId()+"\n");
+				writerToClient.write(task.getTaskDescription()+"\n");
+				writerToClient.write(task.getDueDateAsLong()+"\n");
+				writerToClient.write(task.getPriority()+"\n");
 			}
 			writerToClient.flush();
 			writerToClient.close();

@@ -1,6 +1,7 @@
 package edu.wm.cs.cs435.tasky.database;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -10,6 +11,7 @@ import com.google.appengine.api.datastore.Query;
 
 import edu.wm.cs.cs435.tasky.model.ITaskyServer;
 import edu.wm.cs.cs435.tasky.model.Project;
+import edu.wm.cs.cs435.tasky.model.Task;
 
 /**
  * This class implements the operations that a Server can have with the a database.
@@ -29,6 +31,13 @@ public class GoogleDatabase implements IServerDatabase
 	private static final String PROJECT_PROPERTY_ID = "projectID";
 	private static final String PROJECT_PROPERTY_EMAIL = "projectEmail";
 	private static final String PROJECT_PROPERTY_NAME = "projectName";
+
+	private static final String TASK_KIND = "Task";
+	private static final String TASK_PROPERTY_ID = "taskID";
+	private static final String TASK_PROPERTY_PROJECT_ID = "projectID";
+	private static final String TASK_PROPERTY_DESCRIPTION = "taskDescription";
+	private static final String TASK_PROPERTY_DUE_DATE = "dueDate";
+	private static final String TASK_PROPERTY_PRIORITY = "priority";
 
 	public GoogleDatabase()
 	{
@@ -137,6 +146,56 @@ public class GoogleDatabase implements IServerDatabase
 		}
 		
 		return listOfProjects;
+	}
+
+	@Override
+	public String addTask(Project project, Task task)
+	{
+		Entity entityTask=new Entity(TASK_KIND);
+		entityTask.setProperty(TASK_PROPERTY_DESCRIPTION, task.getTaskDescription());
+		entityTask.setProperty(TASK_PROPERTY_DUE_DATE, task.getDueDateAsJavaData());
+		entityTask.setProperty(TASK_PROPERTY_PROJECT_ID, project.getId());
+		entityTask.setProperty(TASK_PROPERTY_ID, task.getId());
+		entityTask.setProperty(TASK_PROPERTY_PRIORITY, task.getPriority());
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		datastore.put(entityTask);
+
+		return ITaskyServer.ADD_TASK_SUCCESSFUL;
+	}
+
+	@Override
+	public ArrayList<Task> getTasks(String email, Project project)
+	{
+		
+		Query query = new Query(TASK_KIND).addSort(TASK_PROPERTY_ID);
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		
+		// Use PreparedQuery interface to retrieve results
+		PreparedQuery preparedQuery = datastore.prepare(query);
+		
+		ArrayList<Task> listOfTasks=new ArrayList<>();
+		
+		//iterate through the results and see if the task belongs to the project or not
+		for (Entity result : preparedQuery.asIterable())
+		{
+			long projectIDRetrieved = (long) result.getProperty(TASK_PROPERTY_PROJECT_ID);
+			long taskIDRetrieved = (long) result.getProperty(TASK_PROPERTY_ID);
+			String taskDescriptionRetrieved = (String) result.getProperty(TASK_PROPERTY_DESCRIPTION);
+			Date dueDateRetrieved = (Date) result.getProperty(TASK_PROPERTY_DUE_DATE);
+			long priorityRetrieved = (long) result.getProperty(TASK_PROPERTY_PRIORITY);
+			
+			if (project.getId()==projectIDRetrieved)
+			{
+				Task task = new Task((int)taskIDRetrieved,taskDescriptionRetrieved,dueDateRetrieved);
+				task.setProjectID((int) projectIDRetrieved);
+				task.setPriority((int) priorityRetrieved);
+				listOfTasks.add(task);
+			}
+		}
+		
+		return listOfTasks;
 	}
 	
 }

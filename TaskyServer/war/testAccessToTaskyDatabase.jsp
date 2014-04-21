@@ -1,10 +1,13 @@
 <%@page import="edu.wm.cs.cs435.tasky.database.GoogleDatabase"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="edu.wm.cs.cs435.tasky.model.Server"%>
+<%@ page import="edu.wm.cs.cs435.tasky.model.*"%>
+<%@ page import="java.util.Date"%>
 <%@ page import="java.util.List" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
+<%@ page import="com.google.appengine.api.datastore.PreparedQuery" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
 <%@ page import="com.google.appengine.api.datastore.Query" %>
@@ -28,6 +31,11 @@
 		String projectName = request.getParameter("projectName");
 		String functionType = request.getParameter("functionType");
 		String responseFromServer = "N/A";
+
+		String taskDescription = request.getParameter("taskDescription");
+		String dueDate = request.getParameter("dueDate");
+		String priority = request.getParameter("priority");
+
 		
 		//set default values
 		if (functionType==null)
@@ -39,7 +47,14 @@
 		if (projectID==null)
 			projectID="10";
 		if (projectName==null)
-			projectID="FirstProject";
+			projectName="FirstProject";
+		if (taskDescription==null)
+			taskDescription="sample task";
+		if (dueDate==null)
+			dueDate="today";
+		if (priority==null)
+			priority="5";
+
 	%>
 	
 	<%
@@ -56,9 +71,9 @@
 				responseFromServer=actualListOfProjectsAsText;
 			}
 			else
-				if (functionType.equals("testGetTasks"))
+				if (functionType.equals("getTasks"))
 				{
-					String actualListOfTasksAsText = Server.instance.getTasks(email,projectID);
+					String actualListOfTasksAsText = Server.instance.getTasks(email,projectID).toString();
 					responseFromServer=actualListOfTasksAsText;
 				}
 				else
@@ -80,6 +95,72 @@
 								String addProjectResponse=Server.instance.addProject(email, projectName);
 								responseFromServer = addProjectResponse;
 							}
+							else
+								if (functionType.equals("addTask"))
+								{
+									Project projectObject=new Project(Integer.parseInt(projectID),"");
+									
+									Task taskObject=new Task(taskDescription,dueDate,projectObject.getId());
+									taskObject.setPriority(Integer.parseInt(priority));
+
+									String addTaskResponse=Server.instance.addTask(email, projectObject, taskObject);
+									responseFromServer = addTaskResponse;
+								}
+								else
+									
+								if (functionType.equals("viewAllTasksInTheDatabase"))
+								{
+									Query query = new Query("Task").addSort("taskID");
+									
+									
+									DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+									
+									// Use PreparedQuery interface to retrieve results
+									PreparedQuery preparedQuery = datastore.prepare(query);
+								%>
+								<table border="1">
+									<tr>
+										<th>Project ID</th>
+										<th>ID</th>
+										<th>Task Description</th>
+										<th>Due Date</th>
+										<th>Priority</th>
+									</tr>
+
+								<%
+									
+									for (Entity result : preparedQuery.asIterable())
+									{
+										//Integer taskIDRetrieved = (Integer) result.getProperty("taskID");
+										int projectIDRetrieved = ((Long) result.getProperty("projectID")).intValue();
+										int taskIDRetrieved = ((Long) result.getProperty("taskID")).intValue();
+										String taskDescriptionRetrieved = (String) result.getProperty("taskDescription");
+										Date dueDateRetrieved = (Date) result.getProperty("dueDate");
+										int priorityRetrieved = ((Long) result.getProperty("priority")).intValue();
+
+										Task task=new Task(taskIDRetrieved,taskDescriptionRetrieved,dueDateRetrieved);
+										task.setProjectID(projectIDRetrieved);
+										task.setPriority(priorityRetrieved);
+									
+								%>
+								
+										<tr>
+											<td><%=task.getProjectID()%></td>
+											<td><%=task.getId()%></td>
+											<td><%=task.getTaskDescription()%></td>
+											<td><%=task.getDueDateAsShortFormat()%></td>
+											<td><%=task.getPriority()%></td>
+										</tr>
+								<%
+									}
+								%>
+
+								</table>	
+								
+								<%
+								responseFromServer="See table above. The talbe will not be sent to the client, and is for testing purposes only";
+								}
+								
 	%>
 	
 	<h1>Values that were submitted</h1>
@@ -102,7 +183,7 @@
 	<%
 			}
 			else
-				if (functionType.equals("testGetTasks"))
+				if (functionType.equals("getTasks"))
 				{
 	%>
 			<p>Submitted email: <%=email%></p> 
@@ -132,7 +213,17 @@
 								<p>Submitted project Name: <%=projectName%></p> 
 								<%
 							}
-						
+							else
+								if (functionType.equals("addTask"))
+								{
+									%>
+									<p>Submitted Task Description: <%=taskDescription%></p> 
+									<p>Submitted Due Date: <%=dueDate%></p> 
+									<p>Submitted Project ID: <%=projectID%></p> 
+									<p>Submitted Priority: <%=priority%></p> 
+									<%
+								}
+					
 	
 	%>
 	
@@ -159,6 +250,7 @@
 		<input type="submit" value="Access Database & Test getProjects" >
 	</form>
 	
+	<hr/>
 	<h3>Test isEmailAvailableForSignup</h3>
 	<form action="testAccessToTaskyDatabase.jsp" method="get">
 		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
@@ -185,26 +277,38 @@
 		<input type="submit" value="Access Database & Test Login" >
 	</form>
 	
-	<br/>
-	<h3>Test get list of projects from user</h3>
+	<hr/>
+	
+	<h3>Test view all tasks in the database</h3>
+	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data</p>
+	<form action="testAccessToTaskyDatabase.jsp" method="get">
+		<input type="hidden" name="functionType" value="viewAllTasksInTheDatabase">
+
+		<input type="submit" value="Access Google Datastore & View All Tasks in the database" >
+	</form>
+	
+	<h3>Test add task</h3>
+	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
+	<form action="testAccessToTaskyDatabase.jsp" method="get">
+		Task Description: <input type="text" name="taskDescription" value="sample task"><br/> 
+		Due Date: <input type="text" name="dueDate" value="today"><br/>
+		Project ID: <input type="text" name="projectID" value="1"><br/>
+		Priority (1 (high)-5(low)): <input type="text" name="priority" value="5"><br/>
+		<input type="hidden" name="functionType" value="addTask">
+
+		<input type="submit" value="Access Google Datastore & Add Task" >
+	</form>
+	
+	<h3>Test get all tasks for a particular project</h3>
+	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data</p>
 	<form action="testAccessToTaskyDatabase.jsp" method="get">
 		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
-		<input type="hidden" name="functionType" value="testGetProjects">
+		Project ID: <input type="text" name="projectID" value="1"><br/>
+		<input type="hidden" name="functionType" value="getTasks">
 
-		<input type="submit" value="Access Database & Test Get List of Projects" >
+		<input type="submit" value="Access Google Datastore & Get All Tasks for a specific project that belongs to a user" >
 	</form>
-
-	<br/>
-	<h3>Test get list of tasks for a particular project</h3>
-	<form action="testAccessToTaskyDatabase.jsp" method="get">
-		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
-		ProjectID: <input type="text" name="projectID" value="<%=projectID%>"><br/>
-		<input type="hidden" name="functionType" value="testGetTasks">
-
-		<input type="submit" value="Access Database & Test Get List of Tasks" >
-	</form>
-
-
+	
 
   </body>
 </html>

@@ -3,6 +3,7 @@ package edu.wm.cs.cs435.tasky.database;
 import java.util.ArrayList;
 
 import edu.wm.cs.cs435.tasky.model.Project;
+import edu.wm.cs.cs435.tasky.model.Task;
 
 /**
  * This interface defines the operations between a server and a database.
@@ -64,5 +65,23 @@ public interface IServerDatabase
 	 * @return a list of projects
 	 */
 	ArrayList<Project> getProjects(String email);
+	
+	/**
+	 * Adds a new task to the database, which belongs to a specific project/user
+	 * @param project representing the id of the project it belongs to (i.e., the parent of the task)
+	 * @param task representing the task that will be added, which contains the description, due date, priority, etc. 
+	 * @return ADD_TASK_SUCCESSFUL or ADD_TASK_FAILED
+	 * 
+	 */
+	String addTask(Project project, Task task);
 
+	/**
+	 * Gets the list of tasks associated with a user for a specific project
+	 * 
+	 * @param email, representing the username
+	 * @param project, representing the project from which the tasks will be retrieved
+	 * @return a list of tasks
+	 */
+	ArrayList<Task> getTasks(String email,Project project);
+	
 }

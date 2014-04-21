@@ -19,15 +19,18 @@ public class Task
 {
 	private int id;
 	private int projectID;		//id of the parent (i.e., project it belongs to)
+	private int priority;		//value between 1 and 5 (1 for high priority, 5 for low priority)
 	private String taskDescription;
 	private DateTime dueDate;
+
+
 
 	public Task(String taskDescription)
 	{
 		this.setTaskDescription(taskDescription);
 		this.id=IDs.getNextAvailableTaskID();
 		this.setProjectID(-1);
-		
+		this.setPriority(5);
 
 	}
 
@@ -155,6 +158,35 @@ public class Task
 	{
 		this.projectID = projectID;
 	}
-	
 
+	public int getPriority()
+	{
+		return priority;
+	}
+
+	public void setPriority(int priority)
+	{
+		this.priority = priority;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "Task [id=" + id + ", projectID=" + projectID + ", priority=" + priority + ", taskDescription="
+				+ taskDescription + ", dueDate=" + dueDate + "]";
+	}
+
+	public long getDueDateAsLong()
+	{
+		return dueDate.getMillis();
+	}
+
+	/**
+	 * Create a new date from milliseconds 
+	 * @param parseLong
+	 */
+	public void setDueDate(long milliseconds)
+	{
+		this.setDueDate(new DateTime(milliseconds));
+	}
 }
