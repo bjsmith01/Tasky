@@ -18,6 +18,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class Task
 {
 	private int id;
+	private int projectID;		//id of the parent (i.e., project it belongs to)
 	private String taskDescription;
 	private DateTime dueDate;
 
@@ -25,6 +26,7 @@ public class Task
 	{
 		this.setTaskDescription(taskDescription);
 		this.id=IDs.getNextAvailableTaskID();
+		this.setProjectID(-1);
 		
 
 	}
@@ -34,6 +36,13 @@ public class Task
 		this(taskDescription);
 		
 		convertDueDate(dueDate);
+	}
+
+	public Task(String taskDescription, String dueDate, int projectID)
+	{
+		this(taskDescription,dueDate);
+		
+		this.setProjectID(projectID);
 	}
 
 	public Task(String id,String taskDescription, String dueDate)
@@ -135,6 +144,16 @@ public class Task
 	{
 		DateTimeFormatter fmt = DateTimeFormat.longDate();
 		return fmt.print(dueDate);
+	}
+
+	public int getProjectID()
+	{
+		return projectID;
+	}
+
+	public void setProjectID(int projectID)
+	{
+		this.projectID = projectID;
 	}
 	
 

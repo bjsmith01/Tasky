@@ -25,6 +25,7 @@
 	<%
 		String taskDescription = request.getParameter("taskDescription");
 		String dueDate = request.getParameter("dueDate");
+		String projectID = request.getParameter("projectID");
 		String functionType = request.getParameter("functionType");
 		String responseFromServer = "N/A";
 		
@@ -35,6 +36,8 @@
 			taskDescription="sample task";
 		if (dueDate==null)
 			dueDate="today";
+		if (projectID==null)
+			projectID="1";
 	%>
 
 	<h1>Values that were submitted</h1>
@@ -44,11 +47,14 @@
 	
 	if (functionType.equals("addTask"))
 	{
-		Task task=new Task(taskDescription,dueDate);
+		int projectIDint=Integer.parseInt(projectID);
+		
+		Task task=new Task(taskDescription,dueDate,projectIDint);
 		
 		Entity entityTask=new Entity("Task");
 		entityTask.setProperty("taskDescription", task.getTaskDescription());
 		entityTask.setProperty("dueDate", task.getDueDateAsJavaData());
+		entityTask.setProperty("projectID", task.getProjectID());
 		entityTask.setProperty("taskID", task.getId());
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -68,6 +74,7 @@
 	%>
 	<table border="1">
 		<tr>
+			<th>Project ID</th>
 			<th>ID</th>
 			<th>Task Description</th>
 			<th>Due Date</th>
@@ -78,16 +85,19 @@
 		for (Entity result : preparedQuery.asIterable())
 		{
 			//Integer taskIDRetrieved = (Integer) result.getProperty("taskID");
+			int projectIDRetrieved = ((Long) result.getProperty("projectID")).intValue();
 			int taskIDRetrieved = ((Long) result.getProperty("taskID")).intValue();
 			String taskDescriptionRetrieved = (String) result.getProperty("taskDescription");
 			Date dueDateRetrieved = (Date) result.getProperty("dueDate");
 
 			Task task=new Task(taskIDRetrieved,taskDescriptionRetrieved,dueDateRetrieved);
+			task.setProjectID(projectIDRetrieved);
 			
 		
 	%>
 	
 			<tr>
+				<td><%=task.getProjectID()%></td>
 				<td><%=task.getId()%></td>
 				<td><%=task.getTaskDescription()%></td>
 				<td><%=task.getDueDateAsShortFormat()%></td>
@@ -109,6 +119,7 @@
 	<form action="testGoogleDatastore.jsp" method="get">
 		Task Description: <input type="text" name="taskDescription" value="sample task"><br/> 
 		Due Date: <input type="text" name="dueDate" value="today"><br/>
+		Project ID: <input type="text" name="projectID" value="1"><br/>
 		<input type="hidden" name="functionType" value="addTask">
 
 		<input type="submit" value="Access Google Datastore & Add Task" >
