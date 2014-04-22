@@ -52,6 +52,8 @@ public class Server implements ITaskyServer
 		
 		//check if password is less than 5 characters
 		//other password checks could be added here
+		
+		if (password.length() < 5) return IServerDatabase.PASSWORD_INVALID_FOR_SIGNUP; 
 
 		databaseInstance.addNewUserToDatabase(email,password);
 		

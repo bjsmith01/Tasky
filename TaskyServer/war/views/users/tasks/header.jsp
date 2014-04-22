@@ -17,7 +17,7 @@
 		      <li><a href="#">Calendar</a></li>
 		      <li><a href="#">Something else here</a></li>
 		      <li class="divider"></li>
-		      <li><a href="/views/sessions/logout.jsp">Log Out</a></li>
+		      <li><a href="/views/sessions/destroy.jsp">Log Out</a></li>
 		    </ul>
 		  </li>
 		</ul>

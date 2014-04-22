@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.wm.cs.cs435.tasky.database.IServerDatabase;
+import edu.wm.cs.cs435.tasky.model.ITaskyServer;
 import edu.wm.cs.cs435.tasky.model.Server;
 
 
@@ -36,19 +37,21 @@ public class WebSignupServlet extends HttpServlet
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
-		System.out.println(password);
-		System.out.println(email);
-
+		System.out.println("email: " + email); 
+		System.out.println("password: " + password); 
 		
 		String signupStatus = Server.instance.signup(email, password);
-		
-		if (signupStatus.equals(IServerDatabase.NEW_USER_ADDED_TO_DATABASE)) {
-			HttpSession session = request.getSession(); 
-			session.setAttribute("email", email); 
-		    String redirectURL = "/views/users/tasks/index.jsp";
-		    response.addHeader("email", email);
-		    response.sendRedirect(redirectURL);
-		}
-	}
+		System.out.println("signupstatus: " + signupStatus); 
 
+		if (signupStatus.equals(IServerDatabase.NEW_USER_ADDED_TO_DATABASE)) { 
+			HttpSession session = request.getSession(); 
+			session.setAttribute("email", email);
+			response.sendRedirect("/views/users/tasks/index.jsp");
+			
+		} else { 
+			request.setAttribute("signupStatus", signupStatus);
+			request.getRequestDispatcher("/views/users/create.jsp").forward(request, response);
+		}
+
+	}
 }

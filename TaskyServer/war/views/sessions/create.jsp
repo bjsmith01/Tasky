@@ -1,3 +1,4 @@
+<%@page import="edu.wm.cs.cs435.tasky.model.ITaskyServer"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="edu.wm.cs.cs435.tasky.model.Server"%>
 <%@ page import="java.util.List" %>
@@ -28,36 +29,28 @@
 <%@ include file="/views/header.jsp" %>
 
 
-
-<!--  Login logic -->
-
-<%
-	String email = ""; 
-	String password = ""; 
-	
-	email = request.getParameter("email");
-	password = request.getParameter("password");
-	
-	
-	String loginStatus = Server.instance.login(email, password);
-	System.out.println(loginStatus); 
-	
-	if (loginStatus.equals("LOGIN_SUCCESS")) {
-		session.setAttribute("email", email); 
-	    String redirectURL = "/views/users/tasks/index.jsp";
-	    response.sendRedirect(redirectURL);
-	}
-%>
-<!--  End login logic -->
+<!--  Check login response -->
+<% 
+if (pageContext.findAttribute("loginStatus") != null) { 
+	String loginStatus = pageContext.findAttribute("loginStatus").toString();
+	if (loginStatus.equals(ITaskyServer.LOGIN_INVALID_USERNAME)) { %> 
+<div class="alert alert-danger">
+	Invalid email - perhaps you mistyped it. 
+</div>
+	<% } else if (loginStatus.equals(ITaskyServer.LOGIN_INVALID_PASSWORD)) %>
+<div class="alert alert-danger"> 
+	Incorrect password - do you have caps lock on? 
+</div>
+ 	<% } %>
 
 <div class="col-md-8 col-md-offset-2">
 <h2>Login</h2>
-	<form action="create.jsp" method="get" role="form">
+	<form action="/WebLoginServlet" method="post" role="form">
 		<div class="form-group">
 			<label for="email1">Email:</label>
 			<input class="form-control" type="text"  id="email1" name="email"> <br />
 			<label for="password1">Password:</label>
-			<input class="form-control" type="text" name="password" id="password1" ><br />
+			<input class="form-control" type="password" name="password" id="password1" ><br />
 			
 			<div class="text-center">
 				<button type="submit" class="btn btn-success">Login</button>

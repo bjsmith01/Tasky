@@ -87,14 +87,19 @@ public class GoogleDatabase implements IServerDatabase
 			
 			if (email.equals(emailRetrieved))
 			{
-				if (password.equals(passwordRetrieved))
+				if (password.equals(passwordRetrieved)) { 
+					System.out.println("Successful login"); 
 					return ITaskyServer.LOGIN_SUCCESSFUL;
-				else
+				}
+				else {
+					System.out.println("Invalid password"); 
 					return ITaskyServer.LOGIN_INVALID_PASSWORD;
+				}
 			}
 				
 		}
 		//the email was not found in the database
+		System.out.println("Invalid username"); 
 		return ITaskyServer.LOGIN_INVALID_USERNAME;
 	}
 
