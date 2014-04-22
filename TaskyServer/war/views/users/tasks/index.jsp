@@ -33,7 +33,7 @@
 <div class="col-md-8 col-md-offset-2">
 <div class="text-center"><h3>Task List</h3></div>
 	<%
-		Query query = new Query("Task").addSort("taskID");
+		Query query = new Query("Task").addSort("dueDate");
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
 		// Use PreparedQuery interface to retrieve results
@@ -42,7 +42,6 @@
 	<table class="table table-hover">
 		<thead> 
 			<tr>
-				<th>ID</th>
 				<th>Task Description</th>
 				<th>Due Date</th>
 			</tr>
@@ -53,7 +52,6 @@
 		
 		for (Entity result : preparedQuery.asIterable())
 		{
-			//Integer taskIDRetrieved = (Integer) result.getProperty("taskID");
 			int taskIDRetrieved = ((Long) result.getProperty("taskID")).intValue();
 			String taskDescriptionRetrieved = (String) result.getProperty("taskDescription");
 			Date dueDateRetrieved = (Date) result.getProperty("dueDate");
@@ -64,7 +62,6 @@
 	%>
 	
 			<tr>
-				<td><%=task.getId()%></td>
 				<td><%=task.getTaskDescription()%></td>
 				<td><%=task.getDueDateAsShortFormat()%></td>
 			</tr>
