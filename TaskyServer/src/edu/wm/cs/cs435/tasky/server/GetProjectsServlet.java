@@ -65,7 +65,7 @@ public class GetProjectsServlet extends HttpServlet
 			System.out.println(email);
 			System.out.println("SERVER: end of request");
 
-			//access the database and create a new project
+			//access the database and get all projects
 			ArrayList<Project> listOfProjects=Server.instance.getProjects(email);
 			System.out.println("SERVER: server response is");
 			System.out.println(listOfProjects);

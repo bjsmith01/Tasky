@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="edu.wm.cs.cs435.tasky.model.Server"%>
+<%@page import="edu.wm.cs.cs435.tasky.model.Server"%>
 <%@ page import="edu.wm.cs.cs435.tasky.model.*"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.List" %>
@@ -16,21 +16,17 @@
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<!DOCTYPE HTML>
 <html>
   <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-    <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
 
-
   <body>
-  <div class="container">
-  <div class="col-md-8 col-md-offset-2">
-  
 	<%
 		String taskDescription = request.getParameter("taskDescription");
 		String dueDate = request.getParameter("dueDate");
+		String projectID = request.getParameter("projectID");
+		String priority = request.getParameter("priority");
 		String functionType = request.getParameter("functionType");
 		String responseFromServer = "N/A";
 		
@@ -41,6 +37,10 @@
 			taskDescription="sample task";
 		if (dueDate==null)
 			dueDate="today";
+		if (projectID==null)
+			projectID="1";
+		if (priority==null)
+			priority="5";
 	%>
 
 	<h1>Values that were submitted</h1>
@@ -50,12 +50,17 @@
 	
 	if (functionType.equals("addTask"))
 	{
-		Task task=new Task(taskDescription,dueDate);
+		int projectIDint=Integer.parseInt(projectID);
+		
+		Task task=new Task(taskDescription,dueDate,projectIDint);
+		task.setPriority(Integer.parseInt(priority));
 		
 		Entity entityTask=new Entity("Task");
 		entityTask.setProperty("taskDescription", task.getTaskDescription());
 		entityTask.setProperty("dueDate", task.getDueDateAsJavaData());
+		entityTask.setProperty("projectID", task.getProjectID());
 		entityTask.setProperty("taskID", task.getId());
+		entityTask.setProperty("priority", task.getPriority());
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(entityTask);
@@ -72,40 +77,43 @@
 		// Use PreparedQuery interface to retrieve results
 		PreparedQuery preparedQuery = datastore.prepare(query);
 	%>
-	<table class="table table-hover">
-		<thead> 
-			<tr>
-				<th>ID</th>
-				<th>Task Description</th>
-				<th>Due Date</th>
-			</tr>
-		</thead>
+	<table border="1">
+		<tr>
+			<th>Project ID</th>
+			<th>ID</th>
+			<th>Task Description</th>
+			<th>Due Date</th>
+			<th>Priority</th>
+		</tr>
 
-	<tbody>
 	<%
 		
 		for (Entity result : preparedQuery.asIterable())
 		{
 			//Integer taskIDRetrieved = (Integer) result.getProperty("taskID");
+			int projectIDRetrieved = ((Long) result.getProperty("projectID")).intValue();
 			int taskIDRetrieved = ((Long) result.getProperty("taskID")).intValue();
 			String taskDescriptionRetrieved = (String) result.getProperty("taskDescription");
 			Date dueDateRetrieved = (Date) result.getProperty("dueDate");
+			int priorityRetrieved = ((Long) result.getProperty("priority")).intValue();
 
 			Task task=new Task(taskIDRetrieved,taskDescriptionRetrieved,dueDateRetrieved);
-			
+			task.setProjectID(projectIDRetrieved);
+			task.setPriority(priorityRetrieved);
 		
 	%>
 	
 			<tr>
+				<td><%=task.getProjectID()%></td>
 				<td><%=task.getId()%></td>
 				<td><%=task.getTaskDescription()%></td>
 				<td><%=task.getDueDateAsShortFormat()%></td>
+				<td><%=task.getPriority()%></td>
 			</tr>
 	<%
 		}
 	%>
 
-	</tbody>
 	</table>	
 	
 	<%
@@ -117,28 +125,23 @@
 	<h3>Test add task</h3>
 	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
 	<form action="testGoogleDatastore.jsp" method="get">
-		<div class="form-group">
-			<label for="taskdesc">Task Description: </label>
-			<input class="form-control" id="taskdesc" type="text" name="taskDescription" value="sample task">
-			<label for="dueDate">Due Date: </label>
-			<input class="form-control" id="dueDate" type="text" name="dueDate" value="today"><br/>
-			<input type="hidden" name="functionType" value="addTask">
-	
-			<button class="btn btn-success" type="submit">Access Google Datastore &amp; Add Task</button>
-		</div>
+		Task Description: <input type="text" name="taskDescription" value="sample task"><br/> 
+		Due Date: <input type="text" name="dueDate" value="today"><br/>
+		Project ID: <input type="text" name="projectID" value="1"><br/>
+		Priority (1 (high)-5(low)): <input type="text" name="priority" value="5"><br/>
+		<input type="hidden" name="functionType" value="addTask">
+
+		<input type="submit" value="Access Google Datastore & Add Task" >
 	</form>
 	
 	
 	<h3>Test view all tasks</h3>
 	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data added</p>
 	<form action="testGoogleDatastore.jsp" method="get">
-		<div class="form-group">
-			<input type="hidden" name="functionType" value="getTasks">
-			<button class="btn btn-success" type="submit">Access Google Datastore &amp; View All Tasks</button>
-		</div>
+		<input type="hidden" name="functionType" value="getTasks">
+
+		<input type="submit" value="Access Google Datastore & View All Tasks" >
 	</form>
-	</div>
-	
-  </div>	
+		
   </body>
 </html>

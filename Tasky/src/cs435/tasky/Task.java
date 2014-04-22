@@ -147,7 +147,7 @@ public class Task implements Serializable {
 		if (hasReminder)
 			return reminder;
 		else
-			return new GregorianCalendar(0001, 1, 1);
+			return new GregorianCalendar(1, 1, 1);
 	}
 
 	/**
@@ -157,6 +157,11 @@ public class Task implements Serializable {
 	public void setReminder(GregorianCalendar Reminder) {
 		reminder = Reminder;
 		hasReminder = true;
+	}
+	
+	public boolean hasReminder()
+	{
+		return hasReminder;
 	}
 	
 	

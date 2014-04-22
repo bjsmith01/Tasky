@@ -17,6 +17,9 @@ public interface ITaskyServer
 	public static final String ADD_PROJECT_OPERATION = "ADD_PROJECT";
 	public static final String GET_PROJECTS_OPERATION = "GET_PROJECTS";
 	
+	public static final String ADD_TASK_OPERATION = "ADD_TASK";
+	public static final String GET_TASKS_OPERATION = "GET_TASKS";
+	
 	public static final String LOGIN_SUCCESSFUL="LOGIN_SUCCESSFUL";
 	public static final String LOGIN_INVALID_USERNAME="LOGIN_INVALID_USERNAME";
 	public static final String LOGIN_INVALID_PASSWORD="LOGIN_INVALID_PASSWORD";
@@ -26,6 +29,9 @@ public interface ITaskyServer
 
 	public static final String ADD_PROJECT_SUCCESSFUL="ADD_PROJECT_SUCCESSFUL";
 	public static final String ADD_PROJECT_FAILED="ADD_PROJECT_FAILED";
+	
+	public static final String ADD_TASK_SUCCESSFUL = "ADD_TASK_SUCCESSFUL";
+	public static final String ADD_TASK_FAILED = "ADD_TASK_FAILED";
 	
 	
 	
@@ -80,17 +86,17 @@ public interface ITaskyServer
 	 * @param projectID
 	 * @return a textual representation of the list of tasks
 	 */
-	public String getTasks(String email,String projectID);
+	public ArrayList<Task> getTasks(String email,String projectID);
 
 	/**
 	 * Add a new task to a project for a specific user
 	 * 
 	 * @param email, representing the username
-	 * @param projectID
-	 * @param task - the task name
+	 * @param project, representing the ID of the "parent" of the task
+	 * @param task - the task which contains id, decription, due date, priority, etc.
 	 * @return a textual representation of the list of tasks
 	 */
-	public String addTask(String email,String projectID,String task);
+	public String addTask(String email,Project project,Task task);
 
 	/**
 	 * Delete an existing task from a project for a specific user
