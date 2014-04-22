@@ -35,6 +35,9 @@
 	String taskDescription = request.getParameter("taskDescription");
 	String dueDate = request.getParameter("dueDate");
 	String functionType = request.getParameter("functionType");
+	String projectID = request.getParameter("projectID"); 
+	String priority = request.getParameter("priority"); 
+	String projectName = request.getParameter("projectName"); 
 	String responseFromServer = "N/A";
 	
 	//set default values
@@ -48,16 +51,15 @@
 	if (functionType.equals("addTask"))
 	{
 		Task task=new Task(taskDescription,dueDate);
+		Project projectObject=new Project(Integer.parseInt(projectID),"");
 		
-		Entity entityTask=new Entity("Task");
-		entityTask.setProperty("taskDescription", task.getTaskDescription());
-		entityTask.setProperty("dueDate", task.getDueDateAsJavaData());
-		entityTask.setProperty("taskID", task.getId());
-		
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		datastore.put(entityTask);
-		
-		response.sendRedirect("index.jsp");
+		Task taskObject=new Task(taskDescription,dueDate,projectObject.getId());
+		taskObject.setPriority(Integer.parseInt(priority));
+
+		String addTaskResponse=Server.instance.addTask(email, projectObject, taskObject);
+		responseFromServer = addTaskResponse;
+		String redirectURL = "index.jsp?projectID=" + projectID + "&projectName=" + projectName; 
+		response.sendRedirect(redirectURL);
 	}
 %>
 
@@ -67,13 +69,16 @@
 
 <div class="text-center"><h3>Add New Task</h3></div>
 
-	<form action="new.jsp" method="get">
+	<form action="create.jsp" method="get">
 		<div class="form-group">
 			<label for="taskdesc">Task Description: </label>
-			<input class="form-control" id="taskdesc" type="text" name="taskDescription" > <br />
+			<input class="form-control" id="taskdesc" type="text" name="taskDescription" > <br>
 			<label for="dueDate">Due Date: </label>
-			<input class="form-control" id="dueDate" type="text" name="dueDate" value="today"><br />
+			<input class="form-control" id="dueDate" type="date" name="dueDate" value="today"><br>
+			<input class="form-control" id="priority" type="number" name="priority" value="1"><br> 
 			<input type="hidden" name="functionType" value="addTask">
+			<input type="hidden" name="projectID" value="<%= projectID %>">
+			<input type="hidden" name="projectName" value="<%= projectName %>">
 	
 			<div class="text-center">
 				<button class="btn btn-success" type="submit">Add Task</button>

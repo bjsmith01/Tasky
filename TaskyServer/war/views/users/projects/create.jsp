@@ -1,4 +1,3 @@
-<%@page import="java.util.ArrayList"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="edu.wm.cs.cs435.tasky.model.Server"%>
 <%@ page import="edu.wm.cs.cs435.tasky.model.*"%>
@@ -30,48 +29,43 @@
 
 <%@ include file="./header.jsp" %>
 
-<% String projectID = request.getParameter("projectID");
-	String projectName = request.getParameter("projectName"); 
-	System.out.println("projectID:" + projectID); 
-	System.out.println("projectName:  " + projectName); %>
+<!--  Project add logic -->
+
+<%
+	String projectName = request.getParameter("projName"); 
+	String functionType = request.getParameter("functionType");
+	
+	//set default values
+	if (functionType==null)
+		functionType="N/A";
+
+	
+	if (functionType.equals("addProject")) {
+		String projectID = Server.instance.addProject(email, projectName);
+		response.sendRedirect("/views/users/projects/index.jsp");
+	}
+	
+%>
+
+<!--  End task add logic -->
+
 <div class="col-md-8 col-md-offset-2">
-<div class="text-center"><h3>Project: <%= projectName %> </h3></div>
 
-	<table class="table table-hover">
-		<thead> 
-			<tr>
-				<th>Task Description</th>
-				<th>Priority</th>
-				<th>Due Date</th>
-			</tr>
-		</thead>
+<div class="text-center"><h3>Add New Project</h3></div>
 
-	<tbody>
-	<%
-	ArrayList<Task> taskArray = Server.instance.getTasks(email, projectID); 
+	<form class="form-horizontal" action="create.jsp" method="get">
+		<div class="form-group">
+			<label for="taskdesc" class="col-sm-3 control-label">Project Name: </label>
+			<div class="col-sm-8">
+				<input class="form-control" id="projName" type="text" name="projName" > <br />
+			</div>
+			<input type="hidden" name="functionType" value="addProject">
 	
-	for (Task task : taskArray) { 
-	%>
-	
-			<tr>
-				<td><%=task.getTaskDescription()%></td>
-				<td><%=task.getPriority() %>
-				<td><%=task.getDueDateAsShortFormat()%></td>
-			</tr>
-	<%
-		}
-	%>
-
-	</tbody>
-	</table>	
-
-
-	<div class="text-center">
-		<div class="btn-group btn-group-lg">
-			<a href="create.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>" class="btn btn-default">Add New Task</a>
+			<div class="text-center">
+				<button class="btn btn-success" type="submit">Create Project!</button>
+			</div>
 		</div>
-	</div> <br />
-
+	</form>
 </div>
 
 

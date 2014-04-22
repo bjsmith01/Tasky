@@ -15,15 +15,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 
 	<servlet>
-	    <servlet-name>TasksIndexServlet</servlet-name>
-	    <servlet-class>edu.wm.cs.cs435.tasky.server.TasksIndexServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-	    <servlet-name>TasksIndexServlet</servlet-name>
-	    <url-pattern>/TasksIndexServlet</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
 		<servlet-name>SignupServlet</servlet-name>
 		<servlet-class>edu.wm.cs.cs435.tasky.server.SignupServlet</servlet-class>
 	</servlet>
@@ -88,6 +79,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 
 		<welcome-file-list>
-		<welcome-file>testAccessToTaskyDatabase.jsp</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 </web-app>

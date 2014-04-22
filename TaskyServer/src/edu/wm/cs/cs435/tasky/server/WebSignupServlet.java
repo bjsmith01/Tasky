@@ -46,7 +46,7 @@ public class WebSignupServlet extends HttpServlet
 		if (signupStatus.equals(IServerDatabase.NEW_USER_ADDED_TO_DATABASE)) { 
 			HttpSession session = request.getSession(); 
 			session.setAttribute("email", email);
-			response.sendRedirect("/views/users/tasks/index.jsp");
+			response.sendRedirect("/views/users/projects/index.jsp");
 			
 		} else { 
 			request.setAttribute("signupStatus", signupStatus);

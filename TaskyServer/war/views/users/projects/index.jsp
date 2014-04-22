@@ -30,37 +30,31 @@
 
 <%@ include file="./header.jsp" %>
 
-<% String projectID = request.getParameter("projectID");
-	String projectName = request.getParameter("projectName"); 
-	System.out.println("projectID:" + projectID); 
-	System.out.println("projectName:  " + projectName); %>
+<% String projectID = request.getParameter("projectID");  %>
 <div class="col-md-8 col-md-offset-2">
-<div class="text-center"><h3>Project: <%= projectName %> </h3></div>
+<div class="text-center"><h3>Projects</h3></div>
 
 	<table class="table table-hover">
 		<thead> 
 			<tr>
-				<th>Task Description</th>
-				<th>Priority</th>
-				<th>Due Date</th>
+				<th>Project Name</th>
 			</tr>
 		</thead>
 
 	<tbody>
 	<%
-	ArrayList<Task> taskArray = Server.instance.getTasks(email, projectID); 
+	ArrayList<Project> projectArray = Server.instance.getProjects(email); 
 	
-	for (Task task : taskArray) { 
+	if (projectArray.isEmpty()) { %> 
+	<div class="alert alert-success">You have no projects. Use the Add New Project button below to start!</div>
+	<% } else {
+	for (Project project : projectArray) { 
 	%>
 	
 			<tr>
-				<td><%=task.getTaskDescription()%></td>
-				<td><%=task.getPriority() %>
-				<td><%=task.getDueDateAsShortFormat()%></td>
+				<td><a href="/views/users/tasks/index.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>"><%=project.getName()%></a></td>
 			</tr>
-	<%
-		}
-	%>
+	<% }} %>
 
 	</tbody>
 	</table>	
@@ -68,7 +62,7 @@
 
 	<div class="text-center">
 		<div class="btn-group btn-group-lg">
-			<a href="create.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>" class="btn btn-default">Add New Task</a>
+			<a href="create.jsp" class="btn btn-default">Add New Project</a>
 		</div>
 	</div> <br />
 

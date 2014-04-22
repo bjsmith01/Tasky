@@ -42,7 +42,7 @@ public class WebLoginServlet extends HttpServlet
 		if (loginStatus.equals(ITaskyServer.LOGIN_SUCCESSFUL)) { 
 			HttpSession session = request.getSession(); 
 			session.setAttribute("email", email);
-			response.sendRedirect("/views/users/tasks/index.jsp");
+			response.sendRedirect("/views/users/projects/index.jsp");
 			
 		} else { 
 			request.setAttribute("loginStatus", loginStatus);
