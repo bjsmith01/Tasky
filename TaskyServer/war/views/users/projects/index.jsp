@@ -52,7 +52,10 @@
 	%>
 	
 			<tr>
-				<td><a href="/views/users/tasks/index.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>"><%=project.getName()%></a></td>
+				<td><a href="/views/users/tasks/index.jsp
+				?projectID=<%=project.getId()%>
+				&projectName=<%=project.getName()%>" class="btn btn-default btn-lg">
+				<%=project.getName()%></a></td>
 			</tr>
 	<% }} %>
 

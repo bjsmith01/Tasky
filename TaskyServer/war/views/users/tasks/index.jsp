@@ -49,7 +49,9 @@
 	<tbody>
 	<%
 	ArrayList<Task> taskArray = Server.instance.getTasks(email, projectID); 
-	
+	if (taskArray.isEmpty()) { %> 
+	<div class="alert alert-success">You have no tasks. Use the Add New Task button below to start!</div>
+	<% } else {
 	for (Task task : taskArray) { 
 	%>
 	
@@ -59,7 +61,7 @@
 				<td><%=task.getDueDateAsShortFormat()%></td>
 			</tr>
 	<%
-		}
+		}}
 	%>
 
 	</tbody>

@@ -67,15 +67,24 @@
 
 <div class="col-md-8 col-md-offset-2">
 
-<div class="text-center"><h3>Add New Task</h3></div>
-
+<div class="text-center"><h3>Add New Task</h3></div><br>
 	<form action="create.jsp" method="get">
 		<div class="form-group">
-			<label for="taskdesc">Task Description: </label>
-			<input class="form-control" id="taskdesc" type="text" name="taskDescription" > <br>
-			<label for="dueDate">Due Date: </label>
-			<input class="form-control" id="dueDate" type="date" name="dueDate" value="today"><br>
-			<input class="form-control" id="priority" type="number" name="priority" value="1"><br> 
+			<label for="taskdesc" class="col-md-4 control-label">Task Description: </label>
+			<div class="col-md-8">
+				<input class="form-control" id="taskdesc" type="text" name="taskDescription" > <br>
+			</div>
+			
+			<label for="dueDate" class="col-md-4 control-label">Due Date: </label>
+			<div class="col-md-8">
+				<input class="form-control" id="dueDate" type="date" name="dueDate" value="today"><br>
+			</div>
+			
+			<label for="priority" class="col-md-4 control-label">Priority: </label>
+			<div class="col-md-8">
+				<input class="form-control" id="priority" type="number" name="priority" value="1"><br> 
+			</div>
+			
 			<input type="hidden" name="functionType" value="addTask">
 			<input type="hidden" name="projectID" value="<%= projectID %>">
 			<input type="hidden" name="projectName" value="<%= projectName %>">
