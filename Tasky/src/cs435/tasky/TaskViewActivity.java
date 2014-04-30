@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 /**
  * Class that depicts a list of tasks according to some criteria
  * This class currently as a representation of the ToDo List and will eventually
@@ -88,7 +87,94 @@ public class TaskViewActivity extends Activity {
 		Intent i = new Intent(this, CalendarActivity.class);
 		startActivity(i);
 	}
-	
+	/**
+	 * Takes a given task and marks it as complete if it is not already completed
+	 * @param tk the task to complete
+	 * @param position the index of the task within the list view
+	 */
+	public void completeTask(Task tk, int position)
+	{
+			ArrayAdapter<String> a = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1);	
+			
+			for (int x = 0; x < lView.getAdapter().getCount(); x++)
+			{
+				if (x == position)
+				{
+					a.add(tk.getName() + "  is completed");
+				}
+				else
+				{
+					a.add(lView.getAdapter().getItem(x).toString());
+				}
+			}
+			
+			lView.setAdapter(null);
+			lView.setAdapter(a);
+
+			tk.setCompleted(true);
+	}
+	/**
+	 * Mark a completed task as not complete. The task must be completed beforehand.
+	 * @param tk the completed task
+	 * @param position the index of the task within the listview
+	 */
+	public void uncompleteTask(Task tk, int position)
+	{
+		if (tk.isCompleted())
+		{
+			ArrayAdapter<String> a = new ArrayAdapter
+					<String>(getBaseContext(), 
+							android.R.layout.simple_list_item_1);	
+			
+			for (int x = 0; x < lView.getAdapter().getCount(); x++)
+			{
+				if (x == position)
+				{
+					a.add(tk.getName());
+				}
+				else
+				{
+					a.add(lView.getAdapter().getItem(x).toString());
+				}
+			}
+			
+			lView.setAdapter(null);
+			lView.setAdapter(a);
+
+			tk.setCompleted(false);
+		}
+	}
+	/**
+	 * Delete a completed task
+	 * @param tk the task to be deleted
+	 * @param position the index of the task within the listview
+	 */
+	public void deleteTask(Task tk, int position)
+	{		
+		ArrayAdapter<String> a = new ArrayAdapter
+				<String>(getBaseContext(), 
+						android.R.layout.simple_list_item_1);	
+		
+		for (int x = 0; x < lView.getAdapter().getCount(); x++)
+		{
+			if (x == position)
+			{
+				//Do nothing. Acts as the delete.
+			}
+			else
+			{
+				a.add(lView.getAdapter().getItem(x).toString());
+			}
+		}
+		
+		lView.setAdapter(null);
+		lView.setAdapter(a);
+		
+		GlobalTaskList gL = (GlobalTaskList) getApplication();
+		gL.taskList.remove((int)idList.get(position));
+
+	}
+
 	class touchListener extends SimpleOnGestureListener{
 		
 		@Override
@@ -103,57 +189,21 @@ public class TaskViewActivity extends Activity {
 			if (Math.abs(endTouch.getX() - startTouch.getX()) > 
 			Constants.SWIPE_MIN_DISTANCE && (endTouch.getX() > startTouch.getX()))
 			{
-
 				if (!tk.isCompleted())
 				{
-					ArrayAdapter<String> a = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1);	
-					
-					for (int x = 0; x < lView.getAdapter().getCount(); x++)
-					{
-						if (x == position)
-						{
-							a.add(tk.getName() + "  is completed");
-						}
-						else
-						{
-							a.add(lView.getAdapter().getItem(x).toString());
-						}
-					}
-					
-					lView.setAdapter(null);
-					lView.setAdapter(a);
-
-					tk.setCompleted(true);
-					return true;
+					completeTask(tk, position);
+				}
+				else
+				{
+					deleteTask(tk, position);
 				}
 			}
 			else if (Math.abs(endTouch.getX() - startTouch.getX()) > 
 			Constants.SWIPE_MIN_DISTANCE && (endTouch.getX() < startTouch.getX()))
 			{
-				if (tk.isCompleted())
-				{
-					ArrayAdapter<String> a = new ArrayAdapter
-							<String>(getBaseContext(), 
-									android.R.layout.simple_list_item_1);	
-					
-					for (int x = 0; x < lView.getAdapter().getCount(); x++)
-					{
-						if (x == position)
-						{
-							a.add(tk.getName());
-						}
-						else
-						{
-							a.add(lView.getAdapter().getItem(x).toString());
-						}
-					}
-					
-					lView.setAdapter(null);
-					lView.setAdapter(a);
-
-					tk.setCompleted(false);
-				}
+				uncompleteTask(tk, position);
 			}
+			
 			return false;
 		}
 		
@@ -190,6 +240,5 @@ public class TaskViewActivity extends Activity {
 			return false;
 			
 		}
-		
 	}
 }
