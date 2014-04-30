@@ -8,5 +8,7 @@ public class Constants {
 	public static final String LOGIN_INVALID_EMAIL = "LOGIN_INVALID_EMAIL";
 	public static final String LOGIN_INVALID_PASSWORD = "LOGIN_INVALID_PASSWORD";
 	public static final String NEW_USER_ADDED_TO_DATABASE = "NEW_USER_ADDED_TO_DATABASE";
+	
+	public static final int SWIPE_MIN_DISTANCE = 100;
 
 }
