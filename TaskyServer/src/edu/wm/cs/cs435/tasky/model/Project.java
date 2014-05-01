@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class Project
 {
-	private int id;
+	private long id;
 	private String name;
 	private ArrayList<Task> listOfTasks;
 
@@ -18,16 +18,17 @@ public class Project
 	 * Create a new project and initialize an empty lists of tasks
 	 * @param name
 	 */
-	public Project(String name)
-	{
-		this.setName(name);
-		
-		this.id=IDs.getNextAvailableProjectID();
-		
-		this.listOfTasks=new ArrayList<>();
-	}
+//	public Project(String name)
+//	{
+//		this.setName(name);
+//		
+//		this.id=-1;
+////		this.id=IDs.getNextAvailableProjectID();
+//		
+//		this.listOfTasks=new ArrayList<>();
+//	}
 
-	public Project(int projectID, String projectName)
+	public Project(long projectID, String projectName)
 	{
 		this.id=projectID;
 		this.setName(projectName);
@@ -54,7 +55,7 @@ public class Project
 		return listOfTasks;
 	}
 
-	public int getId()
+	public long getId()
 	{
 		return id;
 	}

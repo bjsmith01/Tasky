@@ -39,6 +39,10 @@ public class GoogleDatabase implements IServerDatabase
 	private static final String TASK_PROPERTY_DUE_DATE = "dueDate";
 	private static final String TASK_PROPERTY_PRIORITY = "priority";
 
+	private static final String ID_KIND = "ID";
+	private static final String ID_PROPERTY_MAX_PROJECT_ID = "MaxProjectID";
+	private static final String ID_PROPERTY_MAX_TASK_ID = "MaxTaskID";
+
 	public GoogleDatabase()
 	{
 	}
@@ -167,7 +171,6 @@ public class GoogleDatabase implements IServerDatabase
 	@Override
 	public ArrayList<Task> getTasks(String email, Project project)
 	{
-		
 		Query query = new Query(TASK_KIND).addSort(TASK_PROPERTY_ID);
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -196,6 +199,80 @@ public class GoogleDatabase implements IServerDatabase
 		}
 		
 		return listOfTasks;
+	}
+
+	/**
+	 * Gets the next available project ID stored in the database, 
+	 * which will be assigned to new projects.
+	 * 
+	 * Each call to this method will return a unique project ID
+	 * 
+	 * @return a unique ID that can be assigned for a new project  
+	 */
+	public long getNextAvailableProjectID()
+	{
+		Query query = new Query(ID_KIND);
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		
+		// Use PreparedQuery interface to retrieve results
+		PreparedQuery preparedQuery = datastore.prepare(query);
+		
+		Entity result=preparedQuery.asSingleEntity();
+		
+		long maxProjectIDRetrieved = (long) result.getProperty(ID_PROPERTY_MAX_PROJECT_ID);
+		
+		//increase the next available ID
+		result.setProperty(ID_PROPERTY_MAX_PROJECT_ID, maxProjectIDRetrieved+1);
+		
+		datastore.put(result);
+
+		return maxProjectIDRetrieved;
+	}
+
+	
+	/**
+	 * Gets the next available task ID stored in the database, 
+	 * which will be assigned to new tasks.
+	 * 
+	 * Each call to this method will return a unique task ID
+	 * 
+	 * @return a unique ID that can be assigned for a new task  
+	 */
+	public long getNextAvailableTaskID()
+	{
+		Query query = new Query(ID_KIND);
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		
+		// Use PreparedQuery interface to retrieve results
+		PreparedQuery preparedQuery = datastore.prepare(query);
+		
+		Entity result=preparedQuery.asSingleEntity();
+		
+		long maxTaskIDRetrieved = (long) result.getProperty(ID_PROPERTY_MAX_TASK_ID);
+		
+		//increase the next available ID
+		result.setProperty(ID_PROPERTY_MAX_TASK_ID, maxTaskIDRetrieved+1);
+		
+		datastore.put(result);
+
+		return maxTaskIDRetrieved;
+	}
+	
+	/**
+	 * Initialize the database with entries for maxProjectID and maxTaskID
+	 * (This only needs to be done once)
+	 * 
+	 */
+	public void initializeDatabaseWithProjectAndTaskIDs()
+	{
+		Entity entityID = new Entity(ID_KIND);
+		entityID.setProperty(ID_PROPERTY_MAX_PROJECT_ID, (long)1);
+		entityID.setProperty(ID_PROPERTY_MAX_TASK_ID, (long)1);
+
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		datastore.put(entityID);
 	}
 	
 }

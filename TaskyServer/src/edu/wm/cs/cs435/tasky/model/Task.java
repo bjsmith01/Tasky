@@ -17,8 +17,8 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class Task
 {
-	private int id;
-	private int projectID;		//id of the parent (i.e., project it belongs to)
+	private long id;
+	private long projectID;		//id of the parent (i.e., project it belongs to)
 	private int priority;		//value between 1 and 5 (1 for high priority, 5 for low priority)
 	private String taskDescription;
 	private DateTime dueDate;
@@ -28,7 +28,7 @@ public class Task
 	public Task(String taskDescription)
 	{
 		this.setTaskDescription(taskDescription);
-		this.id=IDs.getNextAvailableTaskID();
+//		this.id=IDs.getNextAvailableTaskID();
 		this.setProjectID(-1);
 		this.setPriority(5);
 
@@ -41,22 +41,22 @@ public class Task
 		convertDueDate(dueDate);
 	}
 
-	public Task(String taskDescription, String dueDate, int projectID)
+	public Task(String taskDescription, String dueDate, long projectID)
 	{
 		this(taskDescription,dueDate);
 		
 		this.setProjectID(projectID);
 	}
 
-	public Task(String id,String taskDescription, String dueDate)
+	public Task(long taskID,String taskDescription, String dueDate)
 	{
 		this(taskDescription,dueDate);
 		
-		this.id=Integer.parseInt(id);
+		this.id=taskID;
 		
 	}
 
-	public Task(int taskID, String taskDescription, Date dueDate)
+	public Task(long taskID, String taskDescription, Date dueDate)
 	{
 		this.id = taskID;
 		this.taskDescription = taskDescription;
@@ -111,7 +111,7 @@ public class Task
 		}
 	}
 
-	public int getId()
+	public long getId()
 	{
 		return id;
 	}
@@ -149,12 +149,12 @@ public class Task
 		return fmt.print(dueDate);
 	}
 
-	public int getProjectID()
+	public long getProjectID()
 	{
 		return projectID;
 	}
 
-	public void setProjectID(int projectID)
+	public void setProjectID(long projectID)
 	{
 		this.projectID = projectID;
 	}

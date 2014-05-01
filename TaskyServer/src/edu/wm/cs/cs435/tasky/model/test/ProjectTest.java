@@ -26,7 +26,7 @@ public class ProjectTest
 	public void testCreateProject()
 	{
 		IDs.setMaxProjectID(0);
-		Project project1 = new Project("First Project");
+		Project project1 = new Project(1,"First Project");
 
 		assertEquals("First Project", project1.getName());
 		assertEquals(1, project1.getId());
@@ -38,7 +38,7 @@ public class ProjectTest
 	{
 		IDs.setMaxProjectID(0);
 		
-		Project project1 = new Project("First Project");
+		Project project1 = new Project(1,"First Project");
 		
 		assertEquals("First Project", project1.getName());
 		
@@ -57,7 +57,7 @@ public class ProjectTest
 	{
 		IDs.setMaxProjectID(0);
 		
-		Project project1 = new Project("First Project");
+		Project project1 = new Project(1,"First Project");
 		
 		assertEquals("First Project", project1.getName());
 		
