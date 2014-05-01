@@ -1,4 +1,3 @@
-<%@page import="java.util.ArrayList"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="edu.wm.cs.cs435.tasky.model.Server"%>
 <%@ page import="edu.wm.cs.cs435.tasky.model.*"%>
@@ -30,52 +29,30 @@
 
 <%@ include file="./header.jsp" %>
 
-<% String projectID = request.getParameter("projectID");
+<!--  Task add logic -->
+
+<%
+	String functionType = request.getParameter("functionType");
+	String projectID = request.getParameter("projectID");
 	String projectName = request.getParameter("projectName"); 
-	System.out.println("projectID:" + projectID); 
-	System.out.println("projectName:  " + projectName); %>
-<div class="col-md-8 col-md-offset-2">
-<div class="text-center"><h3>Project: <%= projectName %> </h3></div>
-
-	<table class="table table-hover">
-		<thead> 
-			<tr>
-				<th>Task Description</th>
-				<th>Priority</th>
-				<th>Due Date</th>
-			</tr>
-		</thead>
-
-	<tbody>
-	<%
-	ArrayList<Task> taskArray = Server.instance.getTasks(email, projectID); 
-	if (taskArray.isEmpty()) { %> 
-	<div class="alert alert-success">You have no tasks. Use the Add New Task button below to start!</div>
-	<% } else {
-	for (Task task : taskArray) { 
-	%>
+	String taskID = request.getParameter("taskID"); 
+	String responseFromServer = "N/A";
 	
-			<tr>
-				<td><%=task.getTaskDescription()%></td>
-				<td><%=task.getPriority() %>
-				<td><%=task.getDueDateAsShortFormat()%></td>
-				<td><a href="destroy.jsp?projectID=<%=projectID%>&functionType=destroyTask&projectName=<%=projectName%>&taskID=<%=task.getId()%>" class="btn btn-danger">Delete</a>
-			</tr>
-	<%
-		}}
-	%>
+	//set default values
+	if (functionType==null)
+		functionType="N/A";
 
-	</tbody>
-	</table>	
+	if (functionType.equals("destroyTask"))
+	{
+		String destroyTaskResponse=Server.instance.deleteTask(email, projectID, taskID);
+		responseFromServer = destroyTaskResponse;
+		String redirectURL = "index.jsp?projectID=" + projectID + "&projectName=" + projectName; 
+		response.sendRedirect(redirectURL);
+	}
+%>
 
+<!--  End task add logic -->
 
-	<div class="text-center">
-		<div class="btn-group btn-group-lg">
-			<a href="create.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>" class="btn btn-default">Add New Task</a>
-		</div>
-	</div> <br />
-
-</div>
 
 
 <%@ include file="./footer.jsp" %>

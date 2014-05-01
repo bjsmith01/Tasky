@@ -56,6 +56,8 @@
 				?projectID=<%=project.getId()%>
 				&projectName=<%=project.getName()%>" class="btn btn-default btn-lg">
 				<%=project.getName()%></a></td>
+				<td><a href="destroy.jsp?projectID=<%=project.getId()%>&functionType=destroyProject" class="btn btn-danger">Delete</a>
+				
 			</tr>
 	<% }} %>
 
