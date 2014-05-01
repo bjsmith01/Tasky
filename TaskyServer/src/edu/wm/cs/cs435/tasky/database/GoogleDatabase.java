@@ -152,6 +152,40 @@ public class GoogleDatabase implements IServerDatabase
 		return listOfProjects;
 	}
 
+
+	@Override
+	public String deleteProject(String email, String projectID)
+	{
+		long projectIDAsLong=Long.parseLong(projectID);
+		
+		Query query = new Query(PROJECT_KIND).addSort(PROJECT_PROPERTY_EMAIL);
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		
+		// Use PreparedQuery interface to retrieve results
+		PreparedQuery preparedQuery = datastore.prepare(query);
+		
+		Entity foundProject=null;
+		//iterate through the results and see if the project with projectID appears in the database
+		for (Entity result : preparedQuery.asIterable())
+		{
+			long projectIDRetrieved = (long) result.getProperty(PROJECT_PROPERTY_ID);
+			
+			if (projectIDAsLong==projectIDRetrieved)
+			{
+				foundProject=result;
+				break;
+			}
+		}
+		
+		if (foundProject==null)
+			return ITaskyServer.DELETE_PROJECT_FAILED_NO_SUCH_PROJECT_ID;
+
+		//if project was found, delete the project
+		datastore.delete(foundProject.getKey());
+		return ITaskyServer.DELETE_PROJECT_SUCCESSFUL;
+	}
+	
 	@Override
 	public String addTask(Project project, Task task)
 	{
@@ -310,5 +344,6 @@ public class GoogleDatabase implements IServerDatabase
 		datastore.delete(foundTask.getKey());
 		return ITaskyServer.DELETE_TASK_SUCCESSFUL;
 	}
+
 	
 }

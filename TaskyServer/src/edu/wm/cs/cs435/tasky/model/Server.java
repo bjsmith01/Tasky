@@ -115,6 +115,12 @@ public class Server implements ITaskyServer
 	}
 
 	@Override
+	public String deleteProject(String email, String projectID)
+	{
+		return databaseInstance.deleteProject(email, projectID);
+	}
+	
+	@Override
 	public String addTask(String email, Project project, Task task)
 	{
 		//create a new task and assign it a unique ID
@@ -167,5 +173,6 @@ public class Server implements ITaskyServer
 	{
 		databaseInstance.initializeDatabaseWithProjectAndTaskIDs();
 	}
+
 	
 }

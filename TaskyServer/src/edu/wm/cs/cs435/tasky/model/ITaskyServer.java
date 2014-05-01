@@ -15,6 +15,7 @@ public interface ITaskyServer
 	public static final String SIGNUP_OPERATION = "SIGNUP";
 	public static final String LOGIN_OPERATION = "LOGIN";
 	public static final String ADD_PROJECT_OPERATION = "ADD_PROJECT";
+	public static final String DELETE_PROJECT_OPERATION = "DELETE_PROJECT";
 	public static final String GET_PROJECTS_OPERATION = "GET_PROJECTS";
 	
 	public static final String ADD_TASK_OPERATION = "ADD_TASK";
@@ -37,6 +38,9 @@ public interface ITaskyServer
 	
 	public static final String DELETE_TASK_SUCCESSFUL = "DELETE_TASK_SUCCESSFUL";
 	public static final String DELETE_TASK_FAILED_NO_SUCH_TASK_ID = "DELETE_TASK_FAILED_NO_SUCH_TASK_ID";
+
+	public static final String DELETE_PROJECT_SUCCESSFUL = "DELETE_PROJECT_SUCCESSFUL";
+	public static final String DELETE_PROJECT_FAILED_NO_SUCH_PROJECT_ID = "DELETE_PROJECT_FAILED_NO_SUCH_PROJECT_ID";
 	
 	
 	
@@ -83,6 +87,15 @@ public interface ITaskyServer
 	 */
 	public String addProject(String email,String projectName);
 	
+	/**
+	 * Delete an existing project for a specific user
+	 * 
+	 * @param email, representing the username
+	 * @param projectID
+	 * @return a status message
+	 */
+	public String deleteProject(String email,String projectID);
+
 	
 	/**
 	 * Gets the list of tasks associated with a specific projectID of a specific user

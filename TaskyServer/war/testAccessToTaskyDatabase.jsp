@@ -80,6 +80,12 @@
 			responseFromServer=actualListOfTasksAsText;
 		}
 
+		if (functionType.equals("deleteProject"))
+		{
+			String deleteProjectResponse = Server.instance.deleteProject(email, projectID);
+			responseFromServer=deleteProjectResponse;
+		}
+
 		if (functionType.equals("isEmailAvailableForSignup"))
 		{
 			GoogleDatabase googleDatabase=new GoogleDatabase();
@@ -200,6 +206,14 @@
 	<%
 	}
 
+	if (functionType.equals("deleteProject"))
+	{
+	%>
+		<p>Submitted email: <%=email%></p> 
+		<p>Submitted projectID: <%=projectID%></p>
+	<%
+	}
+
 	if (functionType.equals("isEmailAvailableForSignup"))
 	{
 	%>
@@ -260,6 +274,17 @@
 
 		<input type="submit" value="Access Database & Test addProject" >
 	</form>
+	
+	<h3>Test delete a project for a user</h3>
+	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data</p>
+	<form action="testAccessToTaskyDatabase.jsp" method="get">
+		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
+		Project ID: <input type="text" name="projectID" value="1"><br/>
+		<input type="hidden" name="functionType" value="deleteProject">
+
+		<input type="submit" value="Access Google Datastore & Delete a Project" >
+	</form>
+	
 	
 	<h3>Test get projects</h3>
 	<form action="testAccessToTaskyDatabase.jsp" method="get">
