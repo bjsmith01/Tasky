@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -49,6 +50,12 @@ public class LogInActivity extends Activity {
 				&& password.getText().toString() != ""
 				&& privLogin(username.getText().toString(), password.getText().toString()))
 		{
+			SharedPreferences p = this.getSharedPreferences("Login" , MODE_PRIVATE);
+			SharedPreferences.Editor e = p.edit();
+			e.putString("USERNAME", username.getText().toString());
+			e.putString("PASSWORD", password.getText().toString());
+			e.commit();
+			
 			Intent i = new Intent(this, ToDoListActivity.class);
 			startActivity(i);
 		}

@@ -9,10 +9,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +29,7 @@ import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 /**
  * 
  * @author Jarrett Gabel
@@ -112,7 +115,7 @@ public class CalendarActivity extends Activity {
 		Spinner month = (Spinner) findViewById(R.id.calMonths);
 		loadGridViewData(g, month.getSelectedItemPosition() + 1, year.getSelectedItemPosition() + 2000);
 		Log.v("CalTest", "a element count = " + String.valueOf(a.size()));
-
+		
 	}
 
 	private void loadGridViewData(GridView g, int monthValue, int yearValue)
@@ -235,15 +238,15 @@ public class CalendarActivity extends Activity {
 			Intent TVI = new Intent(this, TVSearchActivity.class);
 			startActivity(TVI);
 			break;
-		case R.id.calAddTask:
-			
+		case R.id.calAddTask:	
 			Intent addI = new Intent(this, AddTaskActivity.class);
 			addI.putExtra("PrevView", Constants.CALENDAR);
 			startActivity(addI);
 			break;
-		case R.id.calEdit:
-			i = new Intent(this, EditTaskActivity.class);
-			i.putExtra("RETURN", Constants.CALENDAR);
+		case R.id.calLogOut:
+			GlobalTaskList g = (GlobalTaskList) getApplication();
+			g.taskList = new ArrayList<Task>();
+			i = new Intent(this, LogInActivity.class);
 			startActivity(i);
 		default:
 			return super.onOptionsItemSelected(item);

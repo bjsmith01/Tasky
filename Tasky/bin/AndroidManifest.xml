@@ -38,11 +38,13 @@
         </activity>
         <activity
             android:name="cs435.tasky.TaskViewActivity"
-            android:label="@string/title_activity_task_view" >
+            android:label="@string/title_activity_task_view" 
+			android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name="cs435.tasky.EditTaskActivity"
-            android:label="@string/title_activity_edit_task" >
+            android:label="@string/title_activity_edit_task"
+			android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name="cs435.tasky.LogInActivity"
@@ -54,11 +56,13 @@
         </activity>
         <activity
             android:name="cs435.tasky.NewUserActivity"
-            android:label="@string/title_activity_new_user" >
+            android:label="@string/title_activity_new_user"
+			android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name="cs435.tasky.AddTaskActivity"
-            android:label="@string/title_activity_add_task" >
+            android:label="@string/title_activity_add_task"
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 
