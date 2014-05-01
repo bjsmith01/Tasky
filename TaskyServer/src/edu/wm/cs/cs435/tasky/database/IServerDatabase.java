@@ -84,4 +84,14 @@ public interface IServerDatabase
 	 */
 	ArrayList<Task> getTasks(String email,Project project);
 	
+	/**
+	 * Delete an existing task from a project for a specific user
+	 * 
+	 * @param email, representing the username
+	 * @param projectID
+	 * @param taskID
+	 * @return a status message
+	 */
+	public String deleteTask(String email,String projectID,String taskID);
+
 }

@@ -274,5 +274,41 @@ public class GoogleDatabase implements IServerDatabase
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(entityID);
 	}
+
+	@Override
+	public String deleteTask(String email, String projectID, String taskID)
+	{
+		long projectIDAsLong=Long.parseLong(projectID);
+		long taskIDAsLong=Long.parseLong(taskID);
+		
+		Query query = new Query(TASK_KIND).addSort(TASK_PROPERTY_ID);
+		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		
+		// Use PreparedQuery interface to retrieve results
+		PreparedQuery preparedQuery = datastore.prepare(query);
+		
+		Entity foundTask=null;
+		//iterate through the results and see if the task with taskID appears in the database
+		for (Entity result : preparedQuery.asIterable())
+		{
+			long projectIDRetrieved = (long) result.getProperty(TASK_PROPERTY_PROJECT_ID);
+			long taskIDRetrieved = (long) result.getProperty(TASK_PROPERTY_ID);
+			
+			if (projectIDAsLong==projectIDRetrieved)
+				if (taskIDAsLong==taskIDRetrieved)
+				{
+					foundTask=result;
+					break;
+				}
+		}
+		
+		if (foundTask==null)
+			return ITaskyServer.DELETE_TASK_FAILED_NO_SUCH_TASK_ID;
+
+		//if task was found, delete the task
+		datastore.delete(foundTask.getKey());
+		return ITaskyServer.DELETE_TASK_SUCCESSFUL;
+	}
 	
 }

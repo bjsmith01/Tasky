@@ -18,6 +18,7 @@ public interface ITaskyServer
 	public static final String GET_PROJECTS_OPERATION = "GET_PROJECTS";
 	
 	public static final String ADD_TASK_OPERATION = "ADD_TASK";
+	public static final String DELETE_TASK_OPERATION = "DELETE_TASK";
 	public static final String GET_TASKS_OPERATION = "GET_TASKS";
 	
 	public static final String LOGIN_SUCCESSFUL="LOGIN_SUCCESSFUL";
@@ -32,6 +33,10 @@ public interface ITaskyServer
 	
 	public static final String ADD_TASK_SUCCESSFUL = "ADD_TASK_SUCCESSFUL";
 	public static final String ADD_TASK_FAILED = "ADD_TASK_FAILED";
+	
+	
+	public static final String DELETE_TASK_SUCCESSFUL = "DELETE_TASK_SUCCESSFUL";
+	public static final String DELETE_TASK_FAILED_NO_SUCH_TASK_ID = "DELETE_TASK_FAILED_NO_SUCH_TASK_ID";
 	
 	
 	
@@ -104,7 +109,7 @@ public interface ITaskyServer
 	 * @param email, representing the username
 	 * @param projectID
 	 * @param taskID
-	 * @return a textual representation of the list of tasks
+	 * @return a status message
 	 */
 	public String deleteTask(String email,String projectID,String taskID);
 

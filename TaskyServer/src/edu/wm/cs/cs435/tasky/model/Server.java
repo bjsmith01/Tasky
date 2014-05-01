@@ -128,8 +128,7 @@ public class Server implements ITaskyServer
 	@Override
 	public String deleteTask(String email, String projectID, String taskID)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return databaseInstance.deleteTask(email, projectID, taskID);
 	}
 	
 	

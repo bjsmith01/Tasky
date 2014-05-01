@@ -69,6 +69,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/InitializeDatabaseIDsServlet</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>DeleteTaskServlet</servlet-name>
+		<servlet-class>edu.wm.cs.cs435.tasky.server.DeleteTaskServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteTaskServlet</servlet-name>
+		<url-pattern>/DeleteTaskServlet</url-pattern>
+	</servlet-mapping>
+
 	<welcome-file-list>
 		<welcome-file>testAccessToTaskyDatabase.jsp</welcome-file>
 	</welcome-file-list>

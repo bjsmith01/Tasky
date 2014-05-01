@@ -28,6 +28,7 @@
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String projectID = request.getParameter("projectID");
+		String taskID = request.getParameter("taskID");
 		String projectName = request.getParameter("projectName");
 		String functionType = request.getParameter("functionType");
 		String responseFromServer = "N/A";
@@ -46,6 +47,8 @@
 			password="123";
 		if (projectID==null)
 			projectID="10";
+		if (taskID==null)
+			taskID="1";
 		if (projectName==null)
 			projectName="FirstProject";
 		if (taskDescription==null)
@@ -64,102 +67,108 @@
 			String loginStatus = Server.instance.login(email, password);
 			responseFromServer = loginStatus;
 		}
-		else
-			if (functionType.equals("getProjects"))
+
+		if (functionType.equals("getProjects"))
+		{
+			String actualListOfProjectsAsText = Server.instance.getProjects(email).toString();
+			responseFromServer=actualListOfProjectsAsText;
+		}
+
+		if (functionType.equals("getTasks"))
+		{
+			String actualListOfTasksAsText = Server.instance.getTasks(email,projectID).toString();
+			responseFromServer=actualListOfTasksAsText;
+		}
+
+		if (functionType.equals("isEmailAvailableForSignup"))
+		{
+			GoogleDatabase googleDatabase=new GoogleDatabase();
+			String isEmailAvailableForSignup=googleDatabase.isEmailAvailableForSignup(email);
+			responseFromServer = isEmailAvailableForSignup;
+		}
+
+		if (functionType.equals("signup"))
+		{
+			String signupResponse=Server.instance.signup(email, password);
+			responseFromServer = "" + signupResponse;
+		}
+
+		if (functionType.equals("addProject"))
+		{
+			String addProjectResponse=Server.instance.addProject(email, projectName);
+			responseFromServer = addProjectResponse;
+		}
+
+		if (functionType.equals("addTask"))
+		{
+			Project projectObject=new Project(Integer.parseInt(projectID),"");
+			
+			Task taskObject=new Task(taskDescription,dueDate,projectObject.getId());
+			taskObject.setPriority(Integer.parseInt(priority));
+
+			String addTaskResponse=Server.instance.addTask(email, projectObject, taskObject);
+			responseFromServer = addTaskResponse;
+		}
+
+		if (functionType.equals("deleteTask"))
+		{
+			String addTaskResponse=Server.instance.deleteTask(email, projectID, taskID);
+			responseFromServer = addTaskResponse;
+		}
+
+		if (functionType.equals("viewAllTasksInTheDatabase"))
+		{
+			Query query = new Query("Task").addSort("taskID");
+			
+			
+			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+			
+			// Use PreparedQuery interface to retrieve results
+			PreparedQuery preparedQuery = datastore.prepare(query);
+			
+			%>
+			<table border="1">
+				<tr>
+					<th>Project ID</th>
+					<th>ID</th>
+					<th>Task Description</th>
+					<th>Due Date</th>
+					<th>Priority</th>
+				</tr>
+	
+			<%
+			
+			for (Entity result : preparedQuery.asIterable())
 			{
-				String actualListOfProjectsAsText = Server.instance.getProjects(email).toString();
-				responseFromServer=actualListOfProjectsAsText;
+				//Integer taskIDRetrieved = (Integer) result.getProperty("taskID");
+				int projectIDRetrieved = ((Long) result.getProperty("projectID")).intValue();
+				int taskIDRetrieved = ((Long) result.getProperty("taskID")).intValue();
+				String taskDescriptionRetrieved = (String) result.getProperty("taskDescription");
+				Date dueDateRetrieved = (Date) result.getProperty("dueDate");
+				int priorityRetrieved = ((Long) result.getProperty("priority")).intValue();
+
+				Task task=new Task(taskIDRetrieved,taskDescriptionRetrieved,dueDateRetrieved);
+				task.setProjectID(projectIDRetrieved);
+				task.setPriority(priorityRetrieved);
+			
+				%>
+		
+				<tr>
+					<td><%=task.getProjectID()%></td>
+					<td><%=task.getId()%></td>
+					<td><%=task.getTaskDescription()%></td>
+					<td><%=task.getDueDateAsShortFormat()%></td>
+					<td><%=task.getPriority()%></td>
+				</tr>
+				<%
 			}
-			else
-				if (functionType.equals("getTasks"))
-				{
-					String actualListOfTasksAsText = Server.instance.getTasks(email,projectID).toString();
-					responseFromServer=actualListOfTasksAsText;
-				}
-				else
-					if (functionType.equals("isEmailAvailableForSignup"))
-					{
-						GoogleDatabase googleDatabase=new GoogleDatabase();
-						String isEmailAvailableForSignup=googleDatabase.isEmailAvailableForSignup(email);
-						responseFromServer = isEmailAvailableForSignup;
-					}
-					else
-						if (functionType.equals("signup"))
-						{
-							String signupResponse=Server.instance.signup(email, password);
-							responseFromServer = "" + signupResponse;
-						}
-						else
-							if (functionType.equals("addProject"))
-							{
-								String addProjectResponse=Server.instance.addProject(email, projectName);
-								responseFromServer = addProjectResponse;
-							}
-							else
-								if (functionType.equals("addTask"))
-								{
-									Project projectObject=new Project(Integer.parseInt(projectID),"");
-									
-									Task taskObject=new Task(taskDescription,dueDate,projectObject.getId());
-									taskObject.setPriority(Integer.parseInt(priority));
+			%>
 
-									String addTaskResponse=Server.instance.addTask(email, projectObject, taskObject);
-									responseFromServer = addTaskResponse;
-								}
-								else
-									
-								if (functionType.equals("viewAllTasksInTheDatabase"))
-								{
-									Query query = new Query("Task").addSort("taskID");
-									
-									
-									DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-									
-									// Use PreparedQuery interface to retrieve results
-									PreparedQuery preparedQuery = datastore.prepare(query);
-								%>
-								<table border="1">
-									<tr>
-										<th>Project ID</th>
-										<th>ID</th>
-										<th>Task Description</th>
-										<th>Due Date</th>
-										<th>Priority</th>
-									</tr>
-
-								<%
-									
-									for (Entity result : preparedQuery.asIterable())
-									{
-										//Integer taskIDRetrieved = (Integer) result.getProperty("taskID");
-										int projectIDRetrieved = ((Long) result.getProperty("projectID")).intValue();
-										int taskIDRetrieved = ((Long) result.getProperty("taskID")).intValue();
-										String taskDescriptionRetrieved = (String) result.getProperty("taskDescription");
-										Date dueDateRetrieved = (Date) result.getProperty("dueDate");
-										int priorityRetrieved = ((Long) result.getProperty("priority")).intValue();
-
-										Task task=new Task(taskIDRetrieved,taskDescriptionRetrieved,dueDateRetrieved);
-										task.setProjectID(projectIDRetrieved);
-										task.setPriority(priorityRetrieved);
-									
-								%>
-								
-										<tr>
-											<td><%=task.getProjectID()%></td>
-											<td><%=task.getId()%></td>
-											<td><%=task.getTaskDescription()%></td>
-											<td><%=task.getDueDateAsShortFormat()%></td>
-											<td><%=task.getPriority()%></td>
-										</tr>
-								<%
-									}
-								%>
-
-								</table>	
-								
-								<%
-								responseFromServer="See table above. The talbe will not be sent to the client, and is for testing purposes only";
-								}
+		</table>	
+		
+		<%
+		responseFromServer="See table above. The talbe will not be sent to the client, and is for testing purposes only";
+		}
 								
 	%>
 	
@@ -167,62 +176,72 @@
 	<p>Submitted functionType: <%=functionType%></p>
 
 	<%
-		if (functionType.equals("testLogin"))
-		{
+	if (functionType.equals("testLogin"))
+	{
 	%>
 		<p>The return value should be a string LOGIN_SUCCESSFUL, LOGIN_INVALID_USERNAME or LOGIN_INVALID_PASSWORD</p> 
 		<p>Submitted email: <%=email%></p> 
 		<p>Submitted password: <%=password%></p> 
 	<%
-		}
-		else
-			if (functionType.equals("getProjects"))
-			{
+	}
+
+	if (functionType.equals("getProjects"))
+	{
 	%>
-			<p>Submitted email: <%=email%></p> 
+		<p>Submitted email: <%=email%></p> 
 	<%
-			}
-			else
-				if (functionType.equals("getTasks"))
-				{
+	}
+
+	if (functionType.equals("getTasks"))
+	{
 	%>
-			<p>Submitted email: <%=email%></p> 
-			<p>Submitted projectID: <%=projectID%></p>
+		<p>Submitted email: <%=email%></p> 
+		<p>Submitted projectID: <%=projectID%></p>
 	<%
-				}
-				else
-					if (functionType.equals("isEmailAvailableForSignup"))
-					{
-					%>
-						<p>Submitted email: <%=email%></p> 
-					<%
-					}
-					else
-						if (functionType.equals("signup"))
-						{
-							%>
-							<p>Submitted email: <%=email%></p> 
-							<p>Submitted password: <%=password%></p> 
-							<%
-						}
-						else
-							if (functionType.equals("addProject"))
-							{
-								%>
-								<p>Submitted email: <%=email%></p> 
-								<p>Submitted project Name: <%=projectName%></p> 
-								<%
-							}
-							else
-								if (functionType.equals("addTask"))
-								{
-									%>
-									<p>Submitted Task Description: <%=taskDescription%></p> 
-									<p>Submitted Due Date: <%=dueDate%></p> 
-									<p>Submitted Project ID: <%=projectID%></p> 
-									<p>Submitted Priority: <%=priority%></p> 
-									<%
-								}
+	}
+
+	if (functionType.equals("isEmailAvailableForSignup"))
+	{
+	%>
+		<p>Submitted email: <%=email%></p> 
+	<%
+	}
+	
+	if (functionType.equals("signup"))
+	{
+	%>
+		<p>Submitted email: <%=email%></p> 
+		<p>Submitted password: <%=password%></p> 
+	<%
+	}
+
+	if (functionType.equals("addProject"))
+	{
+	%>
+		<p>Submitted email: <%=email%></p> 
+		<p>Submitted project Name: <%=projectName%></p> 
+	<%
+	}
+
+	if (functionType.equals("addTask"))
+	{
+	%>
+		<p>Submitted Task Description: <%=taskDescription%></p> 
+		<p>Submitted Due Date: <%=dueDate%></p> 
+		<p>Submitted Project ID: <%=projectID%></p> 
+		<p>Submitted Priority: <%=priority%></p> 
+	<%
+	}
+
+	if (functionType.equals("deleteTask"))
+	{
+	%>
+		<p>Submitted Task Description: <%=taskDescription%></p> 
+		<p>Submitted email: <%=email%></p> 
+		<p>Submitted project ID: <%=projectID%></p> 
+		<p>Submitted task ID: <%=taskID%></p> 
+	<%
+	}
 					
 	
 	%>
@@ -307,6 +326,17 @@
 		<input type="hidden" name="functionType" value="getTasks">
 
 		<input type="submit" value="Access Google Datastore & Get All Tasks for a specific project that belongs to a user" >
+	</form>
+	
+	<h3>Test delete a task for a particular project</h3>
+	<p>Check the <a href="https://console.developers.google.com/project/apps~tasky-server/datastore/query" target="_blank">Google Developers Console</a> to verify the data</p>
+	<form action="testAccessToTaskyDatabase.jsp" method="get">
+		User/email: <input type="text" name="email" value="<%=email%>"><br/> 
+		Project ID: <input type="text" name="projectID" value="1"><br/>
+		Task ID: <input type="text" name="taskID" value="-1"><br/>
+		<input type="hidden" name="functionType" value="deleteTask">
+
+		<input type="submit" value="Access Google Datastore & Delete a task" >
 	</form>
 	
 
