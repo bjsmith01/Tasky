@@ -115,6 +115,11 @@ public class Task
 	{
 		return id;
 	}
+	
+	public void setId(long taskID)
+	{
+		this.id=taskID;
+	}
 
 	public String getTaskDescription()
 	{

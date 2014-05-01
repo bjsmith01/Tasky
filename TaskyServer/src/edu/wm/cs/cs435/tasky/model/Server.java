@@ -117,6 +117,10 @@ public class Server implements ITaskyServer
 	@Override
 	public String addTask(String email, Project project, Task task)
 	{
+		//create a new task and assign it a unique ID
+		long taskID=getNextAvailableTaskID();
+		task.setId(taskID);
+		
 		//store the task in the database
 		return databaseInstance.addTask(project, task);
 	}
