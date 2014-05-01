@@ -18,20 +18,21 @@ public class IDs
 		maxTaskID=0;
 	}
 
-	public static int getNextAvailableProjectID()
-	{
-		maxProjectID++;
-		
-		return maxProjectID;
-	}
+//	public static int getNextAvailableProjectID()
+//	{
+//		
+//		maxProjectID++;
+//		
+//		return maxProjectID;
+//	}
 	
 	
-	public static int getNextAvailableTaskID()
-	{
-		maxTaskID++;
-		
-		return maxTaskID;
-	}
+//	public static int getNextAvailableTaskID()
+//	{
+//		maxTaskID++;
+//		
+//		return maxTaskID;
+//	}
 
 	
 	/**

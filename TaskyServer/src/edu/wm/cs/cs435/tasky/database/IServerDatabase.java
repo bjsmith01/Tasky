@@ -67,6 +67,16 @@ public interface IServerDatabase
 	ArrayList<Project> getProjects(String email);
 	
 	/**
+	 * Delete an existing project for a specific user
+	 * 
+	 * @param email, representing the username
+	 * @param projectID
+	 * @return a status message
+	 */
+	public String deleteProject(String email,String projectID);
+
+	
+	/**
 	 * Adds a new task to the database, which belongs to a specific project/user
 	 * @param project representing the id of the project it belongs to (i.e., the parent of the task)
 	 * @param task representing the task that will be added, which contains the description, due date, priority, etc. 
@@ -84,4 +94,14 @@ public interface IServerDatabase
 	 */
 	ArrayList<Task> getTasks(String email,Project project);
 	
+	/**
+	 * Delete an existing task from a project for a specific user
+	 * 
+	 * @param email, representing the username
+	 * @param projectID
+	 * @param taskID
+	 * @return a status message
+	 */
+	public String deleteTask(String email,String projectID,String taskID);
+
 }

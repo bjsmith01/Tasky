@@ -45,7 +45,7 @@ public class UserTest
 
 		IDs.setMaxProjectID(0);
 		
-		Project project1 = new Project("First Project");
+		Project project1 = new Project(1,"First Project");
 		user1.addProject(project1);
 		
 		Task task1 = new Task("first task");

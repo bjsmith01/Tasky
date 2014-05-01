@@ -106,12 +106,12 @@ public class SimpleClientForGetTasks
 			int numberOfTasks=Integer.parseInt(readerFromServer.readLine());
 			for (int i = 0; i < numberOfTasks; i++)
 			{
-				int taskID = Integer.parseInt(readerFromServer.readLine());
+				long taskID = Long.parseLong(readerFromServer.readLine());
 				String taskDescription = readerFromServer.readLine();
 				long dueDateAsMilliseconds = Long.parseLong(readerFromServer.readLine());
 				int priority= Integer.parseInt(readerFromServer.readLine());
 				
-				Task task = new Task(taskID+"",taskDescription,dueDateAsMilliseconds+"");
+				Task task = new Task(taskID,taskDescription,dueDateAsMilliseconds+"");
 				task.setDueDate(dueDateAsMilliseconds);
 				task.setPriority(priority);
 				listOfTasks.add(task);

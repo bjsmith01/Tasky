@@ -105,7 +105,9 @@ public class Server implements ITaskyServer
 	public String addProject(String email, String projectName)
 	{
 		//create a new project and assign it a unique ID
-		Project project = new Project(projectName);
+		long projectID=getNextAvailableProjectID();
+		
+		Project project = new Project(projectID,projectName);
 		
 		//store the project in the database
 		return databaseInstance.addProject(email,project);
@@ -113,8 +115,18 @@ public class Server implements ITaskyServer
 	}
 
 	@Override
+	public String deleteProject(String email, String projectID)
+	{
+		return databaseInstance.deleteProject(email, projectID);
+	}
+	
+	@Override
 	public String addTask(String email, Project project, Task task)
 	{
+		//create a new task and assign it a unique ID
+		long taskID=getNextAvailableTaskID();
+		task.setId(taskID);
+		
 		//store the task in the database
 		return databaseInstance.addTask(project, task);
 	}
@@ -122,7 +134,45 @@ public class Server implements ITaskyServer
 	@Override
 	public String deleteTask(String email, String projectID, String taskID)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return databaseInstance.deleteTask(email, projectID, taskID);
 	}
+	
+	
+	/**
+	 * Gets the next available project ID stored in the database, 
+	 * which will be assigned to new projects.
+	 * 
+	 * Each call to this method will return a unique project ID
+	 * 
+	 * @return a unique ID that can be assigned for a new project  
+	 */
+	public long getNextAvailableProjectID()
+	{
+		return databaseInstance.getNextAvailableProjectID();
+	}
+
+	/**
+	 * Gets the next available task ID stored in the database, 
+	 * which will be assigned to new tasks.
+	 * 
+	 * Each call to this method will return a unique task ID
+	 * 
+	 * @return a unique ID that can be assigned for a new task  
+	 */
+	public long getNextAvailableTaskID()
+	{
+		return databaseInstance.getNextAvailableTaskID();
+	}
+
+	/**
+	 * Initialize the database with entries for maxProjectID and maxTaskID
+	 * (This only needs to be done once)
+	 * 
+	 */
+	public void initializeDatabaseWithProjectAndTaskIDs()
+	{
+		databaseInstance.initializeDatabaseWithProjectAndTaskIDs();
+	}
+
+	
 }

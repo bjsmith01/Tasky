@@ -39,8 +39,8 @@ public class CurrentDate
 
 	public static DateTime getCurrentDate()
 	{
-		return getCurrentDateForDebugging();
-		// return new DateTime();
+//		return getCurrentDateForDebugging();
+		 return new DateTime();
 	}
 
 	/**
