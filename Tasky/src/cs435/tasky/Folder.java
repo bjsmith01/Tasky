@@ -12,6 +12,7 @@ public class Folder implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	String name;
+	int id;
 	List<Task> TaskList = new ArrayList<Task>();
 	
 	public Folder (String folderName){
@@ -61,6 +62,16 @@ public class Folder implements Serializable{
 		}
 		//needs to delete folder file from memory
 		
+	}
+	
+	public void setID(int newID)
+	{
+		id = newID;
+	}
+	
+	public int getID()
+	{
+		return id;
 	}
 
 }

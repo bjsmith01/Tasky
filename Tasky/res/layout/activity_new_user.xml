@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,7 +12,7 @@
 
  <EditText
      android:id="@+id/newUserEmail"
-     android:hint="Email"
+     android:hint="@string/email"
      android:singleLine="true"
      android:layout_centerInParent="true"
      android:layout_width="wrap_content"
@@ -19,7 +21,7 @@
      />
  <EditText
      android:id="@+id/newUserPassword"
-     android:hint="Password"
+     android:hint="@string/password"
      android:inputType="textPassword"
      android:layout_centerInParent="true"
      android:layout_below="@id/newUserEmail"
@@ -28,7 +30,7 @@
      />
 <EditText
     android:id="@+id/newUserPasswordCheck"
-    android:hint="Reenter Password"
+    android:hint="@string/enterPassword"
     android:inputType="textPassword"
     android:layout_centerInParent="true"
     android:layout_below="@id/newUserPassword"
@@ -38,7 +40,7 @@
 
 <Button
     android:id="@+id/newUserOkay"
-    android:text="Create User"
+    android:text="@string/createUser"
     android:layout_above="@id/newUserEmail"
     android:layout_toLeftOf="@id/newUserPasswordCheck"
     android:layout_width="wrap_content"
@@ -48,7 +50,7 @@
 
 <Button
     android:id="@+id/newUserCancel"
-    android:text="Cancel"
+    android:text="@string/Cancel"
     android:layout_above="@id/newUserEmail"
     android:layout_toRightOf="@id/newUserPasswordCheck"
     android:layout_width="wrap_content"

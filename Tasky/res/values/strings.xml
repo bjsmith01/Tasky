@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
 <resources>
 
     <string name="app_name">Tasky</string>
@@ -23,5 +24,21 @@
     <string name="title_activity_log_in">Login</string>
     <string name="title_activity_add_task">Add Task</string>
     <string name="title_activity_new_user">New User</string>
-
+    <string name="CreateTask">Create Task</string>
+    <string name="dueDate">Due Date: </string>
+    <string name="reminder">Set a reminder?</string>
+    <string name="taskDescription">Task Description</string>
+    <string name="defaultDate">Jan. 1 2014</string>
+    <string name="taskName">Task Name</string>
+    <string name ="back">Go Back</string>
+    <string name="saveChanges">Save Changes</string>
+    <string name="login">Log In</string>
+    <string name="newUser">New User</string>
+    <string name="createUser">Create User</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="enterPassword">Reenter Password</string>
+	<string name="createATask">Create a Task</string>
+	<string name="logOut">Log Out</string>
+    
 </resources>

@@ -23,6 +23,7 @@ public class Task implements Serializable {
 	private boolean completed;
 	private GregorianCalendar reminder;
 	private boolean hasReminder=false;
+	private int id = 0;
 	
 	/**
 	 * constructor for Task class
@@ -164,6 +165,14 @@ public class Task implements Serializable {
 		return hasReminder;
 	}
 	
+	public int getID()
+	{
+		return id;
+	}
 	
+	public void setID(int newID)
+	{
+		id = newID;
+	}
 	
 }

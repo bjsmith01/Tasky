@@ -29,7 +29,6 @@ import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 /**
  * 
  * @author Jarrett Gabel
@@ -37,7 +36,6 @@ import android.widget.Toast;
  */
 public class CalendarActivity extends Activity {
 	
-	ArrayList<Task> taskList = new ArrayList<Task>();
 	ArrayList<TextView> a = new ArrayList<TextView>();
 
 	@Override
@@ -76,9 +74,7 @@ public class CalendarActivity extends Activity {
 			public void onNothingSelected(AdapterView<?> arg0) {
 				// do nothing
 				
-			}
-			
-		});
+			}});
 		
 		Spinner year = (Spinner) findViewById(R.id.calYear);
 		ArrayAdapter<Integer> yearVals = new ArrayAdapter<Integer>(this, android.R.layout.simple_dropdown_item_1line);
@@ -107,15 +103,12 @@ public class CalendarActivity extends Activity {
 			public void onNothingSelected(AdapterView<?> arg0) {
 				// TODO Auto-generated method stub
 				
-			}
-			
-		});
+			}});
 
 		GridView g = (GridView) findViewById(R.id.calView);
 		Spinner month = (Spinner) findViewById(R.id.calMonths);
 		loadGridViewData(g, month.getSelectedItemPosition() + 1, year.getSelectedItemPosition() + 2000);
 		Log.v("CalTest", "a element count = " + String.valueOf(a.size()));
-		
 	}
 
 	private void loadGridViewData(GridView g, int monthValue, int yearValue)
