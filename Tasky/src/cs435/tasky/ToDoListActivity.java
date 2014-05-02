@@ -2,7 +2,6 @@ package cs435.tasky;
 
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.app.ActionBar;
@@ -39,86 +38,12 @@ public class ToDoListActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_to_do_list);
 
-		/*
-		//the names of the saved folders are stored in saved_folders.txt in
-		//res/raw/  access using getResources().openRawResource(R.raw.saved_folders)
-		try{
-			
-			FileInputStream fis= openFileInput("saved_folders.txt");
-
-			//store the names of the folders in an array 
-			int ch;
-			StringBuffer fileContent = new StringBuffer("");
-			while ((ch = fis.read()) != -1){
-				if ((char)ch!='\n'){
-					fileContent.append((char)ch);
-				}
-			}
-			fis.close();
-	        
-		}catch(Exception e){
-			FileOutputStream fos2 = openFileOutput("saved_folders.txt",Context.MODE_PRIVATE);
-			fos2.write(null);
-			fos2.close();
-		}
-
-			
-        try{
-        	//grab the folder file set its contents to folder
-        	String filename= savedFolders.get(0)+".txt";
-			FileInputStream fin = openFileInput(filename);
-			ObjectInputStream ois= new ObjectInputStream(fin);
-			
-			folder=(Folder) ois.readObject();
-			Log.e("readFile","file successfully read");
-			fin.close();
-			ois.close();
-			
-		} catch(Exception ex){
-			
-			Log.e("No Folders Saved","Creating New Folder");
-			
-			//if there are no saved folders
-			//then create the default Personal Folder
-			folder= new Folder("Personal");
-			
-	        try{
-	         
-	         FileOutputStream fileOut= openFileOutput("personal.txt",Context.MODE_PRIVATE);
-	         ObjectOutputStream obOut= new ObjectOutputStream(fileOut);
-	         obOut.writeObject(folder);
-	         obOut.close();
-	         fileOut.close();
-
-	        }
-	        catch (Exception ex2){
-	        	Log.e("ToDoListActivity",ex2.getMessage());
-	        }
-			
-		}
-		*/
 		
-		//folder=new Folder("Personal");
-		//folder.AddTask(new Task("Test","Testing App \n and stuff \n and stuff",new GregorianCalendar(12,12,2014)));
-		//folder.AddTask(new Task("Test2","Testing App \n and stuff \n and stuff",new GregorianCalendar(12,12,2014)));
 		myAdapter=new MyAdapter(this,folder);
 		
 		exv= (ExpandableListView) findViewById(R.id.expandableListView1);
 		exv.setAdapter(myAdapter);
 
-//		// Set up the action bar to show a dropdown list.
-//		final ActionBar actionBar = getActionBar();
-//		actionBar.setDisplayShowTitleEnabled(false);
-//		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//
-//		// Set up the dropdown list navigation in the action bar in the upper-left corner.
-//		actionBar.setListNavigationCallbacks(
-//		// Specify a SpinnerAdapter to populate the dropdown list.
-//				new ArrayAdapter<String>(actionBar.getThemedContext(),
-//						android.R.layout.simple_list_item_1,
-//						android.R.id.text1, new String[] {
-//								getString(R.string.title),
-//								getString(R.string.folders), }), this);
 	}
 
 	@Override
@@ -155,8 +80,6 @@ public class ToDoListActivity extends FragmentActivity implements
 	        Log.i("In Menu","Calendar Selected");
 	        //Bring up the calendar activity
 	        Intent calStart = new Intent(this, CalendarActivity.class);
-	        Bundle taskBundle = storeTasksForActivityChange();
-	        calStart.putExtras(taskBundle);
 	        startActivity(calStart);
 	        Log.v("CalTest", "Starting Calendar");
 	        return true;
@@ -197,43 +120,6 @@ public class ToDoListActivity extends FragmentActivity implements
 		return true;
 	}
 	
-	/*
-	 * Creates a bundle object that will contain all currently available tasks.
-	 * Allows for task data to be transferred to another task.
-	 */
-	private Bundle storeTasksForActivityChange()
-	{
-		Bundle dataBundle = new Bundle();
-		String dataToSave = "";
-		//Takes every task in folder and places it in the bundle
-		//At this point in time only examines a single folder. Will need to
-		//Examine ALL folders at a future point.
-		for (int x = 0; x < folder.TaskList.size(); x++)
-		{
-			Log.v("CalTest","Real month = " +  String.valueOf(folder.getTask(x).getDueDate().get(Calendar.MONTH)));
-			dataToSave = folder.getTask(x).getName() + "/" + folder.getTask(x).getDesc()
-					+ "/" + String.valueOf(folder.getTask(x).getDueDate()
-							.get(Calendar.MONTH)) + 
-							String.valueOf(folder.getTask(x).getDueDate()
-									.get(Calendar.DAY_OF_MONTH)) +
-							String.valueOf(folder.getTask(x).getDueDate()
-									.get(Calendar.YEAR))
-					+ "/" + folder.getTask(x).isCompleted() +
-					"/" + String.valueOf(folder.getTask(x).getReminder()
-							.get(Calendar.YEAR)) + 
-							String.valueOf(folder.getTask(x).getReminder()
-									.get(Calendar.MONTH)) +
-							String.valueOf(folder.getTask(x).getReminder()
-									.get(Calendar.DAY_OF_MONTH));
-			dataBundle.putString("TASK" + x, dataToSave);
-
-		}
-		dataBundle.putInt("COUNT", folder.TaskList.size());
-		
-		Log.v("CalTesting", "Leaving Bundler");
-		
-		return dataBundle;
-	}
 
 	/**
 	 * A dummy fragment representing a section of the app, but that simply

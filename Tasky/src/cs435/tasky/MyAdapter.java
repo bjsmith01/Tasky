@@ -1,11 +1,13 @@
 /**
- * 
+ * Adapter for Expandable List View
  */
 package cs435.tasky;
 
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -76,10 +78,27 @@ public class MyAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		
+		/*
 		TextView tv = new TextView(context);
 		tv.setText(childList.get(groupPosition)[childPosition]);
-		
 		return tv;
+		*/
+		
+		 
+        if (convertView == null) {
+            LayoutInflater infalInflater = (LayoutInflater) this.context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.list_child, null);
+        }
+ 
+        TextView txtListChild = (TextView) convertView
+                .findViewById(R.id.lblListItem);
+ 
+        txtListChild.setText(childList.get(groupPosition)[childPosition]);
+        return convertView;
+		
+		
 	}
 
 	/* (non-Javadoc)
@@ -125,10 +144,19 @@ public class MyAdapter extends BaseExpandableListAdapter {
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		TextView tv = new TextView(context);
-		tv.setText(parentList.get(groupPosition));
 		
-		return tv;
+		if (convertView == null) {
+            LayoutInflater infalInflater = (LayoutInflater) this.context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.list_parent, null);
+        }
+ 
+        TextView lblListHeader = (TextView) convertView
+                .findViewById(R.id.lblListHeader);
+        lblListHeader.setTypeface(null, Typeface.BOLD);
+        lblListHeader.setText(parentList.get(groupPosition));
+ 
+        return convertView;
 	}
 	
 	public void changeAdapter(Folder fold){

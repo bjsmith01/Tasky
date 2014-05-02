@@ -71,46 +71,8 @@ public class TaskTest {
 		assertTrue(t2.getDueDate().get(GregorianCalendar.DAY_OF_MONTH) == 6);
 		assertTrue(t2.getDueDate().get(GregorianCalendar.YEAR) == 2014);
 		
-		Task t3 = new Task("Test", "This is a test", new GregorianCalendar(2014, 4, 6), new GregorianCalendar(2014, 4, 6));
-		
-		assertTrue(t3.getDueDate().get(GregorianCalendar.MONTH) == 4);
-		assertTrue(t3.getDueDate().get(GregorianCalendar.DAY_OF_MONTH) == 6);
-		assertTrue(t3.getDueDate().get(GregorianCalendar.YEAR) == 2014);
-		
 	}
-	/**
-	 * Tests the reminderDate value of the Task class
-	 * Should first return 1 as year, 1 as month and 1 as day as no reminder
-	 * has been set. Should return 2014 as year, 4 as month and 6 as day in the
-	 * 3 next sets to test the constructors as well as the setReminder command
-	 */
-	@Test
-	public void testReminderDate()
-	{
-		Task t = new Task("Test", "This is a test");
 
-		assertTrue(t.getReminder().get(GregorianCalendar.YEAR) == 1);
-		assertTrue(t.getReminder().get(GregorianCalendar.MONTH) == 1);
-		assertTrue(t.getReminder().get(GregorianCalendar.DAY_OF_MONTH) == 1);
-		
-		t.setReminder(new GregorianCalendar(2014, 4, 6));
-		
-		assertTrue(t.getReminder().get(GregorianCalendar.MONTH) == 4);
-		assertTrue(t.getReminder().get(GregorianCalendar.DAY_OF_MONTH) == 6);
-		assertTrue(t.getReminder().get(GregorianCalendar.YEAR) == 2014);
-		
-		Task t2 = new Task("Test", "This is a test", new GregorianCalendar(2014, 4, 6));
-		
-		assertTrue(t2.getReminder().get(GregorianCalendar.MONTH) == 1);
-		assertTrue(t2.getReminder().get(GregorianCalendar.DAY_OF_MONTH) == 1);
-		assertTrue(t2.getReminder().get(GregorianCalendar.YEAR) == 1);
-		
-		Task t3 = new Task("Test", "This is a test", new GregorianCalendar(2014, 4, 6), new GregorianCalendar(2014, 4, 6));
-		
-		assertTrue(t3.getReminder().get(GregorianCalendar.MONTH) == 4);
-		assertTrue(t3.getReminder().get(GregorianCalendar.DAY_OF_MONTH) == 6);
-		assertTrue(t3.getReminder().get(GregorianCalendar.YEAR) == 2014);
-	}
 	/**
 	 * Tests the description value of the Task class
 	 * First checks to ensure that description = "This is a test", then changes

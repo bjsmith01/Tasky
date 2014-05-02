@@ -1,5 +1,6 @@
 package cs435.tasky;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
@@ -7,27 +8,39 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.TextView;
 
 public class AddTaskActivity extends Activity {
 	
-	NumberPicker dueYear;	NumberPicker remindYear;
-	NumberPicker dueMonth;	NumberPicker remindMonth;
-	NumberPicker dueDay;	NumberPicker remindDay;
-	TextView dueDate;		TextView remindDate;
-	boolean useReminder = false;
+	NumberPicker dueYear;
+	NumberPicker dueMonth;
+	NumberPicker dueDay;
+	TextView dueDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_task);
 		initializeDueDateInfo();
-		initializeReminderDateInfo();
+		
+		Spinner pri = (Spinner) findViewById(R.id.addPriority);
+		
+		ArrayAdapter<Integer> a = new ArrayAdapter<Integer>(this, android.R.layout.simple_dropdown_item_1line);
+		
+		a.add(1); a.add(2); a.add(3);
+		a.add(4); a.add(5);
+		
+		pri.setAdapter((SpinnerAdapter) a);
+		
+		pri.setSelection(0);
 		
 	}
 	/**
@@ -102,6 +115,8 @@ public class AddTaskActivity extends Activity {
 		dueDay.setMinValue(1);
 		dueDay.setMaxValue(31);
 		
+		
+		
 		dueYear.setOnValueChangedListener(new OnValueChangeListener() {
 
 			@Override
@@ -148,77 +163,8 @@ public class AddTaskActivity extends Activity {
 			
 		});
 
-	}
-	/**
-	 * Set up the variables and listeners necessary for the number pickers
-	 * that represent the reminder date
-	 */
-	private void initializeReminderDateInfo()
-	{
-		remindDate = (TextView) findViewById(R.id.addRemindDate);
-		remindDate.setText("Jan. 1 2014");
-		
-		remindYear = (NumberPicker) findViewById(R.id.addRemindYear);
-		remindYear.setMaxValue(3000);
-		remindYear.setMinValue(1);
-		remindYear.setValue(2014);
-		
-		remindMonth = (NumberPicker) findViewById(R.id.addRemindMonth);
-		remindMonth.setValue(1);
-		remindMonth.setMaxValue(12);
-		remindMonth.setMinValue(1);
-		
-		remindDay = (NumberPicker) findViewById(R.id.addRemindDay);
-		remindDay.setValue(1);
-		remindDay.setMinValue(1);
-		remindDay.setMaxValue(31);
-		
-		remindYear.setOnValueChangedListener(new OnValueChangeListener() {
-
-			@Override
-			public void onValueChange(NumberPicker picker, int oldVal,
-					int newVal) {
-				int daysInMonth = 0;
-				
-				GregorianCalendar c = new GregorianCalendar(newVal, remindMonth.getValue() - 1, 1);
-				daysInMonth = c.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
-				remindDay.setMaxValue(daysInMonth);
-				if (remindDay.getValue() > daysInMonth)
-					remindDay.setValue(daysInMonth);
-
-				remindDate.setText(getMonth(remindMonth.getValue()) + " " + remindDay.getValue() + " " + newVal);
-			}
+	}		
 			
-		});
-		remindMonth.setOnValueChangedListener(new OnValueChangeListener() {
-
-			@Override
-			public void onValueChange(NumberPicker arg0, int oldVal, int newVal) {
-				// TODO Auto-generated method stub
-				int daysInMonth = 0;
-				
-				GregorianCalendar c = new GregorianCalendar(remindYear.getValue(), newVal - 1, 1);
-				daysInMonth = c.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
-				remindDay.setMaxValue(daysInMonth);
-				if (remindDay.getValue() > daysInMonth)
-					remindDay.setValue(daysInMonth);
-
-				remindDate.setText(getMonth(newVal) + " " + remindDay.getValue() + " " + remindYear.getValue());
-			}
-			
-		});
-		remindDay.setOnValueChangedListener(new OnValueChangeListener(){
-
-			@Override
-			public void onValueChange(NumberPicker picker, int oldVal,
-					int newVal) {
-				
-				remindDate.setText(getMonth(remindMonth.getValue()) + " " + newVal + " " + remindYear.getValue());
-				
-			}
-			
-		});
-	}
 	/**
 	 * Create a task from the designated user input.
 	 * Only acts if the task has been given a name.
@@ -234,15 +180,8 @@ public class AddTaskActivity extends Activity {
 		{
 			Task t = new Task(eName.getText().toString(), 
 					eDesc.getText().toString(), g);
-			
-			CheckBox b = (CheckBox) findViewById(R.id.addViewRemind);
-			if (b.isChecked())
-			{
-				GregorianCalendar r = new GregorianCalendar(remindYear.
-						getValue(), remindMonth.getValue(), remindDay.
-						getValue());
-				t.setReminder(r);
-			}
+			Spinner p = (Spinner) findViewById(R.id.addPriority);
+			t.setPriority((Integer) p.getSelectedItem());
 			
 			GlobalTaskList gL = (GlobalTaskList) getApplication();
 			gL.taskList.add(t);
@@ -271,20 +210,4 @@ public class AddTaskActivity extends Activity {
 	 * hiding or revealing the reminder options.
 	 * @param view the Set a reminder checkbox
 	 */
-	public void switchReminderView(View view){
-		CheckBox c = (CheckBox) view;
-		if (c.isChecked()){
-			remindYear.setVisibility(View.VISIBLE);
-			remindMonth.setVisibility(View.VISIBLE);
-			remindDay.setVisibility(View.VISIBLE);
-			remindDate.setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			remindYear.setVisibility(View.INVISIBLE);
-			remindMonth.setVisibility(View.INVISIBLE);
-			remindDay.setVisibility(View.INVISIBLE);
-			remindDate.setVisibility(View.INVISIBLE);
-		}
-	}
 }

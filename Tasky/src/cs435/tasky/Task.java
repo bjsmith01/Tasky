@@ -14,36 +14,17 @@ import java.util.GregorianCalendar;
  */
 public class Task implements Serializable {
 	
-	
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String description;
 	private GregorianCalendar dueDate;
 	private boolean hasDueDate = false;
 	private boolean completed;
-	private GregorianCalendar reminder;
-	private boolean hasReminder=false;
 	private int id = 0;
+	private int priority = 0;
 	
 	/**
 	 * constructor for Task class
-	 * @param String Name
-	 * @param String Desc
-	 * @param GregorianCalendar DueDate
-	 * @param GregorianCalendar Reminder
-	 */
-	public Task(String Name, String Desc, GregorianCalendar DueDate, GregorianCalendar Reminder){
-		name=Name;
-		description=Desc;
-		dueDate=DueDate;
-		hasDueDate = true;
-		completed=false;
-		hasReminder=true;
-		reminder=Reminder;
-	}
-	
-	/**
-	 * Constructor for task without reminder
 	 * @param String Name
 	 * @param String Desc
 	 * @param GregorianCalendar DueDate
@@ -140,31 +121,6 @@ public class Task implements Serializable {
 		completed = isCompleted;
 	}
 
-	/**
-	 * get date for reminder
-	 * @return GregorianCalendar reminder
-	 */
-	public GregorianCalendar getReminder() {
-		if (hasReminder)
-			return reminder;
-		else
-			return new GregorianCalendar(1, 1, 1);
-	}
-
-	/**
-	 * set the date for the reminder
-	 * @param Date reminder
-	 */
-	public void setReminder(GregorianCalendar Reminder) {
-		reminder = Reminder;
-		hasReminder = true;
-	}
-	
-	public boolean hasReminder()
-	{
-		return hasReminder;
-	}
-	
 	public int getID()
 	{
 		return id;
@@ -175,4 +131,13 @@ public class Task implements Serializable {
 		id = newID;
 	}
 	
+	public void setPriority(int newP)
+	{
+		priority = newP;
+	}
+	
+	public int getPriority()
+	{
+		return priority;
+	}
 }

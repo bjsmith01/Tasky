@@ -42,9 +42,6 @@ public class TaskViewActivity extends Activity {
 		for (int x = 0; x < tasks.getList().size(); x++)
 		{
 			Task t = tasks.getList().get(x);
-			Log.v("viewTest", "TYEAR: " + t.getDueDate().get(GregorianCalendar.YEAR));
-			Log.v("viewTest", "TMONTH: " + t.getDueDate().get(GregorianCalendar.MONTH));
-			Log.v("viewTest", "TDAY: " + t.getDueDate().get(GregorianCalendar.DAY_OF_MONTH));
 			if (t.getDueDate().get(GregorianCalendar.YEAR) == year
 					&& t.getDueDate().get(GregorianCalendar.MONTH) == month
 					&& t.getDueDate().get(GregorianCalendar.DAY_OF_MONTH) == day)
@@ -208,14 +205,12 @@ public class TaskViewActivity extends Activity {
 		}
 		
 		public boolean onSingleTapUp(MotionEvent tap)
-		
 		{
 			
 			GlobalTaskList g = (GlobalTaskList) getApplication();
 			Intent i = new Intent(getBaseContext(), EditTaskActivity.class);
 
 			int pos = lView.pointToPosition( (int) tap.getX(), (int) tap.getY());
-			
 			
 			Task t = g.getList().get(idList.get(pos));
 			i.putExtra("NAME", t.getName());
@@ -226,14 +221,8 @@ public class TaskViewActivity extends Activity {
 			i.putExtra("YEAR", getIntent().getIntExtra("YEAR", 0));
 			i.putExtra("MONTH", getIntent().getIntExtra("MONTH", 1));
 			i.putExtra("DAY", getIntent().getIntExtra("DAY", 1));
+			i.putExtra("PRI", t.getPriority());
 			
-			i.putExtra("HASREMINDER", t.hasReminder());
-			if (t.hasReminder())
-			{
-				i.putExtra("RYEAR", t.getReminder().get(GregorianCalendar.YEAR));
-				i.putExtra("RMONTH", t.getReminder().get(GregorianCalendar.MONTH));
-				i.putExtra("RDAY", t.getReminder().get(GregorianCalendar.DAY_OF_MONTH));
-			}
 			i.putExtra("RETURN", Constants.TASKVIEW);
 			i.putExtra("ID", idList.get(pos));
 			startActivity(i);

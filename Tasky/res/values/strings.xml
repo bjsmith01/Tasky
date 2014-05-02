@@ -30,7 +30,7 @@
     <string name="taskDescription">Task Description</string>
     <string name="defaultDate">Jan. 1 2014</string>
     <string name="taskName">Task Name</string>
-    <string name ="back">Go Back</string>
+    <string name="back">Go Back</string>
     <string name="saveChanges">Save Changes</string>
     <string name="login">Log In</string>
     <string name="newUser">New User</string>
@@ -38,7 +38,15 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="enterPassword">Reenter Password</string>
-	<string name="createATask">Create a Task</string>
-	<string name="logOut">Log Out</string>
-    
+    <string name="createATask">Create a Task</string>
+    <string name="logOut">Log Out</string>
+    <string name="title_activity_list_view">ListViewActivity</string>
+    <string name="title_activity_list_view_adapter">ListViewAdapter</string>
+    <string name="title_activity_service_verify">ServiceVerifyActivity</string>
+    <string name="title_activity_verify_service">VerifyServiceActivity</string>
+    <string name="serviceText">Select Your TV Provider</string>
+    <string name="Service">Enter Your Area Code</string>
+    <string name="changeZip">Edit Zip</string>
+    <string name="priority">Priority: </string>
+
 </resources>
