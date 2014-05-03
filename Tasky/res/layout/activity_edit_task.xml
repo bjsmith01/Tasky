@@ -42,34 +42,25 @@
         android:layout_centerHorizontal="true"
         android:hint="@string/taskName" />
     
-        <EditText
-        android:id="@+id/editDesc"
-		android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editName"
-        android:layout_centerHorizontal="true"
-        android:hint="@string/taskDescription"
-        android:singleLine="true" />
-    
     <NumberPicker 
         android:id="@+id/editDueDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editDesc"
+        android:layout_below="@id/editName"
 		android:layout_centerHorizontal="true" />
     
 	<NumberPicker 
         android:id="@+id/editDueMonth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editDesc"
+        android:layout_below="@id/editName"
         android:layout_toLeftOf="@id/editDueDay"/>
     
 	<NumberPicker 
         android:id="@+id/editDueYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editDesc"
+        android:layout_below="@id/editName"
 		android:layout_toRightOf="@id/editDueDay"/> 
 
 	<TextView
@@ -88,21 +79,60 @@
         android:text="@string/dueDate"
         android:layout_alignBottom="@id/editDueMonth"
 	    android:layout_marginBottom="80dp" />
+     
     
-        <TextView 
+	<Spinner 
+        android:id="@+id/editFolders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editDueDay"
+        android:layout_centerHorizontal="true"/>
+	
+	<TextView
+        android:id="@+id/editFolderMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/editFolders"
+	    android:layout_marginBottom="30dp"
+        android:layout_toLeftOf="@id/editFolders"
+        android:text="@string/folderMsg"/>
+    
+	<Spinner 
+        android:id="@+id/editPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editDueDay"
+		android:layout_alignBottom="@id/editFolders"
+        android:layout_toLeftOf="@id/editFolderMsg"
+        />
+    
+    <TextView 
         android:id="@+id/editPriMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/editDueDay"
         android:text="@string/priority"
-		android:layout_centerHorizontal="true"/>
-	
-    <Spinner 
-        android:id="@+id/editPriority"
+		android:layout_alignBottom="@id/editFolders"
+		android:layout_toLeftOf="@id/editPriority"
+		/>
+	<TextView
+		android:id="@+id/editOrMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editDueDay"
-        android:layout_toRightOf="@id/editPriMessage"/>
+        android:text="@string/or"
+		android:layout_alignBottom="@id/editFolders"
+	    android:layout_marginBottom="30dp"
+		android:layout_toRightOf="@id/editFolders"
+		/>
+
+	<EditText 
+		android:id="@+id/editNewFolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/newFolder"
+		android:layout_alignBottom="@id/editFolders"
+		android:layout_toRightOf="@id/editOrMsg"
+	    />
 	
 </RelativeLayout>
 </ScrollView>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE xml>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
@@ -8,12 +8,40 @@
     tools:context=".ToDoListActivity"
     tools:ignore="MergeRootFrame" >
 
-    <ExpandableListView
+    <Button
+		android:id="@+id/toDoPrev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:text="Prev"
+        android:onClick="prevFolder"
+        />
+    <TextView
+        android:id="@+id/toDoFolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        />
+    <Button
+		android:id="@+id/toDoNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="Next"
+        android:onClick="nextFolder"
+        />        
+    
+    <ListView
         android:id="@+id/expandableListView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:groupIndicator="@null" >
-    </ExpandableListView>
+        android:groupIndicator="@null"
+        android:layout_below="@id/toDoPrev" >
+    </ListView>
 
-</FrameLayout>
+</RelativeLayout>
 

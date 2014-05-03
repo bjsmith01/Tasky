@@ -48,5 +48,8 @@
     <string name="Service">Enter Your Area Code</string>
     <string name="changeZip">Edit Zip</string>
     <string name="priority">Priority: </string>
+    <string name="folderMsg">Project: </string>
+    <string name="or">Or</string>
+    <string name="newFolder">New Folder</string>
 
 </resources>

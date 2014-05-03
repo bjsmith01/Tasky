@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 /**
  * Class that depicts a list of tasks according to some criteria
  * This class currently as a representation of the ToDo List and will eventually
@@ -25,6 +26,8 @@ public class TaskViewActivity extends Activity {
 
 	ArrayList<Integer> idList = new ArrayList<Integer>();
 	ListView lView;
+	ListViewAdapter l;
+	ArrayList<String> taskList = new ArrayList<String>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,30 +35,31 @@ public class TaskViewActivity extends Activity {
 		setContentView(R.layout.activity_task_view);
 		
 		GlobalTaskList tasks = (GlobalTaskList) getApplication();
-		ArrayAdapter<String> l = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+		//ArrayAdapter<String> l = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 		
 		int year = this.getIntent().getIntExtra("YEAR", 0) + 2000;
 		int month = this.getIntent().getIntExtra("MONTH", 0);
 		int day = this.getIntent().getIntExtra("DAY", 0);
 		
-		Log.v("CalTest", String.valueOf(tasks.getList().size()));
-		for (int x = 0; x < tasks.getList().size(); x++)
+		Log.v("CalTest", String.valueOf(tasks.getTaskList().size()));
+		for (int x = 0; x < tasks.getTaskList().size(); x++)
 		{
-			Task t = tasks.getList().get(x);
+			Task t = tasks.getTaskList().get(x);
 			if (t.getDueDate().get(GregorianCalendar.YEAR) == year
 					&& t.getDueDate().get(GregorianCalendar.MONTH) == month
 					&& t.getDueDate().get(GregorianCalendar.DAY_OF_MONTH) == day)
 			{
 				if (t.isCompleted())
-					l.add(tasks.getList().get(x).getName() + " is complete");
+					taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
 				else
-					l.add(tasks.getList().get(x).getName());
+					taskList.add(tasks.getTaskList().get(x).getName());
 				idList.add(x);
 			}
 
 		}
 		
 		lView = (ListView) findViewById(R.id.taskViewView);
+		l = new ListViewAdapter(this, taskList);
 		lView.setAdapter(l);
 		
 		final GestureDetector tL = new GestureDetector(this, new touchListener());
@@ -91,22 +95,26 @@ public class TaskViewActivity extends Activity {
 	 */
 	public void completeTask(Task tk, int position)
 	{
-			ArrayAdapter<String> a = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1);	
+			//ArrayAdapter<String> a = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1);	
 			
-			for (int x = 0; x < lView.getAdapter().getCount(); x++)
-			{
-				if (x == position)
-				{
-					a.add(tk.getName() + "  is completed");
-				}
-				else
-				{
-					a.add(lView.getAdapter().getItem(x).toString());
-				}
-			}
+			//for (int x = 0; x < lView.getAdapter().getCount(); x++)
+			//{
+			//	if (x == position)
+			//	{
+					taskList.remove(position);
+					taskList.add(position, tk.getName() + " is completed");
+				//	a.add(tk.getName() + "  is completed");
+			//	}
+			//	else
+			//	{
+			//		a.add(lView.getAdapter().getItem(x).toString());
+			//	}
+		//	}
 			
+			l.changeAdapter(taskList);
+					
 			lView.setAdapter(null);
-			lView.setAdapter(a);
+			lView.setAdapter(l);
 
 			tk.setCompleted(true);
 	}
@@ -119,28 +127,31 @@ public class TaskViewActivity extends Activity {
 	{
 		if (tk.isCompleted())
 		{
-			ArrayAdapter<String> a = new ArrayAdapter
-					<String>(getBaseContext(), 
-							android.R.layout.simple_list_item_1);	
-			
-			for (int x = 0; x < lView.getAdapter().getCount(); x++)
-			{
-				if (x == position)
-				{
-					a.add(tk.getName());
-				}
-				else
-				{
-					a.add(lView.getAdapter().getItem(x).toString());
-				}
-			}
-			
+			taskList.remove(position);
+			taskList.add(position, tk.getName());
+			l.changeAdapter(taskList);
 			lView.setAdapter(null);
-			lView.setAdapter(a);
+			lView.setAdapter(l);
 
 			tk.setCompleted(false);
+			//ArrayAdapter<String> a = new ArrayAdapter
+			//		<String>(getBaseContext(), 
+			//				android.R.layout.simple_list_item_1);	
+			
+			//for (int x = 0; x < lView.getAdapter().getCount(); x++)
+			//{
+			//	if (x == position)
+			//	{
+			//		a.add(tk.getName());
+			//	}
+			///	else
+			//	{
+			//		a.add(lView.getAdapter().getItem(x).toString());
+			//	}
+			}
+			
+
 		}
-	}
 	/**
 	 * Delete a completed task
 	 * @param tk the task to be deleted
@@ -148,7 +159,7 @@ public class TaskViewActivity extends Activity {
 	 */
 	public void deleteTask(Task tk, int position)
 	{		
-		ArrayAdapter<String> a = new ArrayAdapter
+		/*ArrayAdapter<String> a = new ArrayAdapter
 				<String>(getBaseContext(), 
 						android.R.layout.simple_list_item_1);	
 		
@@ -163,15 +174,65 @@ public class TaskViewActivity extends Activity {
 				a.add(lView.getAdapter().getItem(x).toString());
 			}
 		}
+		*/
+		taskList.remove(position);
+		l.changeAdapter(taskList);
 		
 		lView.setAdapter(null);
-		lView.setAdapter(a);
+		lView.setAdapter(l);
 		
 		GlobalTaskList gL = (GlobalTaskList) getApplication();
-		gL.taskList.remove((int)idList.get(position));
+		Task t = gL.getTaskList().get((int) idList.get(position));
+		Log.v("ServerTest", String.valueOf(t.getID()));
+		ServerInfo.deleteTask(gL.username, String.valueOf(getProjId(t.getID())), 
+				String.valueOf(t.getID()));
+
+		for (int x = 0; x < gL.getTaskList().size(); x++){
+			if (t.getID() == gL.getTaskList().get(x).getID())
+			{
+				gL.getTaskList().remove(x);
+				break;
+			}
+		}
+		
+		for (Folder f : gL.getFolderList())
+		{
+			for (int x = 0; x < f.TaskList.size(); x++)
+			{
+				if (t.getID() == f.TaskList.get(x).getID())
+				{
+					f.TaskList.remove(x);
+					break;
+				}
+			}
+		}
+		
+		
+		//gL.taskList.remove((int)idList.get(position));
 
 	}
 
+	private int getProjId(long taskID)
+	{
+		GlobalTaskList g = (GlobalTaskList) getApplication();
+		for (Folder f : g.getFolderList())
+		{
+			Log.v("ServerTest","Folder IDs: " + String.valueOf(f.getID()));
+			for (Task t : f.TaskList)
+			{
+				Log.v("ServerTest", "Task IDs: " + String.valueOf(t.getID()));
+				if (t.getID() == taskID)
+				{
+					Log.v("ServerTest", String.valueOf(t.getID()));
+					return f.getID();
+				}
+			}
+		}
+		
+		return -1;
+		
+	}
+	
 	class touchListener extends SimpleOnGestureListener{
 		
 		@Override
@@ -181,7 +242,7 @@ public class TaskViewActivity extends Activity {
 			
 			int position = (int) lView.getItemIdAtPosition((lView.pointToPosition( (int) 
 					startTouch.getX(), (int) startTouch.getY())));
-			Task tk = g.getList().get(idList.get(position));
+			Task tk = g.getTaskList().get(idList.get(position));
 			
 			if (Math.abs(endTouch.getX() - startTouch.getX()) > 
 			Constants.SWIPE_MIN_DISTANCE && (endTouch.getX() > startTouch.getX()))
@@ -212,9 +273,8 @@ public class TaskViewActivity extends Activity {
 
 			int pos = lView.pointToPosition( (int) tap.getX(), (int) tap.getY());
 			
-			Task t = g.getList().get(idList.get(pos));
+			Task t = g.getTaskList().get(idList.get(pos));
 			i.putExtra("NAME", t.getName());
-			i.putExtra("DESC", t.getDesc());
 			i.putExtra("DYEAR", t.getDueDate().get(GregorianCalendar.YEAR));
 			i.putExtra("DMONTH", t.getDueDate().get(GregorianCalendar.MONTH));
 			i.putExtra("DDAY", t.getDueDate().get(GregorianCalendar.DAY_OF_MONTH));

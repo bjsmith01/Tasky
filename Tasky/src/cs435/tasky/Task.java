@@ -16,11 +16,10 @@ public class Task implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private String name;
-	private String description;
 	private GregorianCalendar dueDate;
 	private boolean hasDueDate = false;
 	private boolean completed;
-	private int id = 0;
+	private long id = 0;
 	private int priority = 0;
 	
 	/**
@@ -29,9 +28,8 @@ public class Task implements Serializable {
 	 * @param String Desc
 	 * @param GregorianCalendar DueDate
 	 */
-	public Task(String Name, String Desc, GregorianCalendar DueDate){
+	public Task(String Name, GregorianCalendar DueDate){
 		name=Name;
-		description=Desc;
 		dueDate=DueDate;
 		hasDueDate = true;
 		completed=false;
@@ -40,11 +38,9 @@ public class Task implements Serializable {
 	/**
 	 * Constructor for task without reminder or due date
 	 * @param String Name
-	 * @param String Desc
 	 */
 	public Task(String Name, String Desc){
 		name=Name;
-		description=Desc;
 		completed=false;
 	}
 
@@ -62,22 +58,6 @@ public class Task implements Serializable {
 	 */
 	public String getName(){
 		return name;
-	}
-
-	/**
-	 * the description
-	 * @return String description
-	 */
-	public String getDesc() {
-		return description;
-	}
-
-	/**
-	 * set the description of the task
-	 * @param String desc
-	 */
-	public void setDesc(String desc) {
-		description = desc;
 	}
 
 	/**
@@ -121,14 +101,14 @@ public class Task implements Serializable {
 		completed = isCompleted;
 	}
 
-	public int getID()
+	public long getID()
 	{
 		return id;
 	}
 	
-	public void setID(int newID)
+	public void setID(long taskID)
 	{
-		id = newID;
+		id = taskID;
 	}
 	
 	public void setPriority(int newP)

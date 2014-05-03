@@ -19,6 +19,10 @@ public class Folder implements Serializable{
 		name=folderName;
 	}
 	
+	public Folder(ArrayList<Task> taskList2) {
+		TaskList = taskList2;
+	}
+
 	/**
 	 * adds a task to the folder
 	 * @param Task newTask
@@ -45,25 +49,6 @@ public class Folder implements Serializable{
 		Log.i(""+name, "Deleted Task");
 		TaskList.remove(delTask);		
 	}
-	
-	/**
-	 * deletes the folder from memory
-	 * not currently implemented
-	 */
-	void deleteFolder(Context c){
-		String filename= name+".txt";
-		try {
-			c.deleteFile(filename);
-			Log.i(""+name,"Folder Deleted");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Log.e("delete Error",e.getMessage());
-		}
-		//needs to delete folder file from memory
-		
-	}
-	
 	public void setID(int newID)
 	{
 		id = newID;
@@ -74,4 +59,14 @@ public class Folder implements Serializable{
 		return id;
 	}
 
+	public String getName()
+	{
+		return name;
+	}
+	
+	void changeList(ArrayList<Task> tasks){
+		TaskList.clear();
+		TaskList.addAll(tasks);
+	}
+	
 }

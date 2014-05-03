@@ -9,5 +9,10 @@
     <item android:id="@+id/todo_list"
           android:icon="@android:drawable/ic_menu_agenda"
           android:title="@string/todolist" />
+    
+    <item android:id="@+id/action_settings"
+        android:title="@string/title_activity_service_verify"
+        />
+    
 
 </menu>

@@ -65,7 +65,7 @@ public class TaskTest {
 		assertTrue(t.getDueDate().get(GregorianCalendar.DAY_OF_MONTH) == 6);
 		assertTrue(t.getDueDate().get(GregorianCalendar.YEAR) == 2014);
 		
-		Task t2 = new Task("Test", "This is a test", new GregorianCalendar(2014, 4, 6));
+		Task t2 = new Task("Test", new GregorianCalendar(2014, 4, 6));
 		
 		assertTrue(t2.getDueDate().get(GregorianCalendar.MONTH) == 4);
 		assertTrue(t2.getDueDate().get(GregorianCalendar.DAY_OF_MONTH) == 6);
@@ -73,19 +73,5 @@ public class TaskTest {
 		
 	}
 
-	/**
-	 * Tests the description value of the Task class
-	 * First checks to ensure that description = "This is a test", then changes
-	 * description and ensures that it = "This is another test"
-	 */
-	@Test
-	public void testDesc()
-	{
-		Task t = new Task("Test", "This is a test");
-		assertTrue(t.getDesc() == "This is a test");
-		
-		t.setDesc("This is another test");
-		assertTrue(t.getDesc() == "This is another test");
-	}
 	
 }

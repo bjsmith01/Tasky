@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -50,13 +51,15 @@ public class LogInActivity extends Activity {
 				&& password.getText().toString() != ""
 				&& privLogin(username.getText().toString(), password.getText().toString()))
 		{
-			SharedPreferences p = this.getSharedPreferences("Login" , MODE_PRIVATE);
-			SharedPreferences.Editor e = p.edit();
-			e.putString("USERNAME", username.getText().toString());
-			e.putString("PASSWORD", password.getText().toString());
-			e.commit();
+			GlobalTaskList g = (GlobalTaskList) getApplication();
 			
-			Intent i = new Intent(this, ToDoListActivity.class);
+			g.setUsername(username.getText().toString());
+			g.setPassword(password.getText().toString());
+			
+			getProjectsFromServer();
+			getTasksFromServer();
+			
+			Intent i = new Intent(this, CalendarActivity.class);
 			startActivity(i);
 		}
 		else
@@ -64,6 +67,34 @@ public class LogInActivity extends Activity {
 			Toast.makeText(this, "Invalid username/password", Toast.LENGTH_LONG).show();
 		}
 	}
+	
+	/**
+	 * Pulls the tasks from the server that pertain to the user
+	 */
+	private void getTasksFromServer()
+	{
+		GlobalTaskList g = (GlobalTaskList) getApplication();
+		for (Folder f : g.getFolderList())
+		{
+			ArrayList<Task> tasks = ServerInfo.getTasks(g.username, String.valueOf(f.getID()));
+			for (int x = 0; x < tasks.size(); x++)
+			{
+				f.AddTask(tasks.get(x));
+				g.taskList.add(tasks.get(x));
+			}
+		}
+
+	}
+	/**
+	 * Pulls a list of folders from the server that will store the user's tasks
+	 * Note that the folders will not be visible on the Calendar side of the application
+	 */
+	private void getProjectsFromServer()
+	{
+		GlobalTaskList g = (GlobalTaskList) getApplication();
+		g.setFolderList(ServerInfo.getFolders(g.getUsername()));
+	}
+	
 	
 	private boolean privLogin(String email, String password)
 	{

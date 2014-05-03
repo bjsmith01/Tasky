@@ -14,4 +14,9 @@
           android:icon="@android:drawable/ic_menu_search"
           android:title="@string/tv" />
     
+    <item android:id="@+id/toDoLogOut"
+        android:title="@string/logOut"
+        
+        />
+    
 </menu>

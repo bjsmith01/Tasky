@@ -2,6 +2,7 @@ package cs435.tasky;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.app.ActionBar;
@@ -10,58 +11,99 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.View.OnTouchListener;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ToDoListActivity extends FragmentActivity implements
 		ActionBar.OnNavigationListener {
-
-	/**
-	 * The serialization (saved instance state) Bundle key representing the
-	 * current dropdown position.
-	 */
-	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-	
-	Folder folder= new Folder("Personal");
-	MyAdapter myAdapter;
-	ExpandableListView exv;
-	ArrayList<String> savedFolders= new ArrayList<String>();
-	
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_to_do_list);
-
 		
-		myAdapter=new MyAdapter(this,folder);
+		ArrayList<Integer> idList = new ArrayList<Integer>();
+		ListView lView;
+		ListViewAdapter l;
+		ArrayList<String> taskList=new ArrayList<String>();
+		static Folder folder;
+		int folderIndex = 0;
 		
-		exv= (ExpandableListView) findViewById(R.id.expandableListView1);
-		exv.setAdapter(myAdapter);
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_to_do_list);
+			
+			GlobalTaskList tasks = (GlobalTaskList) getApplication();
+			folder=new Folder(tasks.taskList);
+			
+			//ArrayAdapter<String> l = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+			if (tasks.getFolderList().size() > 0)
+			{
+				for (int x = 0; x < tasks.getFolderList().get(folderIndex).TaskList.size(); x++)
+				{
+					Task t = tasks.getFolderList().get(folderIndex).TaskList.get(x);
+					if (t.isCompleted())
+						taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
+					else
+						taskList.add(tasks.getTaskList().get(x).getName());
+					idList.add(x);		
+				}
+			}
+			/*
+			for (int x = 0; x < tasks.getTaskList().size(); x++)
+			{
+				Task t = tasks.getTaskList().get(x);
+				if (t.isCompleted())
+					taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
+				else
+					taskList.add(tasks.getTaskList().get(x).getName());
+				idList.add(x);				
 
-	}
+			}
+			*/
+			lView = (ListView) findViewById(R.id.expandableListView1);
+			l=new ListViewAdapter(this,taskList);
+			lView.setAdapter(l);
+			
+			TextView t = (TextView) findViewById(R.id.toDoFolder);
+			t.setText(tasks.getFolderList().get(folderIndex).getName());
+			
+			final GestureDetector tL = new GestureDetector(this, new touchListener());
+			OnTouchListener test = new OnTouchListener(){
 
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		// Restore the previously serialized current dropdown position.
-		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-			getActionBar().setSelectedNavigationItem(
-					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					tL.onTouchEvent(event);
+					return false;
+				}
+				
+			};
+			lView.setOnTouchListener(test);
+			
 		}
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		// Serialize the current dropdown position.
-		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar()
-				.getSelectedNavigationIndex());
-	}
-
+/*
+		@Override
+		public void onResume() {
+		    super.onResume(); 
+		    GlobalTaskList tasks = (GlobalTaskList) getApplication();
+		    folder.changeList(tasks.taskList);
+		    taskList.clear();
+		    for (int i=0;i<tasks.taskList.size();i++){
+		    	taskList.add(tasks.taskList.get(i).getName());
+		    }
+		    
+		    l.changeAdapter(taskList);
+			lView.setAdapter(null);
+			lView.setAdapter(l);
+		}
+	
+*/
 	//determines what shows up when menu button is pressed.
 	//looks at to_do_list.xml and populates the menu
 	@Override
@@ -87,10 +129,8 @@ public class ToDoListActivity extends FragmentActivity implements
 	        
 	    case R.id.add_task:
 	        Log.i("In Menu","Add Task Selected");
-	        Task task=new Task("Test Add","Testing App \n and stuff \n and stuff",new GregorianCalendar(12,12,2014));
-	        folder.AddTask(task);
-	        myAdapter.changeAdapter(folder);
-	        exv.setAdapter(myAdapter);
+	        Intent add = new Intent(this,AddTaskActivity.class);
+	        startActivity(add);
 	        
 	        //for creating  a file
 	        
@@ -146,6 +186,184 @@ public class ToDoListActivity extends FragmentActivity implements
 					ARG_SECTION_NUMBER)));
 			return rootView;
 		}
+	}
+	
+	public void goBack(View view)
+	{
+		Intent i = new Intent(this, CalendarActivity.class);
+		startActivity(i);
+	}
+	/**
+	 * Takes a given task and marks it as complete if it is not already completed
+	 * @param tk the task to complete
+	 * @param position the index of the task within the list view
+	 */
+	public void completeTask(Task tk, int position)
+	{
+		taskList.remove(position);
+		taskList.add(position,tk.getName()+ "  is completed");
+
+		l.changeAdapter(taskList);
+		lView.setAdapter(null);
+		lView.setAdapter(l);
+
+		tk.setCompleted(true);
+	}
+	/**
+	 * Mark a completed task as not complete. The task must be completed beforehand.
+	 * @param tk the completed task
+	 * @param position the index of the task within the listview
+	 */
+	public void uncompleteTask(Task tk, int position)
+	{
+		if (tk.isCompleted())
+		{
+			
+			taskList.remove(position);
+			taskList.add(position,tk.getName());
+			
+			l.changeAdapter(taskList);
+			
+			lView.setAdapter(null);
+			lView.setAdapter(l);
+
+			tk.setCompleted(false);
+		}
+	}
+	/**
+	 * Delete a completed task
+	 * @param tk the task to be deleted
+	 * @param position the index of the task within the listview
+	 */
+	public void deleteTask(Task tk, int position)
+	{		
+		
+		taskList.remove(position);
+	
+		l.changeAdapter(taskList);
+		lView.setAdapter(null);
+		lView.setAdapter(l);
+		
+		GlobalTaskList gL = (GlobalTaskList) getApplication();
+		gL.taskList.remove((int)idList.get(position));
+
+	}
+
+	public void nextFolder(View view)
+	{
+		GlobalTaskList tasks = (GlobalTaskList) getApplication();
+		taskList.clear();
+		folderIndex++;
+		if (folderIndex >= tasks.getFolderList().size())
+		{
+			folderIndex = 0;
+		}
+		
+		for (int x = 0; x < tasks.getFolderList().get(folderIndex).TaskList.size(); x++)
+		{
+			Task t = tasks.getFolderList().get(folderIndex).TaskList.get(x);
+			if (t.isCompleted())
+				taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
+			else
+				taskList.add(tasks.getTaskList().get(x).getName());
+			idList.add(x);		
+		}
+		
+		lView = (ListView) findViewById(R.id.expandableListView1);
+		l=new ListViewAdapter(this,taskList);
+		lView.setAdapter(l);
+		
+		TextView t = (TextView) findViewById(R.id.toDoFolder);
+		t.setText(tasks.getFolderList().get(folderIndex).getName());
+		
+	}
+	
+	public void prevFolder(View view)
+	{
+		GlobalTaskList tasks = (GlobalTaskList) getApplication();
+		taskList.clear();
+		folderIndex--;
+		if (folderIndex < 0)
+		{
+			folderIndex = tasks.getFolderList().size() - 1;
+		}
+		
+		for (int x = 0; x < tasks.getFolderList().get(folderIndex).TaskList.size(); x++)
+		{
+			Task t = tasks.getFolderList().get(folderIndex).TaskList.get(x);
+			if (t.isCompleted())
+				taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
+			else
+				taskList.add(tasks.getTaskList().get(x).getName());
+			idList.add(x);		
+		}
+		
+		lView = (ListView) findViewById(R.id.expandableListView1);
+		l=new ListViewAdapter(this,taskList);
+		lView.setAdapter(l);
+		
+		TextView t = (TextView) findViewById(R.id.toDoFolder);
+		t.setText(tasks.getFolderList().get(folderIndex).getName());
+	}
+	
+	class touchListener extends SimpleOnGestureListener{
+		
+		@Override
+		public boolean onFling(MotionEvent startTouch, MotionEvent endTouch, float velX, float velY)
+		{	
+			GlobalTaskList g = (GlobalTaskList) getApplication();
+			
+			int position = (int) lView.getItemIdAtPosition((lView.pointToPosition( (int) 
+					startTouch.getX(), (int) startTouch.getY())));
+			Task tk = g.getTaskList().get(idList.get(position));
+			
+			if (Math.abs(endTouch.getX() - startTouch.getX()) > 
+			Constants.SWIPE_MIN_DISTANCE && (endTouch.getX() > startTouch.getX()))
+			{
+				if (!tk.isCompleted())
+				{
+					completeTask(tk, position);
+				}
+				else
+				{
+					deleteTask(tk, position);
+				}
+			}
+			else if (Math.abs(endTouch.getX() - startTouch.getX()) > 
+			Constants.SWIPE_MIN_DISTANCE && (endTouch.getX() < startTouch.getX()))
+			{
+				uncompleteTask(tk, position);
+			}
+			
+			return false;
+		}
+		
+		public boolean onSingleTapUp(MotionEvent tap)
+		
+		{
+			
+			GlobalTaskList g = (GlobalTaskList) getApplication();
+			Intent i = new Intent(getBaseContext(), EditTaskActivity.class);
+
+			int pos = lView.pointToPosition( (int) tap.getX(), (int) tap.getY());
+			
+			
+			Task t = g.getTaskList().get(idList.get(pos));
+			i.putExtra("NAME", t.getName());
+			i.putExtra("DYEAR", t.getDueDate().get(GregorianCalendar.YEAR));
+			i.putExtra("DMONTH", t.getDueDate().get(GregorianCalendar.MONTH));
+			i.putExtra("DDAY", t.getDueDate().get(GregorianCalendar.DAY_OF_MONTH));
+			i.putExtra("YEAR", getIntent().getIntExtra("YEAR", 0));
+			i.putExtra("MONTH", getIntent().getIntExtra("MONTH", 1));
+			i.putExtra("DAY", getIntent().getIntExtra("DAY", 1));	
+			i.putExtra("RETURN", Constants.TASKY);
+			i.putExtra("ID", idList.get(pos));
+			startActivity(i);
+			return false;
+			
+		}
+
+		
 	}
 
 }

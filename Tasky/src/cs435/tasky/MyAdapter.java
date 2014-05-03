@@ -32,7 +32,6 @@ public class MyAdapter extends BaseExpandableListAdapter {
 		String[] temp={""};
 		for (int i=0; i<fold.TaskList.size();i++){
 			parentList.add(fold.getTask(i).getName());
-			temp[0]=fold.getTask(i).getDesc();
 			childList.add(temp);
 		}
 	}
@@ -167,7 +166,6 @@ public class MyAdapter extends BaseExpandableListAdapter {
 		String[] temp={""};
 		for (int i=0; i<fold.TaskList.size();i++){
 			parentList.add(fold.getTask(i).getName());
-			temp[0]=fold.getTask(i).getDesc();
 			childList.add(temp);
 		}
 		
