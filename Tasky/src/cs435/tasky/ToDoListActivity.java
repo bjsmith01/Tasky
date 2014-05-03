@@ -141,6 +141,12 @@ public class ToDoListActivity extends FragmentActivity implements
 	        Intent tv = new Intent(this,TVSearchActivity.class);
 	        startActivity(tv);
 	        return true;
+	    case R.id.toDoLogOut:
+	    	GlobalTaskList t = (GlobalTaskList) getApplication();
+	    	t.folderList = new ArrayList<Folder>();
+	    	t.taskList = new ArrayList<Task>();
+	    	Intent lI = new Intent(this, LogInActivity.class);
+	    	startActivity(lI);
 	    default:
 	        return super.onOptionsItemSelected(item);
 	    }

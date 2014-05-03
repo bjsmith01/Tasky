@@ -66,7 +66,6 @@ public class AddTaskActivity extends Activity {
 		
 		if (getIntent().getIntExtra("RETURN", -1) == Constants.TASKVIEW)
 		{
-			Toast.makeText(this, "Made it", Toast.LENGTH_LONG).show();
 			EditText nameBox = (EditText) findViewById(R.id.addName);
 			nameBox.setText(getIntent().getStringExtra("NAME"));
 			dueDay.setValue(getIntent().getIntExtra("DDAY", 1));

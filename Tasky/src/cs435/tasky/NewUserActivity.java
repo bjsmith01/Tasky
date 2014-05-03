@@ -40,6 +40,8 @@ public class NewUserActivity extends Activity {
 				password.getText().toString())
 				.equals(Constants.NEW_USER_ADDED_TO_DATABASE))
 		{
+			ServerInfo.addFolder(userName.getText().toString(), "FirstProject");
+				
 			Intent i = new Intent(this, LogInActivity.class);
 			startActivity(i);
 		}
