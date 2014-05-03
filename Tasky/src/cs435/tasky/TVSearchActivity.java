@@ -27,6 +27,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -60,6 +61,54 @@ public class TVSearchActivity extends Activity {
 		edit.setFocusableInTouchMode(true);
 		edit.requestFocus();
 		
+		edit.setOnKeyListener(new OnKeyListener(){
+
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER)
+				{
+					t= new Thread(new Runnable(){
+
+            			@Override
+            			public void run() {
+            				// TODO Auto-generated method stub
+            				String txt=edit.getText().toString();
+            				txt=txt.replaceAll( " ", "+");
+            				findTvShow(txt);
+            			}
+                	});
+            		t.start();
+            		try {
+						t.join();
+						Intent i = new Intent(getBaseContext(), AddTaskActivity.class);
+						i.putExtra("NAME", tvShowTask.getName());
+						i.putExtra("DYEAR", tvShowTask.getDueDate().get(GregorianCalendar.YEAR));
+						i.putExtra("DMONTH", tvShowTask.getDueDate().get(GregorianCalendar.MONTH));
+						i.putExtra("DDAY", tvShowTask.getDueDate().get(GregorianCalendar.DAY_OF_MONTH));
+						i.putExtra("YEAR", getIntent().getIntExtra("YEAR", 0));
+						i.putExtra("MONTH", getIntent().getIntExtra("MONTH", 1));
+						i.putExtra("DAY", getIntent().getIntExtra("DAY", 1));
+						
+						i.putExtra("RETURN", Constants.TASKVIEW);
+						if (tasklist.taskList==null){
+							i.putExtra("ID", 0);
+						}
+						else{
+							i.putExtra("ID", 0);
+						}
+						startActivity(i);
+						
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+            		
+                    return true;
+				}
+				return false;
+			}
+			
+		});
 		
 		edit.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
@@ -233,15 +282,16 @@ public class TVSearchActivity extends Activity {
 	}
 	
 	public void checkForService(){
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		serviceId= prefs.getString("service", "");
 		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		serviceId= "365890";//prefs.getString("service", "");
+		/*
 		if (serviceId==""){
 			Log.i("Service Missing","Starting Verify");
 	        Intent todo= new Intent(this,VerifyServiceActivity.class);
 	        startActivity(todo);
+	        */
 	        
 		}
 	}
 	
-}

@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -78,6 +79,7 @@ public class VerifyServiceActivity extends Activity {
 				
 				
 				Log.i("Service Applied","Starting TVSearch");
+				Log.v("Rawr", result);
 		        Intent todo= new Intent(con,TVSearchActivity.class);
 		        startActivity(todo);
 			}
