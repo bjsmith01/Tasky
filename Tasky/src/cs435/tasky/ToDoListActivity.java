@@ -241,7 +241,34 @@ public class ToDoListActivity extends FragmentActivity implements
 		lView.setAdapter(l);
 
 		GlobalTaskList gL = (GlobalTaskList) getApplication();
-		gL.taskList.remove((int)idList.get(position));
+		
+		Task t = gL.getTaskList().get((int) idList.get(position));
+		Log.v("ServerTest", String.valueOf(t.getID()));
+		ServerInfo.deleteTask(gL.username, String.valueOf(getProjId(t.getID())), 
+				String.valueOf(t.getID()));
+
+		for (int x = 0; x < gL.getTaskList().size(); x++){
+			if (t.getID() == gL.getTaskList().get(x).getID())
+			{
+				gL.getTaskList().remove(x);
+				break;
+			}
+		}
+		
+		for (Folder f : gL.getFolderList())
+		{
+			for (int x = 0; x < f.TaskList.size(); x++)
+			{
+				if (t.getID() == f.TaskList.get(x).getID())
+				{
+					f.TaskList.remove(x);
+					break;
+				}
+			}
+		}
+		
+		
+		//gL.taskList.remove((int)idList.get(position));
 
 	}
 
@@ -306,6 +333,27 @@ public class ToDoListActivity extends FragmentActivity implements
 			TextView t = (TextView) findViewById(R.id.toDoFolder);
 			t.setText(tasks.getFolderList().get(folderIndex).getName());
 		}
+	}
+	
+	private int getProjId(long taskID)
+	{
+		GlobalTaskList g = (GlobalTaskList) getApplication();
+		for (Folder f : g.getFolderList())
+		{
+			Log.v("ServerTest","Folder IDs: " + String.valueOf(f.getID()));
+			for (Task t : f.TaskList)
+			{
+				Log.v("ServerTest", "Task IDs: " + String.valueOf(t.getID()));
+				if (t.getID() == taskID)
+				{
+					Log.v("ServerTest", String.valueOf(t.getID()));
+					return f.getID();
+				}
+			}
+		}
+		
+		return -1;
+		
 	}
 
 	class touchListener extends SimpleOnGestureListener{
