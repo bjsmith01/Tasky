@@ -26,22 +26,22 @@ import android.widget.Toast;
 
 public class ToDoListActivity extends FragmentActivity implements
 		ActionBar.OnNavigationListener {
-		
+
 		ArrayList<Integer> idList = new ArrayList<Integer>();
 		ListView lView;
 		ListViewAdapter l;
 		ArrayList<String> taskList=new ArrayList<String>();
 		static Folder folder;
 		int folderIndex = 0;
-		
+
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_to_do_list);
-			
+
 			GlobalTaskList tasks = (GlobalTaskList) getApplication();
 			folder=new Folder(tasks.taskList);
-			
+
 			//ArrayAdapter<String> l = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 			if (tasks.getFolderList().size() > 0)
 			{
@@ -55,25 +55,15 @@ public class ToDoListActivity extends FragmentActivity implements
 					idList.add(x);		
 				}
 			}
-			/*
-			for (int x = 0; x < tasks.getTaskList().size(); x++)
-			{
-				Task t = tasks.getTaskList().get(x);
-				if (t.isCompleted())
-					taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
-				else
-					taskList.add(tasks.getTaskList().get(x).getName());
-				idList.add(x);				
-
-			}
-			*/
 			lView = (ListView) findViewById(R.id.expandableListView1);
 			l=new ListViewAdapter(this,taskList);
 			lView.setAdapter(l);
-			
+
 			TextView t = (TextView) findViewById(R.id.toDoFolder);
-			t.setText(tasks.getFolderList().get(folderIndex).getName());
-			
+			if (tasks.getFolderList().size()!=0){
+				t.setText(tasks.getFolderList().get(folderIndex).getName());
+			}
+
 			final GestureDetector tL = new GestureDetector(this, new touchListener());
 			OnTouchListener test = new OnTouchListener(){
 
@@ -82,10 +72,10 @@ public class ToDoListActivity extends FragmentActivity implements
 					tL.onTouchEvent(event);
 					return false;
 				}
-				
+
 			};
 			lView.setOnTouchListener(test);
-			
+
 		}
 /*
 		@Override
@@ -112,7 +102,7 @@ public class ToDoListActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.to_do_list, menu);
 		return true;
 	}
-	
+
 	//determines what happens when an item in the menu is selected
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -125,16 +115,16 @@ public class ToDoListActivity extends FragmentActivity implements
 	        startActivity(calStart);
 	        Log.v("CalTest", "Starting Calendar");
 	        return true;
-	        
-	        
+
+
 	    case R.id.add_task:
 	        Log.i("In Menu","Add Task Selected");
 	        Intent add = new Intent(this,AddTaskActivity.class);
 	        startActivity(add);
-	        
+
 	        //for creating  a file
-	        
-	        
+
+
 	        return true;
 	    case R.id.tv_search:
 	        Log.i("In Menu","TV Search Selected");
@@ -151,7 +141,7 @@ public class ToDoListActivity extends FragmentActivity implements
 	        return super.onOptionsItemSelected(item);
 	    }
 	}
-	
+
 	//determines what happens when an item in the action bar is pressed
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
@@ -165,7 +155,7 @@ public class ToDoListActivity extends FragmentActivity implements
 				.replace(R.id.container, fragment).commit();
 		return true;
 	}
-	
+
 
 	/**
 	 * A dummy fragment representing a section of the app, but that simply
@@ -193,7 +183,7 @@ public class ToDoListActivity extends FragmentActivity implements
 			return rootView;
 		}
 	}
-	
+
 	public void goBack(View view)
 	{
 		Intent i = new Intent(this, CalendarActivity.class);
@@ -224,12 +214,12 @@ public class ToDoListActivity extends FragmentActivity implements
 	{
 		if (tk.isCompleted())
 		{
-			
+
 			taskList.remove(position);
 			taskList.add(position,tk.getName());
-			
+
 			l.changeAdapter(taskList);
-			
+
 			lView.setAdapter(null);
 			lView.setAdapter(l);
 
@@ -243,13 +233,13 @@ public class ToDoListActivity extends FragmentActivity implements
 	 */
 	public void deleteTask(Task tk, int position)
 	{		
-		
+
 		taskList.remove(position);
-	
+
 		l.changeAdapter(taskList);
 		lView.setAdapter(null);
 		lView.setAdapter(l);
-		
+
 		GlobalTaskList gL = (GlobalTaskList) getApplication();
 		gL.taskList.remove((int)idList.get(position));
 
@@ -257,72 +247,78 @@ public class ToDoListActivity extends FragmentActivity implements
 
 	public void nextFolder(View view)
 	{
+		
 		GlobalTaskList tasks = (GlobalTaskList) getApplication();
-		taskList.clear();
-		folderIndex++;
-		if (folderIndex >= tasks.getFolderList().size())
-		{
-			folderIndex = 0;
-		}
-		
-		for (int x = 0; x < tasks.getFolderList().get(folderIndex).TaskList.size(); x++)
-		{
-			Task t = tasks.getFolderList().get(folderIndex).TaskList.get(x);
-			if (t.isCompleted())
-				taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
-			else
-				taskList.add(tasks.getTaskList().get(x).getName());
-			idList.add(x);		
-		}
-		
-		lView = (ListView) findViewById(R.id.expandableListView1);
-		l=new ListViewAdapter(this,taskList);
-		lView.setAdapter(l);
-		
-		TextView t = (TextView) findViewById(R.id.toDoFolder);
-		t.setText(tasks.getFolderList().get(folderIndex).getName());
-		
-	}
+		if (tasks.getFolderList().size()>1){
+			taskList.clear();
+			folderIndex++;
+			if (folderIndex >= tasks.getFolderList().size())
+			{
+				folderIndex = 0;
+			}
 	
+			for (int x = 0; x < tasks.getFolderList().get(folderIndex).TaskList.size(); x++)
+			{
+				Task t = tasks.getFolderList().get(folderIndex).TaskList.get(x);
+				if (t.isCompleted())
+					taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
+				else
+					taskList.add(tasks.getTaskList().get(x).getName());
+				idList.add(x);		
+			}
+	
+			lView = (ListView) findViewById(R.id.expandableListView1);
+			l=new ListViewAdapter(this,taskList);
+			lView.setAdapter(l);
+	
+			TextView t = (TextView) findViewById(R.id.toDoFolder);
+			
+			t.setText(tasks.getFolderList().get(folderIndex).getName());
+		}
+
+	}
+
 	public void prevFolder(View view)
 	{
 		GlobalTaskList tasks = (GlobalTaskList) getApplication();
-		taskList.clear();
-		folderIndex--;
-		if (folderIndex < 0)
-		{
-			folderIndex = tasks.getFolderList().size() - 1;
-		}
-		
-		for (int x = 0; x < tasks.getFolderList().get(folderIndex).TaskList.size(); x++)
-		{
-			Task t = tasks.getFolderList().get(folderIndex).TaskList.get(x);
-			if (t.isCompleted())
-				taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
-			else
-				taskList.add(tasks.getTaskList().get(x).getName());
-			idList.add(x);		
-		}
-		
-		lView = (ListView) findViewById(R.id.expandableListView1);
-		l=new ListViewAdapter(this,taskList);
-		lView.setAdapter(l);
-		
-		TextView t = (TextView) findViewById(R.id.toDoFolder);
-		t.setText(tasks.getFolderList().get(folderIndex).getName());
-	}
+		if (tasks.getFolderList().size()>1){
+			taskList.clear();
+			folderIndex--;
+			if (folderIndex < 0)
+			{
+				folderIndex = tasks.getFolderList().size() - 1;
+			}
 	
+			for (int x = 0; x < tasks.getFolderList().get(folderIndex).TaskList.size(); x++)
+			{
+				Task t = tasks.getFolderList().get(folderIndex).TaskList.get(x);
+				if (t.isCompleted())
+					taskList.add(tasks.getTaskList().get(x).getName() + " is complete");
+				else
+					taskList.add(tasks.getTaskList().get(x).getName());
+				idList.add(x);		
+			}
+	
+			lView = (ListView) findViewById(R.id.expandableListView1);
+			l=new ListViewAdapter(this,taskList);
+			lView.setAdapter(l);
+	
+			TextView t = (TextView) findViewById(R.id.toDoFolder);
+			t.setText(tasks.getFolderList().get(folderIndex).getName());
+		}
+	}
+
 	class touchListener extends SimpleOnGestureListener{
-		
+
 		@Override
 		public boolean onFling(MotionEvent startTouch, MotionEvent endTouch, float velX, float velY)
 		{	
 			GlobalTaskList g = (GlobalTaskList) getApplication();
-			
+
 			int position = (int) lView.getItemIdAtPosition((lView.pointToPosition( (int) 
 					startTouch.getX(), (int) startTouch.getY())));
 			Task tk = g.getTaskList().get(idList.get(position));
-			
+
 			if (Math.abs(endTouch.getX() - startTouch.getX()) > 
 			Constants.SWIPE_MIN_DISTANCE && (endTouch.getX() > startTouch.getX()))
 			{
@@ -340,20 +336,20 @@ public class ToDoListActivity extends FragmentActivity implements
 			{
 				uncompleteTask(tk, position);
 			}
-			
+
 			return false;
 		}
-		
+
 		public boolean onSingleTapUp(MotionEvent tap)
-		
+
 		{
-			
+
 			GlobalTaskList g = (GlobalTaskList) getApplication();
 			Intent i = new Intent(getBaseContext(), EditTaskActivity.class);
 
 			int pos = lView.pointToPosition( (int) tap.getX(), (int) tap.getY());
-			
-			
+
+
 			Task t = g.getTaskList().get(idList.get(pos));
 			i.putExtra("NAME", t.getName());
 			i.putExtra("DYEAR", t.getDueDate().get(GregorianCalendar.YEAR));
@@ -366,10 +362,10 @@ public class ToDoListActivity extends FragmentActivity implements
 			i.putExtra("ID", idList.get(pos));
 			startActivity(i);
 			return false;
-			
+
 		}
 
-		
+
 	}
 
 }

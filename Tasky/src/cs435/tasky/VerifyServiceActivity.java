@@ -79,7 +79,6 @@ public class VerifyServiceActivity extends Activity {
 				
 				
 				Log.i("Service Applied","Starting TVSearch");
-				Log.v("Rawr", result);
 		        Intent todo= new Intent(con,TVSearchActivity.class);
 		        startActivity(todo);
 			}
